@@ -1,0 +1,173 @@
+#!/bin/sh
+
+# Website initialization
+webInit() 
+{
+cat <<EOF > index.html
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>{Document Title}</title>
+	<link rel="stylesheet" href="/css/style.css">
+	<!-- <link rel="icon" href="/favicon.ico" type="image/x-icon"> -->
+    </head>
+    <body>
+	<script src="/scripts/index.js"></script>
+    </body>
+</html>
+EOF
+
+mkdir -p css imgs scripts
+
+cat <<EOF > ./css/style.css
+html {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+EOF
+
+cat <<EOF > ./scripts/index.js
+console.log("Hello World!");
+EOF
+
+touch ./imgs/sample.png
+
+echo -e "Web project files were initialized."
+}
+# Website initialization end
+
+# HTML initialization
+htmlInit()
+{
+cat <<EOF > index.html
+<!DOCTYPE html>
+<html lang="hu">
+    <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>{Document Title}</title>
+	<link rel="stylesheet" href="/css/style.css">
+	<!-- <link rel="icon" href="/favicon.ico" type="image/x-icon"> -->
+    </head>
+    <body>
+	<script src="/scripts/index.js"></script>
+    </body>
+</html>
+EOF
+
+echo -e "HTML file initialized."
+}
+# HTML initialization end
+
+# CSS initialization
+cssInit()
+{
+cat <<EOF > style.css
+html {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+EOF
+echo -e "CSS file initialized."
+}
+# CSS initialization end
+
+# Tex project initialization
+texInit()
+{
+cat <<EOF > ./document.tex
+
+\documentclass[12pt]{article}
+\linespread{1.5}
+\setlength{\parindent}{0.5in}
+\setlength{\parskip}{1.1ex}
+
+\usepackage{graphicx,caption,float,textcomp,mathcomp,fancyhdr,nameref,amsmath} % Csomag importálás
+\usepackage{mathptmx}
+% \usepackage[magyar]{babel}
+% \usepackage{t1enc}
+\usepackage[margin=1in]{geometry} % Szép margót állít
+\graphicspath{ {./imgs/} }
+
+\makeatletter
+\newcommand*{\currentname}{\@currentlabelname}
+\renewcommand{\contentsname}{Tartalomjegyzék}
+\renewcommand{\today}{0000. hónap 1.}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\rhead{~\thesection . fejezet}
+\chead{\currentname}
+\lhead{\thepage}
+
+\setlength{\headheight}{20.0pt}
+
+\lfoot{\today}
+\cfoot{\thepage}
+\rfoot{Gyenes Béla}
+
+\title{Cím}
+\author{Gyenes Béla}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\pagenumbering{gobble}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[scale=0.25]{imgs/feketelyuk.png}
+% \end{figure}
+
+\pagebreak
+
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+
+\pagebreak
+
+\end{document}
+EOF
+
+mkdir ./imgs && touch ./imgs/sample.png
+
+echo -e "LaTeX project files were initialized."
+}
+
+case $1 in
+    "web")
+	webInit
+	;;
+
+    "html")
+	htmlInit
+	;;
+    "css")
+	cssInit
+	;;
+    "tex")
+	texInit
+	;;
+    "help")
+	echo -e "Available arguments:\nweb | html | css | tex"
+	;;
+    *)
+	echo -e "Please provide a valid argument. Type help as an argument to get all the available options."
+	;;
+esac

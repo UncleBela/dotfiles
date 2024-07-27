@@ -1,0 +1,4 @@
+{
+  "clangd.path": "~/.config/coc/extensions/clangd_17.0.3/bin/clangd",
+  "inlayHint.enable": false
+}

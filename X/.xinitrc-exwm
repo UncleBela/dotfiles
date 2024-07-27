@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Start Emacs daemon
+if command -v emacs >/dev/null 2>&1; then
+    emacs --daemon
+fi
+
+# Wait a bit to ensure the daemon starts
+sleep 1
+
+# mpd
+mpd &
+
+# Start EXWM using emacsclient
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec emacsclient -c -a 'emacs' --eval '(exwm-enable)'

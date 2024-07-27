@@ -1,0 +1,56 @@
+Suckless softwares (dwm, st, dmenu, slstatus)
+https://suckless.org/
+
+Requirements:
++ make
++ gcc
++ webkit2gtk
++ gcr
++ libavif
++ otf-monocraft
++ ttf-font-awesome
+
+IMPORTANT!
+If you decide to change fonts, they must be monospaced, otherwise they'll show up with weird letter spacing.
+
+To build the files, you must either
+1) run the build.sh script (this will build all the suckless softwares individually, requires the make package)
+2) manually go in the suckless directories and use the make commands.
+
+Patches included:
+dwm-alttab-20220709-d3f93c7.diff
+dwm-alwayscenter-20200625-f04cac6.diff
+dwm-attachbelow-6.2.diff
+dwm-status2d-20200508-60bb3df.diff
+dwm-statuscolors-20220322-bece862.diff
+dwm-steam-6.2.diff
+dwm-unmanaged-6.4.diff
+dwm-uselessgap-20211119-58414bee958f2.diff
+
+st-alpha-20220206-0.8.5.diff
+st-delkey-0.6.diff
+st-scrollback-0.8.5.diff
+
+dmenu-highlight-20201211-fcdc159.diff
+dmenu-border-20230512-0fe460d.diff
+dmenu-lineheight-5.2.diff
+dmenu-center-5.2.diff
+dmenu-numbers-20220512-28fb3e2.diff
+dmenu-grid-4.9.diff
+
+You must have the Xorg display server installed!
+Append "exec dwm" as the last line in your .xinitrc file to start after running "startx".
+
+MODKEY is the Left Alt button.
+
+Main keybinds:
+LAlt + LShift + T = opens new st instance
+LAlt + F3 = opens up dmenu on top, type to get desired software to open
+LAlt + Left Arrow = switches to previous window on current monitor
+LAlt + Right Arrow = switches to next window on current monitor
+LAlt + LShift + Left Arrow = switches to the monitor display to the left side
+LAlt + LShift + Right Arrow = switches to the monitor display to the right side
+LAlt + L = Push master/slave seperator a bit to the right
+LAlt + H = Push master/slave seperator a bit to the left
+
+To see all the keybindings, refer to the config.h files.

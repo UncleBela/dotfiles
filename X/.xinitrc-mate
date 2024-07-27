@@ -1,0 +1,5 @@
+#!/bin/sh
+
+/usr/bin/emacs --daemon &
+xbindkeys
+exec mate-session

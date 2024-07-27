@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "$(shuf -n 32 /usr/share/dict/words.txt --random-source=/dev/urandom | tr '\n' ' ')"

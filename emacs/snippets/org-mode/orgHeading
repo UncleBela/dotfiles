@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: orgHeading
+# key: ~tt
+# --
+#+TITLE: $1
+#+AUTHOR: $2
+#+OPTIONS: num:nil toc:nil html-postamble:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css">
+$0
