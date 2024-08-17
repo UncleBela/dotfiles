@@ -1,41 +1,91 @@
+(require 'ox-texinfo)
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(require 'ox-texinfo)
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name
+   (expand-file-name
 	"straight/repos/straight.el/bootstrap.el"
 	(or (bound-and-true-p straight-base-dir)
 	    user-emacs-directory)))
-      (bootstrap-version 7))
+  (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
 	(url-retrieve-synchronously
 	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
 	 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
+  (goto-char (point-max))
+  (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(set-face-attribute 'default nil :font "Iosevka-22")
-(set-face-attribute 'default nil :foreground "white" :background "black")
-(set-face-attribute 'region nil :background "#505050")
-(set-face-attribute 'highlight nil :background "#303030")
-(set-face-attribute 'fringe nil :background "black")
-(set-face-foreground 'line-number-current-line "green") 
+(defun ub-lightmode ()
+  "Activate Light Mode"
+  (interactive)
+  (set-face-attribute 'region nil :background "#b3b3b3")
+  (set-face-attribute 'highlight nil :background "#dbdbdb")
+  (set-face-attribute 'fringe nil :background "white")
+  (set-face-background 'hl-line "#dbdbdb")
+  (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
+  (set-face-foreground 'org-level-1 "Firebrick4")
+  (set-face-attribute 'default nil :foreground "black" :background "white")
+  (set-frame-parameter nil 'alpha-background 100)
+  (add-to-list 'default-frame-alist '(alpha-background . 100))    
+  )
+
+(defun ub-darkmode ()
+  "Activate Light Mode"
+  (interactive)
+  (set-face-attribute 'region nil :background "#b3b3b3")
+  (set-face-attribute 'highlight nil :background "#262626")
+  (set-face-attribute 'fringe nil :background "black")
+  (set-face-background 'hl-line "#454545")
+  (set-face-attribute 'default nil :foreground "white" :background "black")
+  (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
+  (set-face-foreground 'org-level-1 "GreenYellow")
+  (set-frame-parameter nil 'alpha-background 100)
+  (add-to-list 'default-frame-alist '(alpha-background . 100))    
+  )
+
+(defun ub-tp ()
+  (interactive)
+  (set-frame-parameter nil 'alpha-background 80)
+  (add-to-list 'default-frame-alist '(alpha-background . 80))    
+  )
+
+(global-set-key (kbd "M-j") 'copy-line-down)
+(global-set-key (kbd "M-k") 'copy-line-up)
+(global-set-key (kbd "C-j") 'move-line-down)
+(global-set-key (kbd "C-k") 'move-line-up)
+(global-set-key (kbd "C-z") 'undo-only)
+(global-set-key (kbd "C-u") 'undo-redo)
+(global-set-key (kbd "C-x u") 'universal-argument)
+
+(global-set-key (kbd "C-c q") 'indent-region)
+(global-set-key (kbd "C-c c") 'comment-dwim)
+(global-set-key (kbd "C-c e") 'eval-buffer)
+(global-set-key (kbd "C-c r") 'replace-regexp)
+
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "#333333")
+
+(set-face-attribute 'default nil :font "Iosevka-22")
+
+;;;; Light Mode
+;; (ub-lightmode)
+
+;; Dark Mode
+(ub-darkmode)
+
+(set-face-foreground 'line-number-current-line "green") 
+
 (add-hook 'server-after-make-frame-hook
-  (lambda ()
-  (set-frame-font "Iosevka-22")))
+          (lambda ()
+            (set-frame-font "Iosevka-22")))
 
 (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
 (set-face-attribute 'font-lock-function-name-face nil :foreground "#A6E22E")
 (set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
-(set-face-attribute 'font-lock-string-face nil :foreground "#E6DB74")
 (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
 (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
@@ -47,14 +97,14 @@
 
   ;; Customize the default mode line faces for your lambda line
   (set-face-attribute 'mode-line nil
-		      :background "#0a0a0a"  ; Dark background color
-		      :foreground "#b2b2b2"  ; Light text color
-		      :box nil)  ; No border
+		  :background "#0a0a0a"  ; Dark background color
+		  :foreground "#b2b2b2"  ; Light text color
+		  :box nil)  ; No border
 
   (set-face-attribute 'mode-line-inactive nil
-		      :background "#0a0a0a"  ; Dark background color
-		      :foreground "#b2b2b2"  ; Light text color
-		      :box nil)  ; No border
+		  :background "#0a0a0a"  ; Dark background color
+		  :foreground "#b2b2b2"  ; Light text color
+		  :box nil)  ; No border
   (lambda-line-mode 1))
 (setq visible-bell nil)  ; Disable visual bell entirely
 (setq ring-bell-function 'ignore)  ; Ignore the bell function to avoid any bell
@@ -65,29 +115,6 @@
   (lambda-themes-set-italic-comments t)
   (lambda-themes-set-italic-keywords t)
   (lambda-themes-set-variable-pitch t))
-
-(set-frame-parameter nil 'alpha-background 80)
-(add-to-list 'default-frame-alist '(alpha-background . 80))
-
-(unless (package-installed-p 'evil)
-  (package-refresh-contents)
-  (package-install 'evil))
-
-(require 'evil)
-(evil-mode 1)
-
-(unless (package-installed-p 'evil-org)
-  (package-refresh-contents)
-  (package-install 'evil-org))
-
-(require 'evil-org)
-(add-hook 'org-mode-hook 'evil-org-mode)
-
-;; Undo Redo system
-(setq evil-undo-system 'undo-redo)
-(define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
-(define-key evil-visual-state-map (kbd "C-r") 'undo-redo)
-(define-key evil-insert-state-map (kbd "C-r") 'undo-redo)
 
 (use-package lsp-mode
   :ensure t
@@ -203,9 +230,9 @@
 
 (use-package gdscript-mode
   :straight (gdscript-mode
-	     :type git
-	     :host github
-	     :repo "godotengine/emacs-gdscript-mode"))
+	 :type git
+	 :host github
+	 :repo "godotengine/emacs-gdscript-mode"))
 
 (unless (package-installed-p 'ivy)
 (package-refresh-contents)
@@ -282,11 +309,19 @@
 (when (eq major-mode 'fireplace-mode)
 (display-line-numbers-mode -1)))
 
-(use-package evil-mc :ensure t)
-(global-evil-mc-mode t)
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-c m <down>" . mc/mark-next-lines)
+	 ("C-c m <up>" . mc/mark-previous-lines)
+	 ("C-c m n" . mc/mark-next-like-this)
+	 ("C-c m p" . mc/mark-previous-like-this)
+	 ("C-c m a" . mc/mark-all-like-this)))
 
-(global-set-key (kbd "C-<up>") 'evil-mc-make-cursor-move-prev-line)
-(global-set-key (kbd "C-<down>") 'evil-mc-make-cursor-move-next-line)
+(setq mc/cmds-to-run-for-all nil)
+
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 (use-package emms
   :ensure t
@@ -312,9 +347,9 @@
   ("<XF86AudioStop>" . emms-stop))
 
   (defun open-pulsemixer ()
-      "Open pulsemixer in st (suckless terminal)."
-      (interactive)
-      (start-process "st" nil "st" "-e" "pulsemixer"))
+  "Open pulsemixer in st (suckless terminal)."
+  (interactive)
+  (start-process "st" nil "st" "-e" "pulsemixer"))
   (global-set-key (kbd "s-m v") 'open-pulsemixer)
 
   (defun my-disable-line-numbers-in-emms-playlist ()
@@ -330,9 +365,9 @@
     "Toggle between relative and absolute line numbering."
     (interactive)
     (setq display-line-numbers-type
-	  (if (eq display-line-numbers-type 'relative)
-	      'absolute
-	      'relative))
+      (if (eq display-line-numbers-type 'relative)
+      'absolute
+      'relative))
     (global-display-line-numbers-mode -1) ; Turn off line numbering
     (global-display-line-numbers-mode 1)) ; Turn it back on
   (global-set-key (kbd "M-g") 'toggle-line-numbering-type)
@@ -372,13 +407,6 @@
   (transpose-lines 1)
   (previous-line 1))
 
-(global-set-key (kbd "M-j") 'copy-line-down)
-(global-set-key (kbd "M-k") 'copy-line-up)
-(global-set-key (kbd "C-j") 'move-line-down)
-(global-set-key (kbd "C-k") 'move-line-up)
-(global-set-key (kbd "C-c C-v") 'eshell)
-(global-set-key (kbd "C-s") 'save-buffer)
-
 (global-set-key (kbd "C-c C-<left>")  'windmove-left)
 (global-set-key (kbd "C-c C-<right>") 'windmove-right)
 (global-set-key (kbd "C-c C-<up>")    'windmove-up)
@@ -416,5 +444,17 @@
 (append '("/usr/share/info")
 Info-default-directory-list
 '("~/.emacs.d/info")))
+
+(defun my-open-file-in-new-buffer ()
+  "Open the file at point in a new buffer."
+  (interactive)
+  (let ((file (org-element-property :path (org-element-context))))
+    (if file
+	(find-file file)
+  (message "No file at point"))))
+
+(define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
+
+(global-unset-key (kbd "C-x C-z"))
 
 (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")

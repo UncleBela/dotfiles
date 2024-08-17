@@ -1,13 +1,15 @@
+#+PROPERTY: header-args :tangle init.el
+
+* Loading Packages
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-texinfo)
+#+END_SRC
 * Package Management
 First of all, we will add MEPLA as a repository, thus, it will unlock us many other packages that are handy.
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-#+END_SRC
-* Loading Packages
-#+BEGIN_SRC emacs-lisp
-  (require 'ox-texinfo)
 #+END_SRC
 * Bootstrap straight.el
 #+BEGIN_SRC emacs-lisp
@@ -27,21 +29,83 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+END_SRC
+* UB Settings
+** Light Mode
+#+BEGIN_SRC emacs-lisp
+  (defun ub-lightmode ()
+    "Activate Light Mode"
+    (interactive)
+    (set-face-attribute 'region nil :background "#b3b3b3")
+    (set-face-attribute 'highlight nil :background "#dbdbdb")
+    (set-face-attribute 'fringe nil :background "white")
+    (set-face-background 'hl-line "#dbdbdb")
+    (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
+    (set-face-foreground 'org-level-1 "Firebrick4")
+    (set-face-attribute 'default nil :foreground "black" :background "white")
+    (set-frame-parameter nil 'alpha-background 100)
+    (add-to-list 'default-frame-alist '(alpha-background . 100))    
+    )
+#+END_SRC
+
+** Dark Mode
+#+BEGIN_SRC emacs-lisp
+  (defun ub-darkmode ()
+    "Activate Light Mode"
+    (interactive)
+    (set-face-attribute 'region nil :background "#b3b3b3")
+    (set-face-attribute 'highlight nil :background "#262626")
+    (set-face-attribute 'fringe nil :background "black")
+    (set-face-background 'hl-line "#454545")
+    (set-face-attribute 'default nil :foreground "white" :background "black")
+    (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
+    (set-face-foreground 'org-level-1 "GreenYellow")
+    (set-frame-parameter nil 'alpha-background 100)
+    (add-to-list 'default-frame-alist '(alpha-background . 100))    
+    )
+#+END_SRC
+** Transparent Emacs
+#+BEGIN_SRC emacs-lisp
+  (defun ub-tp ()
+    (interactive)
+    (set-frame-parameter nil 'alpha-background 80)
+    (add-to-list 'default-frame-alist '(alpha-background . 80))    
+    )
+#+END_SRC   
+** Custom Keybindings
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-j") 'copy-line-down)
+  (global-set-key (kbd "M-k") 'copy-line-up)
+  (global-set-key (kbd "C-j") 'move-line-down)
+  (global-set-key (kbd "C-k") 'move-line-up)
+  (global-set-key (kbd "C-z") 'undo-only)
+  (global-set-key (kbd "C-u") 'undo-redo)
+  (global-set-key (kbd "C-x u") 'universal-argument)
+
+  (global-set-key (kbd "C-c q") 'indent-region)
+  (global-set-key (kbd "C-c c") 'comment-dwim)
+  (global-set-key (kbd "C-c e") 'eval-buffer)
+  (global-set-key (kbd "C-c r") 'replace-regexp)  
+
+#+END_SRC
 * UI Enhancements: Fonts and Colors
 Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
 ** UI Enhancements: Fonts and Colors
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :font "Iosevka-22")
-  (set-face-attribute 'default nil :foreground "white" :background "black")
-  (set-face-attribute 'region nil :background "#505050")
-  (set-face-attribute 'highlight nil :background "#303030")
-  (set-face-attribute 'fringe nil :background "black")
-  (set-face-foreground 'line-number-current-line "green") 
   (global-hl-line-mode 1)
-  (set-face-background 'hl-line "#333333")
+
+  (set-face-attribute 'default nil :font "Iosevka-22")
+
+  ;;;; Light Mode
+  ;; (ub-lightmode)
+
+  ;; Dark Mode
+  (ub-darkmode)
+
+  (set-face-foreground 'line-number-current-line "green") 
+
   (add-hook 'server-after-make-frame-hook
-    (lambda ()
-    (set-frame-font "Iosevka-22")))
+            (lambda ()
+              (set-frame-font "Iosevka-22")))
 
 #+END_SRC
 ** UI Enhancements: Syntax Highlighting
@@ -49,7 +113,6 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
 (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
 (set-face-attribute 'font-lock-function-name-face nil :foreground "#A6E22E")
 (set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
-(set-face-attribute 'font-lock-string-face nil :foreground "#E6DB74")
 (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
 (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
@@ -85,36 +148,6 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     (lambda-themes-set-italic-keywords t)
     (lambda-themes-set-variable-pitch t))
 #+END_SRC
-* Transparent Emacs
-#+BEGIN_SRC emacs-lisp
-(set-frame-parameter nil 'alpha-background 80)
-(add-to-list 'default-frame-alist '(alpha-background . 80))
-#+END_SRC
-* Evil Mode
-#+BEGIN_SRC emacs-lisp
-  (unless (package-installed-p 'evil)
-    (package-refresh-contents)
-    (package-install 'evil))
-
-  (require 'evil)
-  (evil-mode 1)
-
-  (unless (package-installed-p 'evil-org)
-    (package-refresh-contents)
-    (package-install 'evil-org))
-
-  (require 'evil-org)
-  (add-hook 'org-mode-hook 'evil-org-mode)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  ;; Undo Redo system
-  (setq evil-undo-system 'undo-redo)
-  (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
-  (define-key evil-visual-state-map (kbd "C-r") 'undo-redo)
-  (define-key evil-insert-state-map (kbd "C-r") 'undo-redo)
-#+END_SRC
-
 * LSP Configuration
 ** lsp-mode
 #+BEGIN_SRC emacs-lisp
@@ -221,7 +254,7 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     (which-key-mode))
 #+END_SRC
 * Major Modes and Packages
-Set up various major modes and additional packages.
+  Set up various major modes and additional packages.
 ** Org Mode
 #+BEGIN_SRC emacs-lisp
 (use-package org :ensure t)
@@ -354,19 +387,29 @@ Set up various major modes and additional packages.
 ** Fireplace
 #+BEGIN_SRC emacs-lisp
   (use-package fireplace :ensure t)
-  
+
   (defun my-disable-line-numbers-in-fireplace ()
   "Disable line numbers in Fireplace."
   (when (eq major-mode 'fireplace-mode)
   (display-line-numbers-mode -1)))
 #+END_SRC
-** evil-mc (multi cursors)
+** Multiple Cursors
 #+BEGIN_SRC emacs-lisp
-  (use-package evil-mc :ensure t)
-  (global-evil-mc-mode t)
-
-  (global-set-key (kbd "C-<up>") 'evil-mc-make-cursor-move-prev-line)
-  (global-set-key (kbd "C-<down>") 'evil-mc-make-cursor-move-next-line)
+  (use-package multiple-cursors
+    :ensure t
+    :bind (("C-c m <down>" . mc/mark-next-lines)
+	   ("C-c m <up>" . mc/mark-previous-lines)
+	   ("C-c m n" . mc/mark-next-like-this)
+	   ("C-c m p" . mc/mark-previous-like-this)
+	   ("C-c m a" . mc/mark-all-like-this)))
+  
+  (setq mc/cmds-to-run-for-all nil)
+#+END_SRC
+** Tab indentations
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 4)
+  (setq indent-line-function 'insert-tab)
 #+END_SRC
 * Music Player - EMMS
 Here, we will be configuring the EMMS music player.
@@ -412,15 +455,15 @@ Here, we will be configuring the EMMS music player.
   Include miscellaneous settings and functions.
 ** Line Numbering
 #+BEGIN_SRC emacs-lisp
-    (setq display-line-numbers-type 'relative)
+  (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode t)
     (defun toggle-line-numbering-type ()
       "Toggle between relative and absolute line numbering."
       (interactive)
       (setq display-line-numbers-type
-	    (if (eq display-line-numbers-type 'relative)
-		'absolute
-		'relative))
+        (if (eq display-line-numbers-type 'relative)
+        'absolute
+        'relative))
       (global-display-line-numbers-mode -1) ; Turn off line numbering
       (global-display-line-numbers-mode 1)) ; Turn it back on
     (global-set-key (kbd "M-g") 'toggle-line-numbering-type)
@@ -464,15 +507,6 @@ Here, we will be configuring the EMMS music player.
     (previous-line 1))
 #+END_SRC
 
-** Custom Keybindings
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-j") 'copy-line-down)
-  (global-set-key (kbd "M-k") 'copy-line-up)
-  (global-set-key (kbd "C-j") 'move-line-down)
-  (global-set-key (kbd "C-k") 'move-line-up)
-  (global-set-key (kbd "C-c C-v") 'eshell)
-  (global-set-key (kbd "C-s") 'save-buffer)
-#+END_SRC
 ** Windmove keybinds
 #+BEGIN_SRC emacs-lisp
     (global-set-key (kbd "C-c C-<left>")  'windmove-left)
@@ -529,8 +563,25 @@ Here, we will be configuring the EMMS music player.
 Info-default-directory-list
 '("~/.emacs.d/info")))
 #+END_SRC
+** Open new file in a new frame
+ #+BEGIN_SRC emacs-lisp
+   (defun my-open-file-in-new-buffer ()
+     "Open the file at point in a new buffer."
+     (interactive)
+     (let ((file (org-element-property :path (org-element-context))))
+       (if file
+	   (find-file file)
+	 (message "No file at point"))))
+
+   (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
+ #+END_SRC 
+** Unbind freeze buffer keybind
+#+BEGIN_SRC emacs-lisp
+  (global-unset-key (kbd "C-x C-z"))
+#+END_SRC
 * Export to init.el
 This block will convert all org-babel code blocks to a plain `init.el`.
 #+BEGIN_SRC emacs-lisp :exports none
-    (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
+  (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
 #+END_SRC
+
