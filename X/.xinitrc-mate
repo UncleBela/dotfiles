@@ -2,4 +2,5 @@
 
 /usr/bin/emacs --daemon &
 xbindkeys
+pipewire &
 exec mate-session

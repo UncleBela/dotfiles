@@ -36,11 +36,19 @@ sudo cp ./surf/config.h.pc ./surf/config.h
 
 echo -e "Suckless software is being installed on a ${platform~~}.\n"
 
-sudo make -C clean install ./dwm
-sudo make -C clean install ./st
-sudo make -C clean install ./slock
-sudo make -C clean install ./surf
-sudo make -C clean install ./dmenu
-sudo make -C clean install ./slstatus
+cd ./dwm && sudo make clean install && cd ..
+cd ./st && sudo make clean install && cd ..
+cd ./slock && sudo make clean install && cd ..
+cd ./surf && sudo make clean install && cd ..
+cd ./dmenu && sudo make clean install && cd ..
+cd ./slstatus && sudo make clean install && cd ..
 
-echo -e "\nSuccess!\nEverything should be up and working. Append \"exec dwm\" on the last line of your .xinitrc file in the home directory."
+read -p "Delete LightDM and it's additional packages (y/n)? " lightdmDelete
+
+case "$lightdmDelete" in
+	y|Y) sudo pacman -Rdd --noconfirm light-locker lightdm lightdm-gtk-greeter lightdm-runit;;
+	n|N) echo "LightDM will not be removed.";;
+	*) echo "LightDM will not be removed.";;
+esac
+
+echo -e "\nSuccess!\nEverything should be up and running. Append \"exec dwm\" on the last line of your .xinitrc file in the home directory."

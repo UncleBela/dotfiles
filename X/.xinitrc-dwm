@@ -3,6 +3,7 @@
 feh --randomize --no-fehbg --bg-fill ~/Pictures/Wallpapers/Desktop_Wallpapers/Oil/
 /usr/bin/emacs --daemon &
 slstatus &
+pipewire &
 xbindkeys
 xcompmgr &
 ~/.screenlayout/3m.sh

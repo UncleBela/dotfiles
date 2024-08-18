@@ -46,6 +46,12 @@ mkdir -p ~/.emacs.d/
 cp -R ./emacs/* ~/.emacs.d/
 printf "Emacs config files copied."
 
+cat > ~/.Xresources <<EOF
+*.WINDOW_FOREGROUND: white
+EOF
+
+xrdb ~/.Xresources
+
 echo -e "------------------------"
 echo -e "------------------------"
 echo -e "|         Fish         |"
@@ -75,7 +81,14 @@ echo -e "------------------------"
 printf "Installing suckless software now..."
 cd ./suckless/
 chmod +x ./build.sh
-sh ./build.sh
+
+read -p "Will you be using a (pc), or a (laptop)?: " deviceChoice
+
+case "$deviceChoice" in
+	pc|PC) sh ./build.sh pc;;
+	laptop|LAPTOP) sh ./build.sh laptop;;
+	*) echo "No device selected.";;
+esac
 
 echo -e "------------------------"
 echo -e "------------------------"

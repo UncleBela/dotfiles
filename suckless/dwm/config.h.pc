@@ -140,8 +140,10 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 
+    /* Keybind to lock system with slock */
+    { MODKEY|ShiftMask,             XK_Delete,                spawn,  SHCMD("slock")},
 	/* Custom keybindings for C Music Player and audio mixer */
-	{ MODKEY|ShiftMask,             XK_F12,                     spawn,  SHCMD("st -e cmus") },
+	{ MODKEY|ShiftMask,             XK_F12,                   spawn,  SHCMD("st -e cmus") },
 	{ MODKEY|ShiftMask,             XK_F1,                    spawn,  SHCMD("st -e pulsemixer")},
 	{ 0,                            XF86XK_AudioRaiseVolume,  spawn,  SHCMD("cmus-remote --volume +5")},
 	{ 0,                            XF86XK_AudioLowerVolume,  spawn,  SHCMD("cmus-remote --volume -5")},
@@ -156,10 +158,11 @@ static const Key keys[] = {
 	{ Mod4Mask,                     XK_w,                     spawn,  SHCMD("firefox") },
 	{ Mod4Mask,                     XK_e,                     spawn,  SHCMD("emacsclient -c -a 'emacs'") },
 	{ Mod4Mask,                     XK_i,                     spawn,  SHCMD("inkscape") },
-	{ Mod4Mask,                     XK_g,                     spawn,  SHCMD("godot") },
+	{ Mod4Mask,                     XK_g,                     spawn,  SHCMD("gimp") },
 	{ Mod4Mask,                     XK_a,                     spawn,  SHCMD("audacity") },
 	{ Mod4Mask,                     XK_t,                     spawn,  SHCMD("tiled") },
 	{ Mod4Mask,                     XK_b,                     spawn,  SHCMD("blender") },
+	{ MODKEY,                       XK_minus,                 spawn,  SHCMD("rofimoji --selector-args='-theme /usr/share/rofi/themes/gruvbox-dark' --action type") },
 };
 
 /* button definitions */
