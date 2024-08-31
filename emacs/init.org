@@ -1,4 +1,4 @@
-#+PROPERTY: header-args :tangle init.el
+#+PROPERTY: header-args:emacs-lisp :tangle init.el
 
 * Loading Packages
 #+BEGIN_SRC emacs-lisp
@@ -86,6 +86,7 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (global-set-key (kbd "C-c e") 'eval-buffer)
   (global-set-key (kbd "C-c r") 'replace-regexp)  
 
+  (global-set-key (kbd "C-c l") 'org-open-at-point)
 #+END_SRC
 * UI Enhancements: Fonts and Colors
 Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
@@ -93,21 +94,25 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
 #+BEGIN_SRC emacs-lisp
   (global-hl-line-mode 1)
 
-  (set-face-attribute 'default nil :font "Iosevka-22")
+  (set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
 
   ;;;; Light Mode
-  ;; (ub-lightmode)
+  (ub-lightmode)
 
   ;; Dark Mode
-  (ub-darkmode)
+  ;; (ub-darkmode)
+
+  ;; Transparent Mode
+  ;; (ub-tp)
 
   (set-face-foreground 'line-number-current-line "green") 
 
   (add-hook 'server-after-make-frame-hook
             (lambda ()
-              (set-frame-font "Iosevka-22")))
+              (set-frame-font "DejaVu Sans Mono-18")))
 
 #+END_SRC
+
 ** UI Enhancements: Syntax Highlighting
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
@@ -149,112 +154,59 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     (lambda-themes-set-variable-pitch t))
 #+END_SRC
 * LSP Configuration
-** lsp-mode
 #+BEGIN_SRC emacs-lisp
-  (use-package lsp-mode
-    :ensure t
-    :hook ((bash-mode . lsp)
-	   (python-mode . lsp)
-	   (julia-mode . lsp)
-	   (html-mode . lsp)
-	   (css-mode . lsp)
-	   (js-mode . lsp)
-	   (typescript-mode . lsp))
-    :commands lsp)
-#+END_SRC
-** lsp-mode config for each language
-#+BEGIN_SRC emacs-lisp
-  ;; Bash LSP setup
-  (use-package lsp-mode
-    :ensure t
-    :hook (sh-mode . lsp))
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :hook ((bash-mode . lsp)
+         (python-mode . lsp)
+         (julia-mode . lsp)
+         (html-mode . lsp)
+         (css-mode . lsp)
+         (js-mode . lsp)
+         (typescript-mode . lsp)
+         (sh-mode . lsp)
+         (c-mode . lsp)
+         (c++-mode . lsp))
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-completion-provider :capf)  ; Common setting for completion
+  (lsp-clients-clangd-executable "/usr/bin/clangd"))
 
-  ;; Python LSP setup
-  (use-package lsp-python-ms
-    :ensure t
-    :hook (python-mode . (lambda ()
-			   (require 'lsp-python-ms)
-			   (lsp))))
-  (setq lsp-python-ms-auto-install-server t)
-
-  ;; Julia LSP
-    (use-package lsp-mode
-    :init
-    (setq lsp-julia-package-dir nil)
-    :hook
-    (julia-mode . lsp))
-
-    (use-package julia-mode
-    :ensure t
-    :mode "\\.jl\\'"
-    :hook
-    (julia-mode . (lambda ()
-		    (require 'lsp-julia)
-		    (lsp))))
-
-    (use-package lsp-julia
-    :after julia-mode
-    :custom
-    (lsp-julia-default-environment "~/.julia/environments/v1.10"))  ; Adjust the path to your Julia environment
-
-  ;; HTML, CSS, JavaScript, and TypeScript LSP setup
-  (use-package web-mode
-    :ensure t
-    :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.ts?\\'")
-    :hook (web-mode . lsp))
-#+END_SRC
-** for C
-#+BEGIN_SRC emacs-lisp
-  (require 'lsp-mode)
-  (add-hook 'c-mode-hook #'lsp)
-  (add-hook 'c++-mode-hook #'lsp)
-
-  (setq lsp-clients-clangd-executable "/usr/bin/clangd")
-
-  (require 'company)
-  (add-hook 'after-init-hook 'global-company-mode)
-
-  (setq lsp-completion-provider :capf)
-#+END_SRC 
-** lsp-ui
-#+BEGIN_SRC emacs-lisp
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
-#+END_SRC
-** company
-#+BEGIN_SRC emacs-lisp
-  (use-package company
+
+(use-package company
   :ensure t
   :config
   (setq company-idle-delay 0.2
-    company-minimum-prefix-length 1)
+        company-minimum-prefix-length 1)
   (global-company-mode t))
-#+END_SRC
-** yasnippet
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :config
-    (yas-global-mode 1))
-  (use-package yasnippet-snippets
-      :ensure t)
-#+END_SRC
-** flycheck
-#+BEGIN_SRC emacs-lisp
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :ensure t)
+
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
-#+END_SRC
-** which-key
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :ensure t
-    :config
-    (which-key-mode))
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
 #+END_SRC
 * Major Modes and Packages
   Set up various major modes and additional packages.
+** Magit
+#+BEGIN_SRC emacs-lisp
+(use-package magit :ensure t)
+#+END_SRC
 ** Org Mode
 #+BEGIN_SRC emacs-lisp
 (use-package org :ensure t)
@@ -304,6 +256,10 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
   #+END_SRC 
 ** Ivy and Counsel
 #+BEGIN_SRC emacs-lisp
+  (unless (package-installed-p 'counsel)
+  (package-refresh-contents)
+  (package-install 'counsel))
+  
   (unless (package-installed-p 'ivy)
   (package-refresh-contents)
   (package-install 'ivy))
@@ -407,9 +363,11 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
 #+END_SRC
 ** Tab indentations
 #+BEGIN_SRC emacs-lisp
+  (setopt indent-tabs-mode nil)
+  (setopt tab-width 4)
   (setq-default indent-tabs-mode nil)
-  (setq-default tab-width 4)
-  (setq indent-line-function 'insert-tab)
+  (setq standard-indent 4)
+  (setq c-basic-offset 4)
 #+END_SRC
 * Music Player - EMMS
 Here, we will be configuring the EMMS music player.
@@ -520,12 +478,14 @@ Here, we will be configuring the EMMS music player.
 #+END_SRC
 ** st (suckless terminal) completion
 #+BEGIN_SRC emacs-lisp
-(defun open-terminal-in-current-directory ()
-    "Open a terminal in the current directory using `st`."
+  (defun open-terminal-in-current-directory ()
+    "Open a terminal in the current directory using `st` and disown the process."
     (interactive)
     (let ((current-directory (expand-file-name default-directory)))
-    (start-process "st" nil "st" "-e" "sh" "-c" (concat "cd " current-directory " && exec $SHELL"))))
-(global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
+      (start-process-shell-command
+       "st" nil
+       (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
+  (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
 #+END_SRC
 ** Windresize keybindings
 #+BEGIN_SRC emacs-lisp
@@ -579,9 +539,90 @@ Info-default-directory-list
 #+BEGIN_SRC emacs-lisp
   (global-unset-key (kbd "C-x C-z"))
 #+END_SRC
+* Ivy and Yasnippet
+#+BEGIN_SRC emacs-lisp
+  (defun ivy-my-yasnippet ()
+    "Selecting custom yasnippets with ivy from ~/.emacs.d/snippets."
+    (interactive)
+    (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Replace with your snippet directory path(s)
+           (choices (yas--all-templates (yas--get-snippet-tables)))
+           (my-snippets (seq-filter
+                         (lambda (template)
+                           (let ((file (yas--template-load-file template)))
+                             (and file
+                                  (cl-some (lambda (dir)
+                                             (string-prefix-p (expand-file-name dir) (expand-file-name file)))
+                                           yas-snippet-dirs))))
+                         choices))
+           (snippets (mapcar (lambda (template)
+                               (cons (yas--template-name template) template))
+                             my-snippets)))
+      (ivy-read "Snippet: " (mapcar #'car snippets)
+                :action (lambda (snippet-name)
+                          (let ((template (cdr (assoc snippet-name snippets))))
+                            (when template
+                              (yas-expand-snippet (yas--template-content template))))))))
+  (global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
+#+END_SRC
+* Typescript
+#+BEGIN_SRC emacs-lisp
+  ;; Company mode setup
+  (use-package company
+    :ensure t
+    :config
+    (setq company-minimum-prefix-length 1)
+    (setq company-idle-delay 0.0))  ;; Show suggestions immediately
+
+  ;; TypeScript specific setup
+  (use-package typescript-mode
+    :ensure t
+    :mode "\\.ts\\'"
+    :hook (typescript-mode . lsp-deferred)
+    :config
+    (setq typescript-indent-level 2))
+
+  ;; Optional: setup lsp-ui for better UI
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-sideline-enable t)
+    (setq lsp-ui-doc-enable t))
+#+END_SRC
+* LSP
+  #+BEGIN_SRC emacs-lisp
+    (defun my-filter-lsp-warnings (format-string &rest args)
+  "Filter out specific lsp-mode warnings."
+  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
+    (apply #'message format-string args)))
+
+(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
+  #+END_SRC
+* Elcord
+#+BEGIN_SRC emacs-lisp
+(use-package elcord :ensure t)
+#+END_SRC
+* Highlight Indent Guides
+#+BEGIN_SRC emacs-lisp
+
+  (use-package highlight-indent-guides :ensure t)
+  (setq highlight-indent-guides-auto-enabled nil)
+
+  ;; Set the method to use character displays
+  (setq highlight-indent-guides-method 'character)
+
+  ;; Enable the mode in programming modes and web-mode
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+  (add-hook 'web-mode-hook 'highlight-indent-guides-mode)
+
+  (setq highlight-indent-guides-responsive 'top)
+  (setq highlight-indent-guides-delay 0)
+  (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
+  (set-face-foreground 'highlight-indent-guides-top-character-face "white")
+  
+#+END_SRC
 * Export to init.el
 This block will convert all org-babel code blocks to a plain `init.el`.
 #+BEGIN_SRC emacs-lisp :exports none
   (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
 #+END_SRC
-

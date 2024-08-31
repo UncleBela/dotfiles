@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: orgHeading
-# key: ~tt
+# name: ub-header
+# key: ub-header
 # --
 #+TITLE: $1
 #+AUTHOR: $2

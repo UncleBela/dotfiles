@@ -6,8 +6,6 @@ function !!
     eval sudo $history[1]
 end
 
-xmodmap $HOME/.Xmodmap
-
 set fish_greeting
 
 function fish_prompt
@@ -42,17 +40,22 @@ export INFOPATH="$INFOPATH:/home/anon/.emacs.d/info:/usr/share/info"
 # "Short"cuts
 alias nv='nvim'
 alias yt-dlp-mp3='yt-dlp -o "%(title)s.%(ext)s" --downloader aria2c --audio-format mp3 -x'
-alias yt-dlp-mp4-lq='yt-dlp -o "%(title)s.%(ext)s" --downloader aria2c --format mp4 -k'
-alias yt-dlp-mp4-date-lq='yt-dlp -o "%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s" --format mp4 -k --downloader aria2c'
-alias yt-dlp-mp4-hq='yt-dlp -o "%(title)s.%(ext)s" --downloader aria2c -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
-alias yt-dlp-mp4-date-hq='yt-dlp -o "%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s" --downloader aria2c -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
+alias yt-dlp-mp3-date='yt-dlp -o "%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s" --downloader aria2c --audio-format mp3 -x'
+alias yt-dlp-mp4-lq='yt-dlp -o "%(title)s.%(ext)s" --format mp4 -k'
+alias yt-dlp-mp4-date-lq='yt-dlp -o "%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s" --format mp4 -k'
+alias yt-dlp-mp4-hq='yt-dlp -o "%(title)s.%(ext)s" -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
+alias yt-dlp-mp4-date-hq='yt-dlp -o "%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s" -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"'
 alias rofimoji='rofimoji --action copy'
 alias emacs="emacsclient -c -a 'emacs'"
+alias emacsserver="/usr/bin/emacs --daemon &"
+alias rsync="rsync -avhP"
+alias cat='bat'
+alias discord="discord_dbus"
 
 # Fun commands
 alias bad-apple='cvlc -V aa -q --no-video-title-show ~/Videos/bad-apple.mp4'
 alias please='sudo'
-alias bitch='git'
+alias bitch="echo \"Bitch please.\""
 
 # Typos
 alias gti='git'

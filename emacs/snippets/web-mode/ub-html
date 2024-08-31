@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: htmlGen
-# key: ~html
+# name: ub-html
+# key: ub-html
 # --
 <!DOCTYPE html>
 <html lang="$1">

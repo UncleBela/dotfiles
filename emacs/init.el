@@ -65,23 +65,28 @@
 (global-set-key (kbd "C-c q") 'indent-region)
 (global-set-key (kbd "C-c c") 'comment-dwim)
 (global-set-key (kbd "C-c e") 'eval-buffer)
-(global-set-key (kbd "C-c r") 'replace-regexp)
+(global-set-key (kbd "C-c r") 'replace-regexp)  
+
+(global-set-key (kbd "C-c l") 'org-open-at-point)
 
 (global-hl-line-mode 1)
 
-(set-face-attribute 'default nil :font "Iosevka-22")
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
 
 ;;;; Light Mode
-;; (ub-lightmode)
+(ub-lightmode)
 
 ;; Dark Mode
-(ub-darkmode)
+;; (ub-darkmode)
+
+;; Transparent Mode
+;; (ub-tp)
 
 (set-face-foreground 'line-number-current-line "green") 
 
 (add-hook 'server-after-make-frame-hook
           (lambda ()
-            (set-frame-font "Iosevka-22")))
+            (set-frame-font "DejaVu Sans Mono-18")))
 
 (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
 (set-face-attribute 'font-lock-function-name-face nil :foreground "#A6E22E")
@@ -118,82 +123,40 @@
 
 (use-package lsp-mode
   :ensure t
+  :commands lsp
   :hook ((bash-mode . lsp)
-	 (python-mode . lsp)
-	 (julia-mode . lsp)
-	 (html-mode . lsp)
-	 (css-mode . lsp)
-	 (js-mode . lsp)
-	 (typescript-mode . lsp))
-  :commands lsp)
-
-;; Bash LSP setup
-(use-package lsp-mode
-  :ensure t
-  :hook (sh-mode . lsp))
-
-;; Python LSP setup
-(use-package lsp-python-ms
-  :ensure t
-  :hook (python-mode . (lambda ()
-			 (require 'lsp-python-ms)
-			 (lsp))))
-(setq lsp-python-ms-auto-install-server t)
-
-;; Julia LSP
-  (use-package lsp-mode
-  :init
-  (setq lsp-julia-package-dir nil)
-  :hook
-  (julia-mode . lsp))
-
-  (use-package julia-mode
-  :ensure t
-  :mode "\\.jl\\'"
-  :hook
-  (julia-mode . (lambda ()
-		  (require 'lsp-julia)
-		  (lsp))))
-
-  (use-package lsp-julia
-  :after julia-mode
+         (python-mode . lsp)
+         (julia-mode . lsp)
+         (html-mode . lsp)
+         (css-mode . lsp)
+         (js-mode . lsp)
+         (typescript-mode . lsp)
+         (sh-mode . lsp)
+         (c-mode . lsp)
+         (c++-mode . lsp))
   :custom
-  (lsp-julia-default-environment "~/.julia/environments/v1.10"))  ; Adjust the path to your Julia environment
-
-;; HTML, CSS, JavaScript, and TypeScript LSP setup
-(use-package web-mode
-  :ensure t
-  :mode ("\\.html?\\'" "\\.css?\\'" "\\.js?\\'" "\\.ts?\\'")
-  :hook (web-mode . lsp))
-
-(require 'lsp-mode)
-(add-hook 'c-mode-hook #'lsp)
-(add-hook 'c++-mode-hook #'lsp)
-
-(setq lsp-clients-clangd-executable "/usr/bin/clangd")
-
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-
-(setq lsp-completion-provider :capf)
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-completion-provider :capf)  ; Common setting for completion
+  (lsp-clients-clangd-executable "/usr/bin/clangd"))
 
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
 
 (use-package company
-:ensure t
-:config
-(setq company-idle-delay 0.2
-  company-minimum-prefix-length 1)
-(global-company-mode t))
+  :ensure t
+  :config
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 1)
+  (global-company-mode t))
 
 (use-package yasnippet
   :ensure t
   :config
   (yas-global-mode 1))
+
 (use-package yasnippet-snippets
-    :ensure t)
+  :ensure t)
 
 (use-package flycheck
   :ensure t
@@ -203,6 +166,8 @@
   :ensure t
   :config
   (which-key-mode))
+
+(use-package magit :ensure t)
 
 (use-package org :ensure t)
 
@@ -233,6 +198,10 @@
 	 :type git
 	 :host github
 	 :repo "godotengine/emacs-gdscript-mode"))
+
+(unless (package-installed-p 'counsel)
+(package-refresh-contents)
+(package-install 'counsel))
 
 (unless (package-installed-p 'ivy)
 (package-refresh-contents)
@@ -319,9 +288,11 @@
 
 (setq mc/cmds-to-run-for-all nil)
 
+(setopt indent-tabs-mode nil)
+(setopt tab-width 4)
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(setq indent-line-function 'insert-tab)
+(setq standard-indent 4)
+(setq c-basic-offset 4)
 
 (use-package emms
   :ensure t
@@ -415,10 +386,12 @@
 (electric-pair-mode t)
 
 (defun open-terminal-in-current-directory ()
-    "Open a terminal in the current directory using `st`."
-    (interactive)
-    (let ((current-directory (expand-file-name default-directory)))
-    (start-process "st" nil "st" "-e" "sh" "-c" (concat "cd " current-directory " && exec $SHELL"))))
+  "Open a terminal in the current directory using `st` and disown the process."
+  (interactive)
+  (let ((current-directory (expand-file-name default-directory)))
+    (start-process-shell-command
+     "st" nil
+     (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
 (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
 
 (global-set-key (kbd "s-r") 'windresize)
@@ -456,5 +429,75 @@ Info-default-directory-list
 (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
 
 (global-unset-key (kbd "C-x C-z"))
+
+(defun ivy-my-yasnippet ()
+  "Selecting custom yasnippets with ivy from ~/.emacs.d/snippets."
+  (interactive)
+  (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Replace with your snippet directory path(s)
+         (choices (yas--all-templates (yas--get-snippet-tables)))
+         (my-snippets (seq-filter
+                       (lambda (template)
+                         (let ((file (yas--template-load-file template)))
+                           (and file
+                                (cl-some (lambda (dir)
+                                           (string-prefix-p (expand-file-name dir) (expand-file-name file)))
+                                         yas-snippet-dirs))))
+                       choices))
+         (snippets (mapcar (lambda (template)
+                             (cons (yas--template-name template) template))
+                           my-snippets)))
+    (ivy-read "Snippet: " (mapcar #'car snippets)
+              :action (lambda (snippet-name)
+                        (let ((template (cdr (assoc snippet-name snippets))))
+                          (when template
+                            (yas-expand-snippet (yas--template-content template))))))))
+(global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
+
+;; Company mode setup
+(use-package company
+  :ensure t
+  :config
+  (setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.0))  ;; Show suggestions immediately
+
+;; TypeScript specific setup
+(use-package typescript-mode
+  :ensure t
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
+
+;; Optional: setup lsp-ui for better UI
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-doc-enable t))
+
+(defun my-filter-lsp-warnings (format-string &rest args)
+  "Filter out specific lsp-mode warnings."
+  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
+    (apply #'message format-string args)))
+
+(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
+
+(use-package elcord :ensure t)
+
+(use-package highlight-indent-guides :ensure t)
+(setq highlight-indent-guides-auto-enabled nil)
+
+;; Set the method to use character displays
+(setq highlight-indent-guides-method 'character)
+
+;; Enable the mode in programming modes and web-mode
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(add-hook 'web-mode-hook 'highlight-indent-guides-mode)
+
+(setq highlight-indent-guides-responsive 'top)
+(setq highlight-indent-guides-delay 0)
+(set-face-foreground 'highlight-indent-guides-character-face "dimgray")
+(set-face-foreground 'highlight-indent-guides-top-character-face "white")
 
 (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
