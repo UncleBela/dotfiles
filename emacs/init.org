@@ -1,18 +1,15 @@
 #+PROPERTY: header-args:emacs-lisp :tangle init.el
 
-* Loading Packages
-#+BEGIN_SRC emacs-lisp
-  (require 'ox-texinfo)
-#+END_SRC
 * Package Management
 First of all, we will add MEPLA as a repository, thus, it will unlock us many other packages that are handy.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-#+END_SRC
+#+end_src
+
 * Bootstrap straight.el
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
 	 (expand-file-name
@@ -28,10 +25,16 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 	(goto-char (point-max))
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
-#+END_SRC
+#+end_src
+
+* Loading Packages
+#+begin_src emacs-lisp
+  (require 'ox-texinfo)
+#+end_src
+
 * UB Settings
 ** Light Mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun ub-lightmode ()
     "Activate Light Mode"
     (interactive)
@@ -39,40 +42,104 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
     (set-face-attribute 'highlight nil :background "#dbdbdb")
     (set-face-attribute 'fringe nil :background "white")
     (set-face-background 'hl-line "#dbdbdb")
-    (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
-    (set-face-foreground 'org-level-1 "Firebrick4")
+    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")
+    (set-face-foreground 'font-lock-string-face "red")
+    (set-face-foreground 'org-level-1 "DodgerBlue")
+    (set-face-foreground 'org-level-2 "LimeGreen")
+    (set-face-foreground 'org-level-3 "LightSeaGreen")
     (set-face-attribute 'default nil :foreground "black" :background "white")
     (set-frame-parameter nil 'alpha-background 100)
-    (add-to-list 'default-frame-alist '(alpha-background . 100))    
-    )
-#+END_SRC
+    (add-to-list 'default-frame-alist '(alpha-background . 100))
 
+    ;; ---
+
+    (set-face-foreground 'org-block "#00007f")
+    (set-face-background 'org-block "#f8f8eb")
+
+    (set-face-foreground 'org-block-begin-line "#545454")
+    (set-face-background 'org-block-begin-line "#e0dfd1")
+
+    (set-face-foreground 'org-block-end-line "#545454")
+    (set-face-background 'org-block-end-line "#e0dfd1")
+    
+    ;; ----
+
+    (set-face-attribute 'mode-line nil
+                        :background "#334455") ; #334455: Dark Blue
+
+    ;; Customize the default mode line faces for your lambda line
+    (set-face-attribute 'mode-line nil
+                        :background "#d1d1d1"  ; Dark background color
+                        :foreground "#000000"  ; Light text color
+                        )
+
+  (set-face-attribute 'mode-line-inactive nil
+                      :background "#d1d1d1"  ; Dark background color
+                      :foreground "#000000") ; Light text color
+)
+#+end_src
 ** Dark Mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun ub-darkmode ()
-    "Activate Light Mode"
+    "Activate Dark Mode"
     (interactive)
-    (set-face-attribute 'region nil :background "#b3b3b3")
+    (set-face-attribute 'region nil :background "#757474")
     (set-face-attribute 'highlight nil :background "#262626")
     (set-face-attribute 'fringe nil :background "black")
     (set-face-background 'hl-line "#454545")
     (set-face-attribute 'default nil :foreground "white" :background "black")
-    (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
     (set-face-foreground 'org-level-1 "GreenYellow")
     (set-frame-parameter nil 'alpha-background 100)
-    (add-to-list 'default-frame-alist '(alpha-background . 100))    
-    )
-#+END_SRC
+    (add-to-list 'default-frame-alist '(alpha-background . 100))
+
+    (set-face-attribute 'mode-line nil
+                        :background "#000000"  ; Dark background color
+                        :foreground "#ffffff"  ; Light text color
+                        )
+
+
+    (set-face-attribute 'mode-line-inactive nil
+                        :background "#000000"  ; Dark background color
+                        :foreground "#ffffff") ; Light text color
+
+    ;; ---------x
+
+    (set-face-foreground 'org-block "#ffffff")
+    (set-face-background 'org-block "#0f0f0f")
+    (set-face-foreground 'org-block-begin-line "#146dfc")
+    (set-face-background 'org-block-begin-line "#141414")
+    (set-face-foreground 'org-block-end-line "#146dfc")
+    (set-face-background 'org-block-end-line "#141414")
+
+
+    ;; --------x
+
+    (set-face-attribute 'mode-line nil
+                        :background "#334455") ; #334455: Dark Blue
+
+    ;; Customize the default mode line faces for your lambda line
+    (set-face-attribute 'mode-line nil
+                        :background "#141414"  ; Dark background color
+                        :foreground "#ffffff"  ; Light text color
+                        )
+
+  (set-face-attribute 'mode-line-inactive nil
+                      :background "#141414"  ; Dark background color
+                      :foreground "#ffffff") ; Light text color
+  )
+#+end_src
+
 ** Transparent Emacs
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun ub-tp ()
     (interactive)
     (set-frame-parameter nil 'alpha-background 80)
     (add-to-list 'default-frame-alist '(alpha-background . 80))    
     )
-#+END_SRC   
+#+end_src   
+
 ** Custom Keybindings
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "M-j") 'copy-line-down)
   (global-set-key (kbd "M-k") 'copy-line-up)
   (global-set-key (kbd "C-j") 'move-line-down)
@@ -87,20 +154,21 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (global-set-key (kbd "C-c r") 'replace-regexp)  
 
   (global-set-key (kbd "C-c l") 'org-open-at-point)
-#+END_SRC
+#+end_src
+
 * UI Enhancements: Fonts and Colors
-Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
+  Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
 ** UI Enhancements: Fonts and Colors
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-hl-line-mode 1)
 
   (set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
 
   ;;;; Light Mode
-  (ub-lightmode)
+  ;; (ub-lightmode)
 
   ;; Dark Mode
-  ;; (ub-darkmode)
+  (ub-darkmode)
 
   ;; Transparent Mode
   ;; (ub-tp)
@@ -111,50 +179,44 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
             (lambda ()
               (set-frame-font "DejaVu Sans Mono-18")))
 
-#+END_SRC
+#+end_src
 
 ** UI Enhancements: Syntax Highlighting
-#+BEGIN_SRC emacs-lisp
-(set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "#A6E22E")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
-(set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
-(set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
-#+END_SRC
+#+begin_src emacs-lisp
+  (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
+  (set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
+  (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
+  (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
+  (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
+#+end_src
+
 ** UI Enhancements: Lambda-line
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package lambda-line
     :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
     :config
-    (setq lambda-line-position 'bottom)  ; Ensure the line is at the bottom
+    (setq lambda-line-position 'bottom)  ; Lambda-line set at bottom of frame
+)
 
-    ;; Customize the default mode line faces for your lambda line
-    (set-face-attribute 'mode-line nil
-			:background "#0a0a0a"  ; Dark background color
-			:foreground "#b2b2b2"  ; Light text color
-			:box nil)  ; No border
 
-    (set-face-attribute 'mode-line-inactive nil
-			:background "#0a0a0a"  ; Dark background color
-			:foreground "#b2b2b2"  ; Light text color
-			:box nil)  ; No border
-    (lambda-line-mode 1))
-  (setq visible-bell nil)  ; Disable visual bell entirely
-  (setq ring-bell-function 'ignore)  ; Ignore the bell function to avoid any bell
+  (lambda-line-mode 1)  ; Enable lambda-line mode
 
-#+END_SRC
+  (setq visible-bell nil)  ; Turn off visual bell
+  (setq ring-bell-function 'ignore)  ; Ignore the bell function
+#+end_src
+
 ** UI Enhancements: Lambda Themes
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package lambda-themes
     :straight (:type git :host github :repo "lambda-emacs/lambda-themes") 
     :custom
     (lambda-themes-set-italic-comments t)
     (lambda-themes-set-italic-keywords t)
     (lambda-themes-set-variable-pitch t))
-#+END_SRC
+#+end_src
+
 * LSP Configuration
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package lsp-mode
   :ensure t
   :commands lsp
@@ -200,42 +262,49 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
   :ensure t
   :config
   (which-key-mode))
-#+END_SRC
+#+end_src
+
 * Major Modes and Packages
   Set up various major modes and additional packages.
 ** Magit
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package magit :ensure t)
-#+END_SRC
+#+end_src
+
 ** Org Mode
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package org :ensure t)
-#+END_SRC
+#+end_src
+
 ** Org Mode Folds
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-startup-folded t)
-#+END_SRC
+#+end_src
+
 ** Org Indent Content At Headers
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-adapt-indentation t)
-#+END_SRC
+#+end_src
+
 ** Org LaTeX support
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-pretty-entities t)
-#+END_SRC
+#+end_src
+
 ** Org Bullets
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package org-bullets
   :ensure t
   :hook (org-mode . org-bullets-mode))
-#+END_SRC
+#+end_src
 
 ** Org Mode Descriptive Links
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-descriptive-links t)
-#+END_SRC
+#+end_src
+
 ** Org Mode Other Settings
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
  ;; Replace "Table of Contents" text with "Contents"
  (defun replace-toc-title (backend)
   (when (org-export-derived-backend-p backend 'html)
@@ -245,17 +314,19 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
         (replace-match "Contents")))))
 
 (add-hook 'org-export-before-processing-hook 'replace-toc-title)
-#+END_SRC 
+#+end_src 
+
 ** Godot - GDScript Mode
-  #+BEGIN_SRC emacs-lisp
+  #+begin_src emacs-lisp
     (use-package gdscript-mode
       :straight (gdscript-mode
 		 :type git
 		 :host github
 		 :repo "godotengine/emacs-gdscript-mode"))
-  #+END_SRC 
+  #+end_src 
+
 ** Ivy and Counsel
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (unless (package-installed-p 'counsel)
   (package-refresh-contents)
   (package-install 'counsel))
@@ -289,35 +360,43 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
   (counsel-mode 1)
 
   (setq ivy-format-function 'ivy-format-function-line)
-#+END_SRC
+#+end_src
+
 ** Projectile
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package projectile
   :ensure t
   :config
   (projectile-mode +1)
   :bind-keymap
   ("C-c p" . projectile-command-map))
-#+END_SRC
+#+end_src
 
 ** Flycheck
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package flycheck
   :ensure t
   :init
   (global-flycheck-mode))
-#+END_SRC
+#+end_src
 
 ** All The Icons
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package all-the-icons :ensure t)
-#+END_SRC
+#+end_src
+
+** Writeroom - Center buffer text
+   #+BEGIN_SRC emacs-lisp
+     (use-package writeroom-mode :ensure t)
+#+end_src     
+   #+END_SRC
 ** Windresize
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package windresize :ensure t)
-#+END_SRC
+#+end_src
+
 ** Org Roam with UI
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package websocket :ensure t)
   (use-package simple-httpd :ensure t)
   (use-package f :ensure t)
@@ -339,18 +418,24 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
-#+END_SRC
+#+end_src
+
 ** Fireplace
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package fireplace :ensure t)
 
   (defun my-disable-line-numbers-in-fireplace ()
   "Disable line numbers in Fireplace."
   (when (eq major-mode 'fireplace-mode)
   (display-line-numbers-mode -1)))
-#+END_SRC
-** Multiple Cursors
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
+(add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
+#+END_SRC
+
+** Multiple Cursors
+#+begin_src emacs-lisp
   (use-package multiple-cursors
     :ensure t
     :bind (("C-c m <down>" . mc/mark-next-lines)
@@ -360,59 +445,21 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
 	   ("C-c m a" . mc/mark-all-like-this)))
   
   (setq mc/cmds-to-run-for-all nil)
-#+END_SRC
+#+end_src
+
 ** Tab indentations
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setopt indent-tabs-mode nil)
   (setopt tab-width 4)
   (setq-default indent-tabs-mode nil)
   (setq standard-indent 4)
   (setq c-basic-offset 4)
-#+END_SRC
-* Music Player - EMMS
-Here, we will be configuring the EMMS music player.
-#+BEGIN_SRC emacs-lisp
-  (use-package emms
-    :ensure t
-    :config
-    (require 'emms-setup)
-    (require 'emms-player-mpd)
-    (emms-all)
-    (setq emms-seek-seconds 5)
-    (setq emms-player-list '(emms-player-mpd))
-    (setq emms-info-functions '(emms-info-mpd))
-    (setq emms-player-mpd-server-name "localhost")
-    (setq emms-player-mpd-server-port "6601")
-    :bind
-    ("s-m p" . emms)
-    ("s-m b" . emms-smart-browse)
-    ("s-m r" . emms-player-mpd-update-all-reset-cache)
-    ("s-m r" . emms-player-mpd-update-all-reset-cache)
+#+end_src
 
-
-    ("<XF86AudioPrev>" . emms-previous)
-    ("<XF86AudioNext>" . emms-next)
-    ("<XF86AudioPlay>" . emms-pause)
-    ("<XF86AudioStop>" . emms-stop))
-
-    (defun open-pulsemixer ()
-	"Open pulsemixer in st (suckless terminal)."
-	(interactive)
-	(start-process "st" nil "st" "-e" "pulsemixer"))
-    (global-set-key (kbd "s-m v") 'open-pulsemixer)
-
-    (defun my-disable-line-numbers-in-emms-playlist ()
-    "Disable line numbers in EMMS playlist."
-    (when (eq major-mode 'emms-playlist-mode)
-    (display-line-numbers-mode -1)))
-
-    (add-hook 'emms-playlist-mode-hook 'my-disable-line-numbers-in-emms-playlist)
-
-#+END_SRC
 * Additional Configurations
   Include miscellaneous settings and functions.
 ** Line Numbering
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode t)
     (defun toggle-line-numbering-type ()
@@ -425,10 +472,10 @@ Here, we will be configuring the EMMS music player.
       (global-display-line-numbers-mode -1) ; Turn off line numbering
       (global-display-line-numbers-mode 1)) ; Turn it back on
     (global-set-key (kbd "M-g") 'toggle-line-numbering-type)
-#+END_SRC
+#+end_src
 
-** Vim-like move and copy current line above and below
-#+BEGIN_SRC emacs-lisp
+** Move and Copy Current Line Above And Below
+#+begin_src emacs-lisp
   (defun copy-line-up ()
     "Copy the current line and paste it above the current line, and remain on the copied line."
     (interactive)
@@ -463,88 +510,99 @@ Here, we will be configuring the EMMS music player.
     (next-line 1)
     (transpose-lines 1)
     (previous-line 1))
-#+END_SRC
+#+end_src
 
 ** Windmove keybinds
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
     (global-set-key (kbd "C-c C-<left>")  'windmove-left)
     (global-set-key (kbd "C-c C-<right>") 'windmove-right)
     (global-set-key (kbd "C-c C-<up>")    'windmove-up)
     (global-set-key (kbd "C-c C-<down>")  'windmove-down)
-#+END_SRC
+#+end_src
+
 ** Bracket completion
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
     (electric-pair-mode t)
-#+END_SRC
+#+end_src
+
 ** st (suckless terminal) completion
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun open-terminal-in-current-directory ()
-    "Open a terminal in the current directory using `st` and disown the process."
+    "Open a terminal in the current directory using `st` and also disown it."
     (interactive)
     (let ((current-directory (expand-file-name default-directory)))
       (start-process-shell-command
        "st" nil
        (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
   (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
-#+END_SRC
+#+end_src
+
 ** Windresize keybindings
-#+BEGIN_SRC emacs-lisp
-    (global-set-key (kbd "s-r") 'windresize)
-#+END_SRC
+#+begin_src emacs-lisp
+    (global-set-key (kbd "s-r") 'windresize) ; This is nice.
+#+end_src
+
 ** Stop creating ~ and # files
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
     (setq backup-directory-alist
 	    `((".*" . ,temporary-file-directory)))
     (setq auto-save-file-name-transforms
 	    `((".*" ,temporary-file-directory t)))
     (setq make-backup-files nil) ; stop creating ~ files
-#+END_SRC
+#+end_src
+
 ** Opening new buffers in the same window
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq display-buffer-alist
       '((".*" (display-buffer-same-window))))
-#+END_SRC
+#+end_src
+
 ** Quickly open encyclopedia.org
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "<f6>") (lambda () (interactive)
   (find-file "/home/anon/Projects/Personal/org-files/encyclopedia/encyclopedia.org")
   (message: "Opened %s" (buffer-name))))
-#+END_SRC
+#+end_src
+
 ** Quickly open init.org
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "<f5>") (lambda () (interactive)
   (find-file "/home/anon/.emacs.d/init.org")
   (message: "Opened %s" (buffer-name))))
-#+END_SRC
+#+end_src
+
 ** Additional info files directory
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq Info-default-directory-list
 (append '("/usr/share/info")
 Info-default-directory-list
 '("~/.emacs.d/info")))
-#+END_SRC
+#+end_src
+
 ** Open new file in a new frame
- #+BEGIN_SRC emacs-lisp
+ #+begin_src emacs-lisp
    (defun my-open-file-in-new-buffer ()
      "Open the file at point in a new buffer."
      (interactive)
      (let ((file (org-element-property :path (org-element-context))))
        (if file
-	   (find-file file)
-	 (message "No file at point"))))
+       (find-file file)
+     (message "No file at point"))))
 
    (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
- #+END_SRC 
+ #+end_src 
+
 ** Unbind freeze buffer keybind
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-unset-key (kbd "C-x C-z"))
-#+END_SRC
+#+end_src
+
 * Ivy and Yasnippet
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun ivy-my-yasnippet ()
-    "Selecting custom yasnippets with ivy from ~/.emacs.d/snippets."
+    "Custom yasnippet selection with ivy from ~/.emacs.d/snippets dir"
     (interactive)
-    (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Replace with your snippet directory path(s)
+    (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Default *snippets* directory
            (choices (yas--all-templates (yas--get-snippet-tables)))
            (my-snippets (seq-filter
                          (lambda (template)
@@ -563,9 +621,10 @@ Info-default-directory-list
                             (when template
                               (yas-expand-snippet (yas--template-content template))))))))
   (global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
-#+END_SRC
+#+end_src
+
 * Typescript
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;; Company mode setup
   (use-package company
     :ensure t
@@ -588,23 +647,20 @@ Info-default-directory-list
     :config
     (setq lsp-ui-sideline-enable t)
     (setq lsp-ui-doc-enable t))
-#+END_SRC
+#+end_src
+
 * LSP
-  #+BEGIN_SRC emacs-lisp
+  #+begin_src emacs-lisp
     (defun my-filter-lsp-warnings (format-string &rest args)
   "Filter out specific lsp-mode warnings."
   (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
     (apply #'message format-string args)))
 
 (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
-  #+END_SRC
-* Elcord
-#+BEGIN_SRC emacs-lisp
-(use-package elcord :ensure t)
-#+END_SRC
-* Highlight Indent Guides
-#+BEGIN_SRC emacs-lisp
+  #+end_src
 
+* Highlight Indent Guides
+#+begin_src emacs-lisp
   (use-package highlight-indent-guides :ensure t)
   (setq highlight-indent-guides-auto-enabled nil)
 
@@ -617,12 +673,12 @@ Info-default-directory-list
 
   (setq highlight-indent-guides-responsive 'top)
   (setq highlight-indent-guides-delay 0)
-  (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
-  (set-face-foreground 'highlight-indent-guides-top-character-face "white")
-  
-#+END_SRC
+  (set-face-foreground 'highlight-indent-guides-character-face "black")
+  (set-face-foreground 'highlight-indent-guides-top-character-face "dimgray")  
+#+end_src
+
 * Export to init.el
 This block will convert all org-babel code blocks to a plain `init.el`.
-#+BEGIN_SRC emacs-lisp :exports none
+#+begin_src emacs-lisp :exports none
   (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
-#+END_SRC
+#+end_src

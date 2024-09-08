@@ -51,6 +51,7 @@ alias emacsserver="/usr/bin/emacs --daemon &"
 alias rsync="rsync -avhP"
 alias cat='bat'
 alias discord="discord_dbus"
+alias cd_votv="cd /home/anon/.steam/steam/steamapps/compatdata/4108658418/pfx/drive_c/users/steamuser/AppData/Local/VotV/Saved/SaveGames"
 
 # Fun commands
 alias bad-apple='cvlc -V aa -q --no-video-title-show ~/Videos/bad-apple.mp4'

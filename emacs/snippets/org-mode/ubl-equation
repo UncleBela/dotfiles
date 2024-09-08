@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ubm-equation
+# key: ubm-equation
+# --
+
+#+begin_latex
+${1:Single equation snippet goes here.}
+#+end_latex

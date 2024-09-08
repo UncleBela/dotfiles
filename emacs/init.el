@@ -1,5 +1,3 @@
-(require 'ox-texinfo)
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -20,33 +18,98 @@
   (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(require 'ox-texinfo)
+
 (defun ub-lightmode ()
-  "Activate Light Mode"
-  (interactive)
-  (set-face-attribute 'region nil :background "#b3b3b3")
-  (set-face-attribute 'highlight nil :background "#dbdbdb")
-  (set-face-attribute 'fringe nil :background "white")
-  (set-face-background 'hl-line "#dbdbdb")
-  (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
-  (set-face-foreground 'org-level-1 "Firebrick4")
-  (set-face-attribute 'default nil :foreground "black" :background "white")
-  (set-frame-parameter nil 'alpha-background 100)
-  (add-to-list 'default-frame-alist '(alpha-background . 100))    
-  )
+    "Activate Light Mode"
+    (interactive)
+    (set-face-attribute 'region nil :background "#b3b3b3")
+    (set-face-attribute 'highlight nil :background "#dbdbdb")
+    (set-face-attribute 'fringe nil :background "white")
+    (set-face-background 'hl-line "#dbdbdb")
+    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")
+    (set-face-foreground 'font-lock-string-face "red")
+    (set-face-foreground 'org-level-1 "DodgerBlue")
+    (set-face-foreground 'org-level-2 "LimeGreen")
+    (set-face-foreground 'org-level-3 "LightSeaGreen")
+    (set-face-attribute 'default nil :foreground "black" :background "white")
+    (set-frame-parameter nil 'alpha-background 100)
+    (add-to-list 'default-frame-alist '(alpha-background . 100))
+
+    ;; ---
+
+    (set-face-foreground 'org-block "#00007f")
+    (set-face-background 'org-block "#f8f8eb")
+
+    (set-face-foreground 'org-block-begin-line "#545454")
+    (set-face-background 'org-block-begin-line "#e0dfd1")
+
+    (set-face-foreground 'org-block-end-line "#545454")
+    (set-face-background 'org-block-end-line "#e0dfd1")
+    
+    ;; ----
+
+    (set-face-attribute 'mode-line nil
+                        :background "#334455") ; #334455: Dark Blue
+
+    ;; Customize the default mode line faces for your lambda line
+    (set-face-attribute 'mode-line nil
+                        :background "#d1d1d1"  ; Dark background color
+                        :foreground "#000000"  ; Light text color
+                        )
+
+  (set-face-attribute 'mode-line-inactive nil
+                      :background "#d1d1d1"  ; Dark background color
+                      :foreground "#000000") ; Light text color
+)
 
 (defun ub-darkmode ()
-  "Activate Light Mode"
+  "Activate Dark Mode"
   (interactive)
-  (set-face-attribute 'region nil :background "#b3b3b3")
+  (set-face-attribute 'region nil :background "#757474")
   (set-face-attribute 'highlight nil :background "#262626")
   (set-face-attribute 'fringe nil :background "black")
   (set-face-background 'hl-line "#454545")
   (set-face-attribute 'default nil :foreground "white" :background "black")
-  (set-face-foreground 'font-lock-string-face "DeepSkyBlue")
   (set-face-foreground 'org-level-1 "GreenYellow")
   (set-frame-parameter nil 'alpha-background 100)
-  (add-to-list 'default-frame-alist '(alpha-background . 100))    
-  )
+  (add-to-list 'default-frame-alist '(alpha-background . 100))
+
+  (set-face-attribute 'mode-line nil
+                      :background "#000000"  ; Dark background color
+                      :foreground "#ffffff"  ; Light text color
+                      )
+
+
+  (set-face-attribute 'mode-line-inactive nil
+                      :background "#000000"  ; Dark background color
+                      :foreground "#ffffff") ; Light text color
+
+  ;; ---------x
+
+  (set-face-foreground 'org-block "#ffffff")
+  (set-face-background 'org-block "#0f0f0f")
+  (set-face-foreground 'org-block-begin-line "#146dfc")
+  (set-face-background 'org-block-begin-line "#141414")
+  (set-face-foreground 'org-block-end-line "#146dfc")
+  (set-face-background 'org-block-end-line "#141414")
+
+
+  ;; --------x
+
+  (set-face-attribute 'mode-line nil
+                      :background "#334455") ; #334455: Dark Blue
+
+  ;; Customize the default mode line faces for your lambda line
+  (set-face-attribute 'mode-line nil
+                      :background "#141414"  ; Dark background color
+                      :foreground "#ffffff"  ; Light text color
+                      )
+
+(set-face-attribute 'mode-line-inactive nil
+                    :background "#141414"  ; Dark background color
+                    :foreground "#ffffff") ; Light text color
+)
 
 (defun ub-tp ()
   (interactive)
@@ -74,10 +137,10 @@
 (set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
 
 ;;;; Light Mode
-(ub-lightmode)
+;; (ub-lightmode)
 
 ;; Dark Mode
-;; (ub-darkmode)
+(ub-darkmode)
 
 ;; Transparent Mode
 ;; (ub-tp)
@@ -89,30 +152,22 @@
             (set-frame-font "DejaVu Sans Mono-18")))
 
 (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "#A6E22E")
 (set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
 (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
 (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
 
 (use-package lambda-line
-  :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
-  :config
-  (setq lambda-line-position 'bottom)  ; Ensure the line is at the bottom
+    :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
+    :config
+    (setq lambda-line-position 'bottom)  ; Lambda-line set at bottom of frame
+)
 
-  ;; Customize the default mode line faces for your lambda line
-  (set-face-attribute 'mode-line nil
-		  :background "#0a0a0a"  ; Dark background color
-		  :foreground "#b2b2b2"  ; Light text color
-		  :box nil)  ; No border
 
-  (set-face-attribute 'mode-line-inactive nil
-		  :background "#0a0a0a"  ; Dark background color
-		  :foreground "#b2b2b2"  ; Light text color
-		  :box nil)  ; No border
-  (lambda-line-mode 1))
-(setq visible-bell nil)  ; Disable visual bell entirely
-(setq ring-bell-function 'ignore)  ; Ignore the bell function to avoid any bell
+  (lambda-line-mode 1)  ; Enable lambda-line mode
+
+  (setq visible-bell nil)  ; Turn off visual bell
+  (setq ring-bell-function 'ignore)  ; Ignore the bell function
 
 (use-package lambda-themes
   :straight (:type git :host github :repo "lambda-emacs/lambda-themes") 
@@ -247,6 +302,8 @@
 
 (use-package all-the-icons :ensure t)
 
+(use-package writeroom-mode :ensure t)
+
 (use-package windresize :ensure t)
 
 (use-package websocket :ensure t)
@@ -278,6 +335,8 @@
 (when (eq major-mode 'fireplace-mode)
 (display-line-numbers-mode -1)))
 
+(add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
+
 (use-package multiple-cursors
   :ensure t
   :bind (("C-c m <down>" . mc/mark-next-lines)
@@ -293,42 +352,6 @@
 (setq-default indent-tabs-mode nil)
 (setq standard-indent 4)
 (setq c-basic-offset 4)
-
-(use-package emms
-  :ensure t
-  :config
-  (require 'emms-setup)
-  (require 'emms-player-mpd)
-  (emms-all)
-  (setq emms-seek-seconds 5)
-  (setq emms-player-list '(emms-player-mpd))
-  (setq emms-info-functions '(emms-info-mpd))
-  (setq emms-player-mpd-server-name "localhost")
-  (setq emms-player-mpd-server-port "6601")
-  :bind
-  ("s-m p" . emms)
-  ("s-m b" . emms-smart-browse)
-  ("s-m r" . emms-player-mpd-update-all-reset-cache)
-  ("s-m r" . emms-player-mpd-update-all-reset-cache)
-
-
-  ("<XF86AudioPrev>" . emms-previous)
-  ("<XF86AudioNext>" . emms-next)
-  ("<XF86AudioPlay>" . emms-pause)
-  ("<XF86AudioStop>" . emms-stop))
-
-  (defun open-pulsemixer ()
-  "Open pulsemixer in st (suckless terminal)."
-  (interactive)
-  (start-process "st" nil "st" "-e" "pulsemixer"))
-  (global-set-key (kbd "s-m v") 'open-pulsemixer)
-
-  (defun my-disable-line-numbers-in-emms-playlist ()
-  "Disable line numbers in EMMS playlist."
-  (when (eq major-mode 'emms-playlist-mode)
-  (display-line-numbers-mode -1)))
-
-  (add-hook 'emms-playlist-mode-hook 'my-disable-line-numbers-in-emms-playlist)
 
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
@@ -386,7 +409,7 @@
 (electric-pair-mode t)
 
 (defun open-terminal-in-current-directory ()
-  "Open a terminal in the current directory using `st` and disown the process."
+  "Open a terminal in the current directory using `st` and also disown it."
   (interactive)
   (let ((current-directory (expand-file-name default-directory)))
     (start-process-shell-command
@@ -394,7 +417,7 @@
      (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
 (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
 
-(global-set-key (kbd "s-r") 'windresize)
+(global-set-key (kbd "s-r") 'windresize) ; This is nice.
 
 (setq backup-directory-alist
 	`((".*" . ,temporary-file-directory)))
@@ -423,7 +446,7 @@ Info-default-directory-list
   (interactive)
   (let ((file (org-element-property :path (org-element-context))))
     (if file
-	(find-file file)
+    (find-file file)
   (message "No file at point"))))
 
 (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
@@ -431,9 +454,9 @@ Info-default-directory-list
 (global-unset-key (kbd "C-x C-z"))
 
 (defun ivy-my-yasnippet ()
-  "Selecting custom yasnippets with ivy from ~/.emacs.d/snippets."
+  "Custom yasnippet selection with ivy from ~/.emacs.d/snippets dir"
   (interactive)
-  (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Replace with your snippet directory path(s)
+  (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Default *snippets* directory
          (choices (yas--all-templates (yas--get-snippet-tables)))
          (my-snippets (seq-filter
                        (lambda (template)
@@ -483,8 +506,6 @@ Info-default-directory-list
 
 (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
 
-(use-package elcord :ensure t)
-
 (use-package highlight-indent-guides :ensure t)
 (setq highlight-indent-guides-auto-enabled nil)
 
@@ -497,7 +518,7 @@ Info-default-directory-list
 
 (setq highlight-indent-guides-responsive 'top)
 (setq highlight-indent-guides-delay 0)
-(set-face-foreground 'highlight-indent-guides-character-face "dimgray")
-(set-face-foreground 'highlight-indent-guides-top-character-face "white")
+(set-face-foreground 'highlight-indent-guides-character-face "black")
+(set-face-foreground 'highlight-indent-guides-top-character-face "dimgray")
 
 (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
