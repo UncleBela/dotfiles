@@ -1,0 +1,5 @@
+#+OPTIONS: html-style:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/tartalom/style.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/tartalom/hu.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/tartalom/prism.css"/>
+#+HTML_HEAD: <script src="/tartalom/prism.js"></script>
