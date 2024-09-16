@@ -137,10 +137,10 @@
 (set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
 
 ;;;; Light Mode
-;; (ub-lightmode)
+(ub-lightmode)
 
 ;; Dark Mode
-(ub-darkmode)
+;; (ub-darkmode)
 
 ;; Transparent Mode
 ;; (ub-tp)
@@ -159,15 +159,27 @@
 
 (use-package lambda-line
     :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
-    :config
-    (setq lambda-line-position 'bottom)  ; Lambda-line set at bottom of frame
+    :custom
+    (lambda-line-icon-time t) ;; requires ClockFace font (see below)
+    (lambda-line-clockface-update-fontset "⏰") ;; set clock icon
+    (lambda-line-position 'bottom) ;; Set position of status-line 
+    (lambda-line-abbrev t) ;; abbreviate major modes
+    (lambda-line-hspace "  ")  ;; add some cushion
+    (lambda-line-prefix t) ;; use a prefix symbol
+    (lambda-line-prefix-padding nil) ;; no extra space for prefix 
+    (lambda-line-status-invert nil)  ;; no invert colors
+    (lambda-line-gui-ro-symbol  " ⨂") ;; symbols
+    (lambda-line-gui-mod-symbol " ⬤") 
+    (lambda-line-gui-rw-symbol  " ◯") 
+    (lambda-line-space-top +.20)  ;; padding on top and bottom of line
+    (lambda-line-space-bottom -.20)
+    (lambda-line-symbol-position 0.1) ;; adjust the vertical placement of symbol
 )
 
+      (lambda-line-mode 1)  ; Enable lambda-line mode
 
-  (lambda-line-mode 1)  ; Enable lambda-line mode
-
-  (setq visible-bell nil)  ; Turn off visual bell
-  (setq ring-bell-function 'ignore)  ; Ignore the bell function
+      (setq visible-bell nil)  ; Turn off visual bell
+      (setq ring-bell-function 'ignore)  ; Ignore the bell function
 
 (use-package lambda-themes
   :straight (:type git :host github :repo "lambda-emacs/lambda-themes") 
@@ -237,6 +249,7 @@
   :hook (org-mode . org-bullets-mode))
 
 (setq org-descriptive-links t)
+(global-set-key (kbd "C-c o") 'org-toggle-link-display)
 
 ;; Replace "Table of Contents" text with "Contents"
  (defun replace-toc-title (backend)
@@ -300,7 +313,13 @@
   :init
   (global-flycheck-mode))
 
-(use-package all-the-icons :ensure t)
+(use-package all-the-icons :ensure t)  
+(use-package nerd-icons :ensure t)
+
+(use-package all-the-icons-dired :ensure t)  
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+(setq lsp-modeline-code-action-fallback-icon "💡")
 
 (use-package writeroom-mode :ensure t)
 
@@ -352,6 +371,8 @@
 (setq-default indent-tabs-mode nil)
 (setq standard-indent 4)
 (setq c-basic-offset 4)
+
+(use-package undo-tree :ensure t)
 
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
@@ -506,6 +527,55 @@ Info-default-directory-list
 
 (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
 
+(use-package vterm :ensure t)
+
+(use-package julia-mode
+  :ensure t)
+
+(use-package julia-repl
+  :ensure t
+  :hook (julia-mode . julia-repl-mode)
+
+  :init
+  (setenv "JULIA_NUM_THREADS" "8")
+
+  :config
+  ;; Set the terminal backend
+  (julia-repl-set-terminal-backend 'vterm)
+
+  ;; Keybindings for quickly sending code to the REPL
+  (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
+  (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
+  (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
+
+(use-package lsp-julia
+:config
+(setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
+
+(add-hook 'julia-mode-hook #'lsp-mode)
+
+(defun insert-navigation-links (html-file prev-html next-html)
+  (with-current-buffer (find-file-noselect html-file)
+    (goto-char (point-min))
+    (when (re-search-forward "</header>" nil t)  ;; Assuming your template has a <header> tag
+      (insert (format "<nav><a href='index.html'>Home Page</a> %s %s</nav>"
+                      (if prev-html (format "<a href='%s'>Previous Page</a>" prev-html) "")
+                      (if next-html (format "<a href='%s'>Next Page</a>" next-html) "")))
+      (save-buffer)
+      (kill-buffer))))
+
+(defun my-blog-add-navigation ()
+  (interactive)
+  (let* ((files (directory-files-recursively "/path/to/org-files" "\\.org$"))
+         (sorted-files (sort files #'string<)))
+    (dolist (index (number-sequence 1 (1- (length sorted-files))))
+      (let ((current-file (nth index sorted-files))
+            (prev-file (if (> index 0) (nth (1- index) sorted-files) nil))
+            (next-file (if (< index (1- (length sorted-files))) (nth (1+ index) sorted-files) nil)))
+        (insert-navigation-links (replace-regexp-in-string "\\.org$" ".html" current-file)
+                                 (and prev-file (replace-regexp-in-string "\\.org$" ".html" prev-file))
+                                 (and next-file (replace-regexp-in-string "\\.org$" ".html" next-file)))))))
+
 (use-package highlight-indent-guides :ensure t)
 (setq highlight-indent-guides-auto-enabled nil)
 
@@ -520,5 +590,11 @@ Info-default-directory-list
 (setq highlight-indent-guides-delay 0)
 (set-face-foreground 'highlight-indent-guides-character-face "black")
 (set-face-foreground 'highlight-indent-guides-top-character-face "dimgray")
+
+(defun my/org-html--format-image-caption (orig-func &rest args)
+  (let ((caption (apply orig-func args)))
+    (replace-regexp-in-string "Figure:" "Ábra:" caption)))
+
+(advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)x
 
 (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")

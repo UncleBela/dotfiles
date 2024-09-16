@@ -2,8 +2,12 @@
 # name: ub-header
 # key: ub-header
 # --
+
 #+TITLE: $1
 #+AUTHOR: $2
 #+OPTIONS: num:nil toc:nil html-postamble:nil
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css">
+#+OPTIONS: tex:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="$3../../style.css">
+
+[[file:$5index.html][$6Főoldal]] [[$7file:$8prev.org][$9Előző]] [[file:$10next.org][$11Következő]]
 $0
