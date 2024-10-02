@@ -7,7 +7,13 @@
 #+AUTHOR: $2
 #+OPTIONS: num:nil toc:nil html-postamble:nil
 #+OPTIONS: tex:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="$3../../style.css">
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./style.css">
+# #+HTML_HEAD: <script src="./script.js"></script>
 
-[[file:$5index.html][$6Főoldal]] [[$7file:$8prev.org][$9Előző]] [[file:$10next.org][$11Következő]]
-$0
+#+begin_author
+$3
+#+end_author
+
+#+BEGIN_EXPORT html
+<div class="date">$4</div>
+#+END_EXPORT

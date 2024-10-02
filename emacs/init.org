@@ -1,11 +1,22 @@
 #+PROPERTY: header-args:emacs-lisp :tangle init.el
 
+* Headers
+#+BEGIN_SRC emacs-lisp
+    ;;;; Uncle Béla's Emacs config
+    ;;; Author: Uncle Béla
+#+END_SRC
+
+* Debugging (in case it's needed)
+#+BEGIN_SRC emacs-lisp
+(setq debug-on-error nil) ;; Change to t, when in doubt
+#+END_SRC
+
 * Package Management
 First of all, we will add MEPLA as a repository, thus, it will unlock us many other packages that are handy.
 #+begin_src emacs-lisp
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
 #+end_src
 
 * Bootstrap straight.el
@@ -35,33 +46,41 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 * UB Settings
 ** Light Mode
 #+begin_src emacs-lisp
-  (defun ub-lightmode ()
+  (defun ub/lightmode ()
     "Activate Light Mode"
     (interactive)
+    (set-face-attribute 'default nil :foreground "black" :background "#faf7ee")
+    (set-face-attribute 'fringe nil :background "#faf7ee")
+    (set-cursor-color "#2a9b00")
+
     (set-face-attribute 'region nil :background "#b3b3b3")
     (set-face-attribute 'highlight nil :background "#dbdbdb")
-    (set-face-attribute 'fringe nil :background "white")
     (set-face-background 'hl-line "#dbdbdb")
-    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")
-    (set-face-foreground 'font-lock-string-face "red")
+    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")     
+    (set-face-foreground 'font-lock-string-face "#be3c16")
     (set-face-foreground 'org-level-1 "DodgerBlue")
     (set-face-foreground 'org-level-2 "LimeGreen")
     (set-face-foreground 'org-level-3 "LightSeaGreen")
-    (set-face-attribute 'default nil :foreground "black" :background "white")
+    "white"
     (set-frame-parameter nil 'alpha-background 100)
     (add-to-list 'default-frame-alist '(alpha-background . 100))
+    (set-face-foreground 'line-number-current-line "#338b41")
+
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#3d3d3d")
 
     ;; ---
 
     (set-face-foreground 'org-block "#00007f")
-    (set-face-background 'org-block "#f8f8eb")
+    (set-face-background 'org-block "#ccc9c0")
 
     (set-face-foreground 'org-block-begin-line "#545454")
-    (set-face-background 'org-block-begin-line "#e0dfd1")
+    (set-face-background 'org-block-begin-line "#b3afa6")
 
     (set-face-foreground 'org-block-end-line "#545454")
-    (set-face-background 'org-block-end-line "#e0dfd1")
-    
+    (set-face-background 'org-block-end-line "#b3afa6")
+
+    (set-face-attribute 'font-lock-keyword-face nil :foreground "#087e1b")
+
     ;; ----
 
     (set-face-attribute 'mode-line nil
@@ -73,24 +92,31 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :foreground "#000000"  ; Light text color
                         )
 
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#d1d1d1"  ; Dark background color
-                      :foreground "#000000") ; Light text color
-)
+    (set-face-attribute 'mode-line-inactive nil
+                        :background "#d1d1d1"  ; Dark background color
+                        :foreground "#000000") ; Light text color
+    )
 #+end_src
 ** Dark Mode
 #+begin_src emacs-lisp
-  (defun ub-darkmode ()
+  (defun ub/darkmode ()
     "Activate Dark Mode"
     (interactive)
     (set-face-attribute 'region nil :background "#757474")
     (set-face-attribute 'highlight nil :background "#262626")
-    (set-face-attribute 'fringe nil :background "black")
+    (set-face-attribute 'fringe nil :background "#1a181b")
     (set-face-background 'hl-line "#454545")
-    (set-face-attribute 'default nil :foreground "white" :background "black")
-    (set-face-foreground 'org-level-1 "GreenYellow")
+    (set-face-attribute 'default nil :foreground "white" :background "#1a181b")
+    (set-face-foreground 'org-level-1 "#F05941")
+    (set-face-foreground 'org-level-2 "#BE3144")
+    (set-face-foreground 'org-level-3 "#872341")
+    (set-face-foreground 'org-level-4 "#94485f")
+    (set-face-foreground 'org-link "#2e8bf0")
     (set-frame-parameter nil 'alpha-background 100)
     (add-to-list 'default-frame-alist '(alpha-background . 100))
+    (set-face-foreground 'line-number-current-line "#ffe600") 
+
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#ffe600")
 
     (set-face-attribute 'mode-line nil
                         :background "#000000"  ; Dark background color
@@ -102,14 +128,15 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :background "#000000"  ; Dark background color
                         :foreground "#ffffff") ; Light text color
 
-    ;; ---------x
+    ;; ---------
 
     (set-face-foreground 'org-block "#ffffff")
     (set-face-background 'org-block "#0f0f0f")
-    (set-face-foreground 'org-block-begin-line "#146dfc")
+    (set-face-foreground 'org-block-begin-line "#cc0433")
     (set-face-background 'org-block-begin-line "#141414")
-    (set-face-foreground 'org-block-end-line "#146dfc")
+    (set-face-foreground 'org-block-end-line "#cc0433")
     (set-face-background 'org-block-end-line "#141414")
+    (set-face-attribute 'font-lock-keyword-face nil :foreground "#ffc400")    
 
 
     ;; --------x
@@ -123,15 +150,20 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :foreground "#ffffff"  ; Light text color
                         )
 
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#141414"  ; Dark background color
-                      :foreground "#ffffff") ; Light text color
-  )
+    (set-face-attribute 'mode-line-inactive nil
+                        :background "#141414"  ; Dark background color
+                        :foreground "#ffffff") ; Light text color
+    )
 #+end_src
+
+** Global UI Values
+#+BEGIN_SRC emacs-lisp
+(set-face-foreground 'org-meta-line "#00781a")
+#+END_SRC
 
 ** Transparent Emacs
 #+begin_src emacs-lisp
-  (defun ub-tp ()
+  (defun ub/tp ()
     (interactive)
     (set-frame-parameter nil 'alpha-background 80)
     (add-to-list 'default-frame-alist '(alpha-background . 80))    
@@ -157,157 +189,118 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 #+end_src
 
 * UI Enhancements: Fonts and Colors
-  Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
+Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
 ** UI Enhancements: Fonts and Colors
 #+begin_src emacs-lisp
   (global-hl-line-mode 1)
 
-  (set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
+  (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono-18")
 
   ;;;; Light Mode
-  (ub-lightmode)
+  (ub/lightmode)
 
   ;; Dark Mode
-  ;; (ub-darkmode)
+  ;; (ub/darkmode)
 
   ;; Transparent Mode
-  ;; (ub-tp)
-
-  (set-face-foreground 'line-number-current-line "green") 
+  ;; (ub/tp)
 
   (add-hook 'server-after-make-frame-hook
             (lambda ()
-              (set-frame-font "DejaVu Sans Mono-18")))
+              (set-frame-font "Iosevka Nerd Font Mono-18")))
 
 #+end_src
 
 ** UI Enhancements: Syntax Highlighting
 #+begin_src emacs-lisp
-  (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
-  (set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
+  (set-face-attribute 'font-lock-delimiter-face nil :foreground "#ffe600")
+  (set-face-attribute 'org-meta-line nil :foreground "#e69a37")    
   (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
   (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
   (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
 #+end_src
 
-** UI Enhancements: Lambda-line
-#+begin_src emacs-lisp
-  (use-package lambda-line
-    :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
-    :custom
-    (lambda-line-icon-time t) ;; requires ClockFace font (see below)
-    (lambda-line-clockface-update-fontset "⏰") ;; set clock icon
-    (lambda-line-position 'bottom) ;; Set position of status-line 
-    (lambda-line-abbrev t) ;; abbreviate major modes
-    (lambda-line-hspace "  ")  ;; add some cushion
-    (lambda-line-prefix t) ;; use a prefix symbol
-    (lambda-line-prefix-padding nil) ;; no extra space for prefix 
-    (lambda-line-status-invert nil)  ;; no invert colors
-    (lambda-line-gui-ro-symbol  " ⨂") ;; symbols
-    (lambda-line-gui-mod-symbol " ⬤") 
-    (lambda-line-gui-rw-symbol  " ◯") 
-    (lambda-line-space-top +.20)  ;; padding on top and bottom of line
-    (lambda-line-space-bottom -.20)
-    (lambda-line-symbol-position 0.1) ;; adjust the vertical placement of symbol
-)
-
-      (lambda-line-mode 1)  ; Enable lambda-line mode
-
-      (setq visible-bell nil)  ; Turn off visual bell
-      (setq ring-bell-function 'ignore)  ; Ignore the bell function
-#+end_src
-
-** UI Enhancements: Lambda Themes
-#+begin_src emacs-lisp
-  (use-package lambda-themes
-    :straight (:type git :host github :repo "lambda-emacs/lambda-themes") 
-    :custom
-    (lambda-themes-set-italic-comments t)
-    (lambda-themes-set-italic-keywords t)
-    (lambda-themes-set-variable-pitch t))
-#+end_src
-
 * LSP Configuration
 #+begin_src emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :hook ((bash-mode . lsp)
-         (python-mode . lsp)
-         (julia-mode . lsp)
-         (html-mode . lsp)
-         (css-mode . lsp)
-         (js-mode . lsp)
-         (typescript-mode . lsp)
-         (sh-mode . lsp)
-         (c-mode . lsp)
-         (c++-mode . lsp))
-  :custom
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-completion-provider :capf)  ; Common setting for completion
-  (lsp-clients-clangd-executable "/usr/bin/clangd"))
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :hook ((bash-mode . lsp)
+           (python-mode . lsp)
+           (julia-mode . lsp)
+           (html-mode . lsp)
+           (css-mode . lsp)
+           (js-mode . lsp)
+           (typescript-mode . lsp)
+           (sh-mode . lsp)
+           (c-mode . lsp)
+           (c++-mode . lsp))
+    :custom
+    (lsp-headerline-breadcrumb-enable nil)
+    (lsp-completion-provider :capf)  ; Common setting for completion
+    (lsp-clients-clangd-executable "/usr/bin/clangd"))
 
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode)
 
-(use-package company
-  :ensure t
-  :config
-  (setq company-idle-delay 0.2
-        company-minimum-prefix-length 1)
-  (global-company-mode t))
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0.2
+          company-minimum-prefix-length 1)
+    (global-company-mode t))
 
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
+  (use-package yasnippet
+    :ensure t
+    :config
+    (yas-global-mode 1))
 
-(use-package yasnippet-snippets
-  :ensure t)
+  (use-package yasnippet-snippets
+    :ensure t)
 
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
 
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode))
+  (use-package which-key
+    :ensure t
+    :config
+    (which-key-mode))
 #+end_src
 
 * Major Modes and Packages
-  Set up various major modes and additional packages.
+Set up various major modes and additional packages.
 ** Magit
 #+begin_src emacs-lisp
-(use-package magit :ensure t)
+  (use-package magit :ensure t)
 #+end_src
 
 ** Org Mode
 #+begin_src emacs-lisp
-(use-package org :ensure t)
+  (use-package org :ensure t)
 #+end_src
 
 ** Org Mode Folds
 #+begin_src emacs-lisp
-(setq org-startup-folded t)
+  (setq org-startup-folded t)
 #+end_src
 
-** Org Indent Content At Headers
-#+begin_src emacs-lisp
-(setq org-adapt-indentation t)
-#+end_src
+** Org Indent Mode
+#+BEGIN_SRC emacs-lisp
+  (setq org-startup-indented t)
+#+END_SRC
 
 ** Org LaTeX support
 #+begin_src emacs-lisp
-(setq org-pretty-entities t)
+  (setq org-pretty-entities t)
 #+end_src
 
 ** Org Bullets
 #+begin_src emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :hook (org-mode . org-bullets-mode))
+  (use-package org-bullets
+    :ensure t)
+  (add-hook 'org-mode-hook 'org-bullets-mode)  
 #+end_src
 
 ** Org Mode Descriptive Links
@@ -318,39 +311,55 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 
 ** Org Mode Other Settings
 #+begin_src emacs-lisp
- ;; Replace "Table of Contents" text with "Contents"
- (defun replace-toc-title (backend)
-  (when (org-export-derived-backend-p backend 'html)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "Table of Contents" nil t)
-        (replace-match "Contents")))))
+  ;; Replace "Table of Contents" text with "Contents"
+  (defun replace-toc-title (backend)
+    (when (org-export-derived-backend-p backend 'html)
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward "Table of Contents" nil t)
+          (replace-match "Contents")))))
 
-(add-hook 'org-export-before-processing-hook 'replace-toc-title)
+  (add-hook 'org-export-before-processing-hook 'replace-toc-title)
 #+end_src 
 
+** Emacs-Jupyter interface
+#+BEGIN_SRC emacs-lisp
+  (use-package "jupyter" :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (require 'ob-jupyter)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((jupyter . t)  ;; Enable Jupyter support
+     (emacs-lisp . t)
+     (python . t)
+     (julia . t)))  ;; Enable Julia language support
+
+#+END_SRC
+
 ** Godot - GDScript Mode
-  #+begin_src emacs-lisp
-    (use-package gdscript-mode
-      :straight (gdscript-mode
-		 :type git
-		 :host github
-		 :repo "godotengine/emacs-gdscript-mode"))
-  #+end_src 
+#+begin_src emacs-lisp
+  (use-package gdscript-mode
+    :straight (gdscript-mode
+               :type git
+               :host github
+               :repo "godotengine/emacs-gdscript-mode"))
+#+end_src 
 
 ** Ivy and Counsel
 #+begin_src emacs-lisp
   (unless (package-installed-p 'counsel)
-  (package-refresh-contents)
-  (package-install 'counsel))
-  
+    (package-refresh-contents)
+    (package-install 'counsel))
+
   (unless (package-installed-p 'ivy)
-  (package-refresh-contents)
-  (package-install 'ivy))
+    (package-refresh-contents)
+    (package-install 'ivy))
 
   (unless (package-installed-p 'ivy-rich)
-  (package-refresh-contents)
-  (package-install 'ivy-rich))
+    (package-refresh-contents)
+    (package-install 'ivy-rich))
 
 
   (require 'ivy)
@@ -377,20 +386,20 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 
 ** Projectile
 #+begin_src emacs-lisp
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1)
-  :bind-keymap
-  ("C-c p" . projectile-command-map))
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode +1)
+    :bind-keymap
+    ("C-c p" . projectile-command-map))
 #+end_src
 
 ** Flycheck
 #+begin_src emacs-lisp
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode))
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode))
 #+end_src
 
 ** Nerd Icons and All The Icons
@@ -400,15 +409,15 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 
   (use-package all-the-icons-dired :ensure t)  
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-  
+
   (setq lsp-modeline-code-action-fallback-icon "💡")  
 #+END_SRC
 
 ** Writeroom - Center buffer text
-   #+BEGIN_SRC emacs-lisp
-     (use-package writeroom-mode :ensure t)
+#+BEGIN_SRC emacs-lisp
+  (use-package writeroom-mode :ensure t)
 #+end_src     
-   #+END_SRC
+#+END_SRC
 ** Windresize
 #+begin_src emacs-lisp
   (use-package windresize :ensure t)
@@ -421,22 +430,22 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (use-package f :ensure t)
   (use-package org-roam-ui :ensure t)
   (use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today))
-  :config
-  ;; If you're using a vertical completion framework, you might want a more informative completion interface
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-  (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol))
+    :ensure t
+    :custom
+    (org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ;; Dailies
+           ("C-c n j" . org-roam-dailies-capture-today))
+    :config
+    ;; If you're using a vertical completion framework, you might want a more informative completion interface
+    (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
 #+end_src
 
 ** Fireplace
@@ -444,13 +453,13 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (use-package fireplace :ensure t)
 
   (defun my-disable-line-numbers-in-fireplace ()
-  "Disable line numbers in Fireplace."
-  (when (eq major-mode 'fireplace-mode)
-  (display-line-numbers-mode -1)))
+    "Disable line numbers in Fireplace."
+    (when (eq major-mode 'fireplace-mode)
+      (display-line-numbers-mode -1)))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
+  (add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+END_SRC
 
 ** Multiple Cursors
@@ -458,11 +467,11 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (use-package multiple-cursors
     :ensure t
     :bind (("C-c m <down>" . mc/mark-next-lines)
-	   ("C-c m <up>" . mc/mark-previous-lines)
-	   ("C-c m n" . mc/mark-next-like-this)
-	   ("C-c m p" . mc/mark-previous-like-this)
-	   ("C-c m a" . mc/mark-all-like-this)))
-  
+           ("C-c m <up>" . mc/mark-previous-lines)
+           ("C-c m n" . mc/mark-next-like-this)
+           ("C-c m p" . mc/mark-previous-like-this)
+           ("C-c m a" . mc/mark-all-like-this)))
+
   (setq mc/cmds-to-run-for-all nil)
 #+end_src
 
@@ -476,26 +485,26 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 #+end_src
 
 ** Undo-tree
-   #+BEGIN_SRC emacs-lisp
-     (use-package undo-tree :ensure t)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree :ensure t)
+#+END_SRC
    
 * Additional Configurations
-  Include miscellaneous settings and functions.
+Include miscellaneous settings and functions.
 ** Line Numbering
 #+begin_src emacs-lisp
   (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode t)
-    (defun toggle-line-numbering-type ()
-      "Toggle between relative and absolute line numbering."
-      (interactive)
-      (setq display-line-numbers-type
-        (if (eq display-line-numbers-type 'relative)
-        'absolute
-        'relative))
-      (global-display-line-numbers-mode -1) ; Turn off line numbering
-      (global-display-line-numbers-mode 1)) ; Turn it back on
-    (global-set-key (kbd "M-g") 'toggle-line-numbering-type)
+  (defun toggle-line-numbering-type ()
+    "Toggle between relative and absolute line numbering."
+    (interactive)
+    (setq display-line-numbers-type
+          (if (eq display-line-numbers-type 'relative)
+              'absolute
+            'relative))
+    (global-display-line-numbers-mode -1) ; Turn off
+    (global-display-line-numbers-mode 1)) ; Turn on
+  (global-set-key (kbd "C-x a q") 'toggle-line-numbering-type)
+  (global-set-key (kbd "C-x a w") 'display-line-numbers-mode)  
 #+end_src
 
 ** Move and Copy Current Line Above And Below
@@ -512,7 +521,7 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
       (yank)
       (forward-line -1)))
 
-    (defun copy-line-down()
+  (defun copy-line-down()
     (interactive)
     (move-beginning-of-line 1)
     (kill-line)
@@ -522,13 +531,13 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
     (yank)
     )
 
-    (defun move-line-up ()
+  (defun move-line-up ()
     "Move the current line up by one."
     (interactive)
     (transpose-lines 1)
     (previous-line 2))
 
-    (defun move-line-down ()
+  (defun move-line-down ()
     "Move the current line down by one."
     (interactive)
     (next-line 1)
@@ -538,15 +547,15 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 
 ** Windmove keybinds
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-c C-<left>")  'windmove-left)
-    (global-set-key (kbd "C-c C-<right>") 'windmove-right)
-    (global-set-key (kbd "C-c C-<up>")    'windmove-up)
-    (global-set-key (kbd "C-c C-<down>")  'windmove-down)
+  (global-set-key (kbd "C-c C-<left>")  'windmove-left)
+  (global-set-key (kbd "C-c C-<right>") 'windmove-right)
+  (global-set-key (kbd "C-c C-<up>")    'windmove-up)
+  (global-set-key (kbd "C-c C-<down>")  'windmove-down)
 #+end_src
 
 ** Bracket completion
 #+begin_src emacs-lisp
-    (electric-pair-mode t)
+  (electric-pair-mode t)
 #+end_src
 
 ** st (suckless terminal) completion
@@ -563,58 +572,58 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 
 ** Windresize keybindings
 #+begin_src emacs-lisp
-    (global-set-key (kbd "s-r") 'windresize) ; This is nice.
+  (global-set-key (kbd "s-r") 'windresize) ; This is nice.
 #+end_src
 
 ** Stop creating ~ and # files
 #+begin_src emacs-lisp
-    (setq backup-directory-alist
-	    `((".*" . ,temporary-file-directory)))
-    (setq auto-save-file-name-transforms
-	    `((".*" ,temporary-file-directory t)))
-    (setq make-backup-files nil) ; stop creating ~ files
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+  (setq make-backup-files nil) ; stop creating ~ files
 #+end_src
 
 ** Opening new buffers in the same window
 #+begin_src emacs-lisp
-(setq display-buffer-alist
-      '((".*" (display-buffer-same-window))))
+  (setq display-buffer-alist
+        '((".*" (display-buffer-same-window))))
 #+end_src
 
 ** Quickly open encyclopedia.org
 #+begin_src emacs-lisp
   (global-set-key (kbd "<f6>") (lambda () (interactive)
-  (find-file "/home/anon/Projects/Personal/org-files/encyclopedia/encyclopedia.org")
-  (message: "Opened %s" (buffer-name))))
+                                 (find-file "/home/anon/Projects/Personal/org-files/index.org")
+                                 (message: "Opened %s" (buffer-name))))
 #+end_src
 
 ** Quickly open init.org
 #+begin_src emacs-lisp
   (global-set-key (kbd "<f5>") (lambda () (interactive)
-  (find-file "/home/anon/.emacs.d/init.org")
-  (message: "Opened %s" (buffer-name))))
+                                 (find-file "/home/anon/.emacs.d/init.org")
+                                 (message: "Opened %s" (buffer-name))))
 #+end_src
 
 ** Additional info files directory
 #+begin_src emacs-lisp
-(setq Info-default-directory-list
-(append '("/usr/share/info")
-Info-default-directory-list
-'("~/.emacs.d/info")))
+  (setq Info-default-directory-list
+        (append '("/usr/share/info")
+                Info-default-directory-list
+                '("~/.emacs.d/info")))
 #+end_src
 
 ** Open new file in a new frame
- #+begin_src emacs-lisp
-   (defun my-open-file-in-new-buffer ()
-     "Open the file at point in a new buffer."
-     (interactive)
-     (let ((file (org-element-property :path (org-element-context))))
-       (if file
-       (find-file file)
-     (message "No file at point"))))
+#+begin_src emacs-lisp
+  (defun my-open-file-in-new-buffer ()
+    "Open the file at point in a new buffer."
+    (interactive)
+    (let ((file (org-element-property :path (org-element-context))))
+      (if file
+          (find-file file)
+        (message "No file at point"))))
 
-   (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
- #+end_src 
+  (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
+#+end_src 
 
 ** Unbind freeze buffer keybind
 #+begin_src emacs-lisp
@@ -674,14 +683,14 @@ Info-default-directory-list
 #+end_src
 
 * LSP
-  #+begin_src emacs-lisp
-    (defun my-filter-lsp-warnings (format-string &rest args)
-  "Filter out specific lsp-mode warnings."
-  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
-    (apply #'message format-string args)))
+#+begin_src emacs-lisp
+  (defun my-filter-lsp-warnings (format-string &rest args)
+    "Filter out specific lsp-mode warnings."
+    (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
+      (apply #'message format-string args)))
 
-(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
-  #+end_src
+  (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
+#+end_src
 
 * Julia LSP
 #+BEGIN_SRC emacs-lisp
@@ -707,36 +716,10 @@ Info-default-directory-list
     (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
 
   (use-package lsp-julia
-  :config
-  (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
+    :config
+    (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
 
   (add-hook 'julia-mode-hook #'lsp-mode)  
-#+END_SRC
-
-* Blog
-#+BEGIN_SRC emacs-lisp
-  (defun insert-navigation-links (html-file prev-html next-html)
-    (with-current-buffer (find-file-noselect html-file)
-      (goto-char (point-min))
-      (when (re-search-forward "</header>" nil t)  ;; Assuming your template has a <header> tag
-        (insert (format "<nav><a href='index.html'>Home Page</a> %s %s</nav>"
-                        (if prev-html (format "<a href='%s'>Previous Page</a>" prev-html) "")
-                        (if next-html (format "<a href='%s'>Next Page</a>" next-html) "")))
-        (save-buffer)
-        (kill-buffer))))
-
-  (defun my-blog-add-navigation ()
-    (interactive)
-    (let* ((files (directory-files-recursively "/path/to/org-files" "\\.org$"))
-           (sorted-files (sort files #'string<)))
-      (dolist (index (number-sequence 1 (1- (length sorted-files))))
-        (let ((current-file (nth index sorted-files))
-              (prev-file (if (> index 0) (nth (1- index) sorted-files) nil))
-              (next-file (if (< index (1- (length sorted-files))) (nth (1+ index) sorted-files) nil)))
-          (insert-navigation-links (replace-regexp-in-string "\\.org$" ".html" current-file)
-                                   (and prev-file (replace-regexp-in-string "\\.org$" ".html" prev-file))
-                                   (and next-file (replace-regexp-in-string "\\.org$" ".html" next-file)))))))
-
 #+END_SRC
 
 * Highlight Indent Guides
@@ -758,15 +741,230 @@ Info-default-directory-list
 #+end_src
 
 * Caption
-  #+BEGIN_SRC emacs-lisp
-    (defun my/org-html--format-image-caption (orig-func &rest args)
-      (let ((caption (apply orig-func args)))
-        (replace-regexp-in-string "Figure:" "Ábra:" caption)))
+#+BEGIN_SRC emacs-lisp
+  (defun my/org-html--format-image-caption (orig-func &rest args)
+    (let ((caption (apply orig-func args)))
+      (replace-regexp-in-string "Figure:" "Ábra:" caption)))
 
-    (advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)x
+  (advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)
+#+END_SRC
+* Date
+#+BEGIN_SRC emacs-lisp
+  (defun ub/org-html-date ()
+    "Current 'date' insertion. Format is YYYY. MM. DD."
+    (interactive)
+    (let ((current-date (format-time-string "%Y. %m. %d.")))
+      (insert (format "#+BEGIN_EXPORT html\n<div class=\"date\">%s</div>\n#+END_EXPORT" current-date))))
+#+END_SRC
+
+* Hooks
+#+BEGIN_SRC emacs-lisp
+  (defun ubfuns/pretty-funs ()
+    (writeroom-mode 1)
+    (display-line-numbers-mode -1)
+    (visual-line-mode 1))
+
+  (defun ubfuns/dired-funs ()
+    (dired-hide-details-mode t)
+    (dired-omit-mode t))
+
+  (add-hook 'org-mode-hook 'ubfuns/pretty-funs)
+
+  (add-hook 'dired-mode-hook 'ubfuns/pretty-funs)
+  (add-hook 'dired-mode-hook 'ubfuns/dired-funs)
+
+  (add-hook 'term-mode-hook
+            (lambda ()
+              (company-mode -1)
+              (display-line-numbers-mode -1)
+              (lsp-mode -1)
+              (hl-line-mode -1)
+              ))
+
+  (add-hook 'mhtml-mode-hook
+            (lambda ()
+              (display-line-numbers-mode 1)
+              ))
+
+  (add-hook 'css-mode-hook
+            (lambda ()
+              (display-line-numbers-mode 1)
+              ))
+
+  (add-hook 'c-mode-hook
+            (lambda ()
+              (display-line-numbers-mode 1)
+              ))
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (display-line-numbers-mode 1)
+              ))  
+#+END_SRC
+
+* LaTeX engine
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-engine 'xetex)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-s RET") 'eval-expression)
+#+END_SRC
+* Preceding expression
+#+BEGIN_SRC emacs-lisp
+  (defun eval-and-replace ()
+    "Replace the preceding sexp with its value. Useful!"
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (backward-kill-sexp)
+      (insert (format "%s" value))))
+  (global-set-key (kbd "C-x á") 'eval-and-replace)
+  (global-set-key (kbd "M-é") 'backward-word)
+  (global-set-key (kbd "M-á") 'forward-word)  
   #+END_SRC
+* TODO Tartalom
+#+BEGIN_SRC todo
+  ;;; org-tartalom.el --- Automated Tartalom (ToC) Generation for Org Mode -*- lexical-binding: t; -*-
+
+  ;; Author: Your Name
+  ;; Version: 1.0
+  ;; Package-Requires: ((emacs "24.4") (org "9.1"))
+  ;; Keywords: org, toc, toc, automation
+  ;; URL: https://github.com/your-repo/org-tartalom
+
+  ;;; Commentary:
+
+  ;; This Emacs Lisp script automates the generation and updating of a custom
+  ;; Table of Contents (ToC) named "Tartalom" in Org Mode files. It ensures that
+  ;; each heading has a unique identifier and generates a hierarchical list
+  ;; with clickable links. The "Tartalom" section is automatically inserted
+  ;; after initial headers and updated whenever the document structure changes.
+
+  ;;; Code:
+
+  (require 'org)
+  (require 'org-element)
+  (require 'org-id)
+
+  (defgroup org-tartalom nil
+    "Automated Tartalom (ToC) generation for Org Mode."
+    :prefix "org-tartalom-"
+    :group 'org)
+
+  (defcustom org-tartalom-title "Tartalom"
+    "Title for the Table of Contents section."
+    :type 'string
+    :group 'org-tartalom)
+
+  (defcustom org-tartalom-insert-after-regex "^#\\+TITLE\\|^#\\+AUTHOR\\|^#\\+EMAIL\\|^#\\+DATE\\|^#\\+DESCRIPTION"
+    "Regex matching initial headers after which 'Tartalom' will be inserted.
+  Adjust this regex to match all initial lines like #+TITLE, #+AUTHOR, etc."
+    :type 'string
+    :group 'org-tartalom)
+
+  (defun org-tartalom-ensure-custom-ids ()
+    "Ensure all headings in the current buffer have a CUSTOM_ID.
+
+  If a heading does not have a CUSTOM_ID, generate one using `org-id-get-create'."
+    (org-element-map (org-element-parse-buffer) 'headline
+      (lambda (hl)
+        (let ((props (org-element-property :properties hl)))
+          (unless (org-element-property :CUSTOM_ID hl)
+            (save-excursion
+              (goto-char (org-element-property :begin hl))
+              (org-id-get-create)))))))
+
+  (defun org-tartalom-generate-toc ()
+    "Generate the 'Tartalom' section based on current headings with CUSTOM_IDs.
+
+  Returns the TOC as a string."
+    (let* ((parsed (org-element-parse-buffer))
+           (headlines (org-element-map parsed 'headline
+                        (lambda (h)
+                          (let ((level (org-element-property :level h))
+                                (title (org-element-property :raw-value h))
+                                (custom-id (org-element-property :CUSTOM_ID h)))
+                            (when custom-id
+                              (cons level (cons title custom-id)))))))
+           (toc-lines
+            (mapcar
+             (lambda (hl)
+               (let ((level (car hl))
+                     (title (car (cdr hl)))
+                     (custom-id (cdr (cdr hl))))
+                 (concat
+                  (make-string (* 2 (1- level)) ?\s)  ; Two spaces per level
+                  "- [[" (concat "#" custom-id) "][" title "]]")))
+             headlines))
+           (toc-content (concat "* " org-tartalom-title "\n" (mapconcat 'identity toc-lines "\n"))))
+      toc-content))
+
+  (defun org-tartalom-insert-or-update ()
+    "Insert or update the 'Tartalom' section in the current buffer."
+    (interactive)
+    (org-tartalom-ensure-custom-ids)
+    (let ((toc (org-tartalom-generate-toc)))
+      ;; Remove existing 'Tartalom' section if it exists
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward (concat "^\\*+ " (regexp-quote org-tartalom-title)) nil t)
+          (let ((beg (match-beginning 0))
+                (end (progn
+                       (outline-next-heading)
+                       (point))))
+            (delete-region beg end))))
+      ;; Insert the new 'Tartalom' at the appropriate position
+      (save-excursion
+        (goto-char (point-min))
+        (if (re-search-forward org-tartalom-insert-after-regex nil t)
+            (progn
+              ;; Move to the end of the matched region
+              (while (and (re-search-forward org-tartalom-insert-after-regex nil t)
+                          (<= (point) (point-max))))
+                (goto-char (match-end 0)))
+              (insert "\n\n" toc "\n\n"))
+          ;; If no initial headers matched, insert at the beginning
+          (goto-char (point-min))
+          (insert toc "\n\n"))))
+
+  (defun org-tartalom-before-export-hook (backend)
+    "Hook to generate 'Tartalom' before exporting.
+
+  BACKEND is the export backend being used."
+    (when (derived-mode-p 'org-mode)
+      (org-tartalom-insert-or-update)))
+
+  ;;;###autoload
+  (defun org-tartalom-setup ()
+    "Set up automated 'Tartalom' generation.
+
+  This function adds necessary hooks to automate the insertion and updating
+  of the 'Tartalom' section."
+    (add-hook 'before-save-hook #'org-tartalom-insert-or-update nil t)
+    (add-hook 'org-export-before-processing-hook #'org-tartalom-before-export-hook))
+
+  ;;;###autoload
+  (defun org-tartalom-teardown ()
+    "Remove automated 'Tartalom' generation.
+
+  This function removes the hooks added by `org-tartalom-setup`."
+    (remove-hook 'before-save-hook #'org-tartalom-insert-or-update t)
+    (remove-hook 'org-export-before-processing-hook #'org-tartalom-before-export-hook))
+
+  ;;;###autoload
+  (add-hook 'org-mode-hook #'org-tartalom-setup)
+
+  (provide 'org-tartalom)
+
+  ;;; org-tartalom.el ends here
+
+#+END_SRC
+
 * Export to init.el
 This block will convert all org-babel code blocks to a plain `init.el`.
 #+begin_src emacs-lisp :exports none
+  (setq org-confirm-babel-evaluate nil)  
   (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
 #+end_src
+
+#+RESULTS:
+| /home/anon/.emacs.d/init.el |

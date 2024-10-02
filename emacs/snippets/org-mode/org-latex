@@ -1,0 +1,79 @@
+# -*- mode: snippet -*-
+# name: org-latex
+# key: org-latex
+# --
+#+MACRO: myname $1
+#+MACRO: doctitle $2
+#+MACRO: docsubject $3
+#+MACRO: docdate $4
+
+#+PROPERTY: header-args:emacs-lisp :eval yes
+#+OPTIONS: html-postamble:nil
+
+#+TITLE: {{{doctitle}}}
+#+AUTHOR: {{{myname}}}
+#+DATE: {{{docdate}}}
+#+LATEX_CLASS: article
+
+#+LATEX_HEADER: \usepackage[magyar,english]{babel}
+#+LATEX_HEADER: \selectlanguage{magyar}
+
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage{geometry}
+#+LATEX_HEADER: \geometry{
+#+LATEX_HEADER:   a4paper,
+#+LATEX_HEADER:   total={170mm,257mm},
+#+LATEX_HEADER:   left=20mm,
+#+LATEX_HEADER:   top=20mm,
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{titling}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \fancypagestyle{plain}{
+#+LATEX_HEADER:     \fancyhf{}
+#+LATEX_HEADER:     \fancyfoot[R]{\includegraphics[width=2cm]{Tux.png}}
+#+LATEX_HEADER:     \fancyfoot[L]{\thedate}
+#+LATEX_HEADER:     \fancyhead[L]{Leírás}
+#+LATEX_HEADER:     \fancyhead[R]{\theauthor}
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \def\@maketitle{
+#+LATEX_HEADER:   \newpage
+#+LATEX_HEADER:   \null
+#+LATEX_HEADER:   \vskip 1em%
+#+LATEX_HEADER:   \begin{center}%
+#+LATEX_HEADER:   \let \footnote \thanks
+#+LATEX_HEADER:     {\LARGE \@title \par}%
+#+LATEX_HEADER:     \vskip 1em%
+#+LATEX_HEADER:   \end{center}%
+#+LATEX_HEADER:   \par
+#+LATEX_HEADER:   \vskip 1em}
+#+LATEX_HEADER: \makeatother
+#+LATEX_HEADER: \usepackage{lipsum}
+#+LATEX_HEADER: \usepackage{cmbright}
+
+#+BEGIN_LaTeX
+\maketitle
+#+END_LaTeX
+
+| Készítette:  | {{{myname}}} |
+| Tárgy: | {{{docsubject}}} |
+| Téma: | {{{doctitle}}} |
+
+* Positioning of the thesis
+#+BEGIN_LaTeX
+\lipsum[1-2]
+#+END_LaTeX
+
+* Objectives
+#+BEGIN_LaTeX
+\lipsum[3]
+#+END_LaTeX
+
+* Plan
+#+BEGIN_LaTeX
+\lipsum[4]
+#+END_LaTeX
+
+# Használt Arch csomagok: texlive-fontsextra texlive-latexextra texlive-plaingeneric
+# A nyelv beállítások nem működnek, de a felső kettő header optionbe raktam.

@@ -3,6 +3,6 @@
 # key: ubm-equation
 # --
 
-#+begin_latex
-${1:Single equation snippet goes here.}
-#+end_latex
+\begin{equation}
+$1 \\\
+\end{equation}

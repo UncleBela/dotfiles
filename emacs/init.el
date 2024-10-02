@@ -1,3 +1,8 @@
+;;;; Uncle Béla's Emacs config
+;;; Author: Uncle Béla
+
+(setq debug-on-error nil) ;; Change to t, when in doubt
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -20,60 +25,75 @@
 
 (require 'ox-texinfo)
 
-(defun ub-lightmode ()
-    "Activate Light Mode"
-    (interactive)
-    (set-face-attribute 'region nil :background "#b3b3b3")
-    (set-face-attribute 'highlight nil :background "#dbdbdb")
-    (set-face-attribute 'fringe nil :background "white")
-    (set-face-background 'hl-line "#dbdbdb")
-    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")
-    (set-face-foreground 'font-lock-string-face "red")
-    (set-face-foreground 'org-level-1 "DodgerBlue")
-    (set-face-foreground 'org-level-2 "LimeGreen")
-    (set-face-foreground 'org-level-3 "LightSeaGreen")
-    (set-face-attribute 'default nil :foreground "black" :background "white")
-    (set-frame-parameter nil 'alpha-background 100)
-    (add-to-list 'default-frame-alist '(alpha-background . 100))
+(defun ub/lightmode ()
+  "Activate Light Mode"
+  (interactive)
+  (set-face-attribute 'default nil :foreground "black" :background "#faf7ee")
+  (set-face-attribute 'fringe nil :background "#faf7ee")
+  (set-cursor-color "#2a9b00")
 
-    ;; ---
+  (set-face-attribute 'region nil :background "#b3b3b3")
+  (set-face-attribute 'highlight nil :background "#dbdbdb")
+  (set-face-background 'hl-line "#dbdbdb")
+  (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")     
+  (set-face-foreground 'font-lock-string-face "#be3c16")
+  (set-face-foreground 'org-level-1 "DodgerBlue")
+  (set-face-foreground 'org-level-2 "LimeGreen")
+  (set-face-foreground 'org-level-3 "LightSeaGreen")
+  "white"
+  (set-frame-parameter nil 'alpha-background 100)
+  (add-to-list 'default-frame-alist '(alpha-background . 100))
+  (set-face-foreground 'line-number-current-line "#338b41")
 
-    (set-face-foreground 'org-block "#00007f")
-    (set-face-background 'org-block "#f8f8eb")
+  (set-face-attribute 'font-lock-comment-face nil :foreground "#3d3d3d")
 
-    (set-face-foreground 'org-block-begin-line "#545454")
-    (set-face-background 'org-block-begin-line "#e0dfd1")
+  ;; ---
 
-    (set-face-foreground 'org-block-end-line "#545454")
-    (set-face-background 'org-block-end-line "#e0dfd1")
-    
-    ;; ----
+  (set-face-foreground 'org-block "#00007f")
+  (set-face-background 'org-block "#ccc9c0")
 
-    (set-face-attribute 'mode-line nil
-                        :background "#334455") ; #334455: Dark Blue
+  (set-face-foreground 'org-block-begin-line "#545454")
+  (set-face-background 'org-block-begin-line "#b3afa6")
 
-    ;; Customize the default mode line faces for your lambda line
-    (set-face-attribute 'mode-line nil
-                        :background "#d1d1d1"  ; Dark background color
-                        :foreground "#000000"  ; Light text color
-                        )
+  (set-face-foreground 'org-block-end-line "#545454")
+  (set-face-background 'org-block-end-line "#b3afa6")
+
+  (set-face-attribute 'font-lock-keyword-face nil :foreground "#087e1b")
+
+  ;; ----
+
+  (set-face-attribute 'mode-line nil
+                      :background "#334455") ; #334455: Dark Blue
+
+  ;; Customize the default mode line faces for your lambda line
+  (set-face-attribute 'mode-line nil
+                      :background "#d1d1d1"  ; Dark background color
+                      :foreground "#000000"  ; Light text color
+                      )
 
   (set-face-attribute 'mode-line-inactive nil
                       :background "#d1d1d1"  ; Dark background color
                       :foreground "#000000") ; Light text color
-)
+  )
 
-(defun ub-darkmode ()
+(defun ub/darkmode ()
   "Activate Dark Mode"
   (interactive)
   (set-face-attribute 'region nil :background "#757474")
   (set-face-attribute 'highlight nil :background "#262626")
-  (set-face-attribute 'fringe nil :background "black")
+  (set-face-attribute 'fringe nil :background "#1a181b")
   (set-face-background 'hl-line "#454545")
-  (set-face-attribute 'default nil :foreground "white" :background "black")
-  (set-face-foreground 'org-level-1 "GreenYellow")
+  (set-face-attribute 'default nil :foreground "white" :background "#1a181b")
+  (set-face-foreground 'org-level-1 "#F05941")
+  (set-face-foreground 'org-level-2 "#BE3144")
+  (set-face-foreground 'org-level-3 "#872341")
+  (set-face-foreground 'org-level-4 "#94485f")
+  (set-face-foreground 'org-link "#2e8bf0")
   (set-frame-parameter nil 'alpha-background 100)
   (add-to-list 'default-frame-alist '(alpha-background . 100))
+  (set-face-foreground 'line-number-current-line "#ffe600") 
+
+  (set-face-attribute 'font-lock-comment-face nil :foreground "#ffe600")
 
   (set-face-attribute 'mode-line nil
                       :background "#000000"  ; Dark background color
@@ -89,10 +109,11 @@
 
   (set-face-foreground 'org-block "#ffffff")
   (set-face-background 'org-block "#0f0f0f")
-  (set-face-foreground 'org-block-begin-line "#146dfc")
+  (set-face-foreground 'org-block-begin-line "#cc0433")
   (set-face-background 'org-block-begin-line "#141414")
-  (set-face-foreground 'org-block-end-line "#146dfc")
+  (set-face-foreground 'org-block-end-line "#cc0433")
   (set-face-background 'org-block-end-line "#141414")
+  (set-face-attribute 'font-lock-keyword-face nil :foreground "#ffc400")    
 
 
   ;; --------x
@@ -106,12 +127,14 @@
                       :foreground "#ffffff"  ; Light text color
                       )
 
-(set-face-attribute 'mode-line-inactive nil
-                    :background "#141414"  ; Dark background color
-                    :foreground "#ffffff") ; Light text color
-)
+  (set-face-attribute 'mode-line-inactive nil
+                      :background "#141414"  ; Dark background color
+                      :foreground "#ffffff") ; Light text color
+  )
 
-(defun ub-tp ()
+(set-face-foreground 'org-meta-line "#00781a")
+
+(defun ub/tp ()
   (interactive)
   (set-frame-parameter nil 'alpha-background 80)
   (add-to-list 'default-frame-alist '(alpha-background . 80))    
@@ -134,59 +157,26 @@
 
 (global-hl-line-mode 1)
 
-(set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
+(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono-18")
 
 ;;;; Light Mode
-(ub-lightmode)
+(ub/lightmode)
 
 ;; Dark Mode
-;; (ub-darkmode)
+;; (ub/darkmode)
 
 ;; Transparent Mode
-;; (ub-tp)
-
-(set-face-foreground 'line-number-current-line "green") 
+;; (ub/tp)
 
 (add-hook 'server-after-make-frame-hook
           (lambda ()
-            (set-frame-font "DejaVu Sans Mono-18")))
+            (set-frame-font "Iosevka Nerd Font Mono-18")))
 
-(set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
+(set-face-attribute 'font-lock-delimiter-face nil :foreground "#ffe600")
+(set-face-attribute 'org-meta-line nil :foreground "#e69a37")    
 (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
 (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
 (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
-
-(use-package lambda-line
-    :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
-    :custom
-    (lambda-line-icon-time t) ;; requires ClockFace font (see below)
-    (lambda-line-clockface-update-fontset "⏰") ;; set clock icon
-    (lambda-line-position 'bottom) ;; Set position of status-line 
-    (lambda-line-abbrev t) ;; abbreviate major modes
-    (lambda-line-hspace "  ")  ;; add some cushion
-    (lambda-line-prefix t) ;; use a prefix symbol
-    (lambda-line-prefix-padding nil) ;; no extra space for prefix 
-    (lambda-line-status-invert nil)  ;; no invert colors
-    (lambda-line-gui-ro-symbol  " ⨂") ;; symbols
-    (lambda-line-gui-mod-symbol " ⬤") 
-    (lambda-line-gui-rw-symbol  " ◯") 
-    (lambda-line-space-top +.20)  ;; padding on top and bottom of line
-    (lambda-line-space-bottom -.20)
-    (lambda-line-symbol-position 0.1) ;; adjust the vertical placement of symbol
-)
-
-      (lambda-line-mode 1)  ; Enable lambda-line mode
-
-      (setq visible-bell nil)  ; Turn off visual bell
-      (setq ring-bell-function 'ignore)  ; Ignore the bell function
-
-(use-package lambda-themes
-  :straight (:type git :host github :repo "lambda-emacs/lambda-themes") 
-  :custom
-  (lambda-themes-set-italic-comments t)
-  (lambda-themes-set-italic-keywords t)
-  (lambda-themes-set-variable-pitch t))
 
 (use-package lsp-mode
   :ensure t
@@ -240,19 +230,19 @@
 
 (setq org-startup-folded t)
 
-(setq org-adapt-indentation t)
+(setq org-startup-indented t)
 
 (setq org-pretty-entities t)
 
 (use-package org-bullets
-  :ensure t
-  :hook (org-mode . org-bullets-mode))
+  :ensure t)
+(add-hook 'org-mode-hook 'org-bullets-mode)
 
 (setq org-descriptive-links t)
 (global-set-key (kbd "C-c o") 'org-toggle-link-display)
 
 ;; Replace "Table of Contents" text with "Contents"
- (defun replace-toc-title (backend)
+(defun replace-toc-title (backend)
   (when (org-export-derived-backend-p backend 'html)
     (save-excursion
       (goto-char (point-min))
@@ -261,23 +251,33 @@
 
 (add-hook 'org-export-before-processing-hook 'replace-toc-title)
 
+(use-package "jupyter" :ensure t)
+
+(require 'ob-jupyter)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((jupyter . t)  ;; Enable Jupyter support
+   (emacs-lisp . t)
+   (python . t)
+   (julia . t)))  ;; Enable Julia language support
+
 (use-package gdscript-mode
   :straight (gdscript-mode
-	 :type git
-	 :host github
-	 :repo "godotengine/emacs-gdscript-mode"))
+             :type git
+             :host github
+             :repo "godotengine/emacs-gdscript-mode"))
 
 (unless (package-installed-p 'counsel)
-(package-refresh-contents)
-(package-install 'counsel))
+  (package-refresh-contents)
+  (package-install 'counsel))
 
 (unless (package-installed-p 'ivy)
-(package-refresh-contents)
-(package-install 'ivy))
+  (package-refresh-contents)
+  (package-install 'ivy))
 
 (unless (package-installed-p 'ivy-rich)
-(package-refresh-contents)
-(package-install 'ivy-rich))
+  (package-refresh-contents)
+  (package-install 'ivy-rich))
 
 
 (require 'ivy)
@@ -330,39 +330,39 @@
 (use-package f :ensure t)
 (use-package org-roam-ui :ensure t)
 (use-package org-roam
-:ensure t
-:custom
-(org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
-:bind (("C-c n l" . org-roam-buffer-toggle)
-       ("C-c n f" . org-roam-node-find)
-       ("C-c n g" . org-roam-graph)
-       ("C-c n i" . org-roam-node-insert)
-       ("C-c n c" . org-roam-capture)
-       ;; Dailies
-       ("C-c n j" . org-roam-dailies-capture-today))
-:config
-;; If you're using a vertical completion framework, you might want a more informative completion interface
-(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-(org-roam-db-autosync-mode)
-;; If using org-roam-protocol
-(require 'org-roam-protocol))
+  :ensure t
+  :custom
+  (org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
 
 (use-package fireplace :ensure t)
 
 (defun my-disable-line-numbers-in-fireplace ()
-"Disable line numbers in Fireplace."
-(when (eq major-mode 'fireplace-mode)
-(display-line-numbers-mode -1)))
+  "Disable line numbers in Fireplace."
+  (when (eq major-mode 'fireplace-mode)
+    (display-line-numbers-mode -1)))
 
 (add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
 
 (use-package multiple-cursors
   :ensure t
   :bind (("C-c m <down>" . mc/mark-next-lines)
-	 ("C-c m <up>" . mc/mark-previous-lines)
-	 ("C-c m n" . mc/mark-next-like-this)
-	 ("C-c m p" . mc/mark-previous-like-this)
-	 ("C-c m a" . mc/mark-all-like-this)))
+         ("C-c m <up>" . mc/mark-previous-lines)
+         ("C-c m n" . mc/mark-next-like-this)
+         ("C-c m p" . mc/mark-previous-like-this)
+         ("C-c m a" . mc/mark-all-like-this)))
 
 (setq mc/cmds-to-run-for-all nil)
 
@@ -375,17 +375,17 @@
 (use-package undo-tree :ensure t)
 
 (setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode t)
-  (defun toggle-line-numbering-type ()
-    "Toggle between relative and absolute line numbering."
-    (interactive)
-    (setq display-line-numbers-type
-      (if (eq display-line-numbers-type 'relative)
-      'absolute
-      'relative))
-    (global-display-line-numbers-mode -1) ; Turn off line numbering
-    (global-display-line-numbers-mode 1)) ; Turn it back on
-  (global-set-key (kbd "M-g") 'toggle-line-numbering-type)
+(defun toggle-line-numbering-type ()
+  "Toggle between relative and absolute line numbering."
+  (interactive)
+  (setq display-line-numbers-type
+        (if (eq display-line-numbers-type 'relative)
+            'absolute
+          'relative))
+  (global-display-line-numbers-mode -1) ; Turn off
+  (global-display-line-numbers-mode 1)) ; Turn on
+(global-set-key (kbd "C-x a q") 'toggle-line-numbering-type)
+(global-set-key (kbd "C-x a w") 'display-line-numbers-mode)
 
 (defun copy-line-up ()
   "Copy the current line and paste it above the current line, and remain on the copied line."
@@ -399,7 +399,7 @@
     (yank)
     (forward-line -1)))
 
-  (defun copy-line-down()
+(defun copy-line-down()
   (interactive)
   (move-beginning-of-line 1)
   (kill-line)
@@ -409,13 +409,13 @@
   (yank)
   )
 
-  (defun move-line-up ()
+(defun move-line-up ()
   "Move the current line up by one."
   (interactive)
   (transpose-lines 1)
   (previous-line 2))
 
-  (defun move-line-down ()
+(defun move-line-down ()
   "Move the current line down by one."
   (interactive)
   (next-line 1)
@@ -441,34 +441,34 @@
 (global-set-key (kbd "s-r") 'windresize) ; This is nice.
 
 (setq backup-directory-alist
-	`((".*" . ,temporary-file-directory)))
+      `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
-	`((".*" ,temporary-file-directory t)))
+      `((".*" ,temporary-file-directory t)))
 (setq make-backup-files nil) ; stop creating ~ files
 
 (setq display-buffer-alist
       '((".*" (display-buffer-same-window))))
 
 (global-set-key (kbd "<f6>") (lambda () (interactive)
-(find-file "/home/anon/Projects/Personal/org-files/encyclopedia/encyclopedia.org")
-(message: "Opened %s" (buffer-name))))
+                               (find-file "/home/anon/Projects/Personal/org-files/index.org")
+                               (message: "Opened %s" (buffer-name))))
 
 (global-set-key (kbd "<f5>") (lambda () (interactive)
-(find-file "/home/anon/.emacs.d/init.org")
-(message: "Opened %s" (buffer-name))))
+                               (find-file "/home/anon/.emacs.d/init.org")
+                               (message: "Opened %s" (buffer-name))))
 
 (setq Info-default-directory-list
-(append '("/usr/share/info")
-Info-default-directory-list
-'("~/.emacs.d/info")))
+      (append '("/usr/share/info")
+              Info-default-directory-list
+              '("~/.emacs.d/info")))
 
 (defun my-open-file-in-new-buffer ()
   "Open the file at point in a new buffer."
   (interactive)
   (let ((file (org-element-property :path (org-element-context))))
     (if file
-    (find-file file)
-  (message "No file at point"))))
+        (find-file file)
+      (message "No file at point"))))
 
 (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
 
@@ -549,32 +549,10 @@ Info-default-directory-list
   (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
 
 (use-package lsp-julia
-:config
-(setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
+  :config
+  (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
 
 (add-hook 'julia-mode-hook #'lsp-mode)
-
-(defun insert-navigation-links (html-file prev-html next-html)
-  (with-current-buffer (find-file-noselect html-file)
-    (goto-char (point-min))
-    (when (re-search-forward "</header>" nil t)  ;; Assuming your template has a <header> tag
-      (insert (format "<nav><a href='index.html'>Home Page</a> %s %s</nav>"
-                      (if prev-html (format "<a href='%s'>Previous Page</a>" prev-html) "")
-                      (if next-html (format "<a href='%s'>Next Page</a>" next-html) "")))
-      (save-buffer)
-      (kill-buffer))))
-
-(defun my-blog-add-navigation ()
-  (interactive)
-  (let* ((files (directory-files-recursively "/path/to/org-files" "\\.org$"))
-         (sorted-files (sort files #'string<)))
-    (dolist (index (number-sequence 1 (1- (length sorted-files))))
-      (let ((current-file (nth index sorted-files))
-            (prev-file (if (> index 0) (nth (1- index) sorted-files) nil))
-            (next-file (if (< index (1- (length sorted-files))) (nth (1+ index) sorted-files) nil)))
-        (insert-navigation-links (replace-regexp-in-string "\\.org$" ".html" current-file)
-                                 (and prev-file (replace-regexp-in-string "\\.org$" ".html" prev-file))
-                                 (and next-file (replace-regexp-in-string "\\.org$" ".html" next-file)))))))
 
 (use-package highlight-indent-guides :ensure t)
 (setq highlight-indent-guides-auto-enabled nil)
@@ -595,6 +573,68 @@ Info-default-directory-list
   (let ((caption (apply orig-func args)))
     (replace-regexp-in-string "Figure:" "Ábra:" caption)))
 
-(advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)x
+(advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)
 
+(defun ub/org-html-date ()
+  "Current 'date' insertion. Format is YYYY. MM. DD."
+  (interactive)
+  (let ((current-date (format-time-string "%Y. %m. %d.")))
+    (insert (format "#+BEGIN_EXPORT html\n<div class=\"date\">%s</div>\n#+END_EXPORT" current-date))))
+
+(defun ubfuns/pretty-funs ()
+  (writeroom-mode 1)
+  (display-line-numbers-mode -1)
+  (visual-line-mode 1))
+
+(defun ubfuns/dired-funs ()
+  (dired-hide-details-mode t)
+  (dired-omit-mode t))
+
+(add-hook 'org-mode-hook 'ubfuns/pretty-funs)
+
+(add-hook 'dired-mode-hook 'ubfuns/pretty-funs)
+(add-hook 'dired-mode-hook 'ubfuns/dired-funs)
+
+(add-hook 'term-mode-hook
+          (lambda ()
+            (company-mode -1)
+            (display-line-numbers-mode -1)
+            (lsp-mode -1)
+            (hl-line-mode -1)
+            ))
+
+(add-hook 'mhtml-mode-hook
+          (lambda ()
+            (display-line-numbers-mode 1)
+            ))
+
+(add-hook 'css-mode-hook
+          (lambda ()
+            (display-line-numbers-mode 1)
+            ))
+
+(add-hook 'c-mode-hook
+          (lambda ()
+            (display-line-numbers-mode 1)
+            ))
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (display-line-numbers-mode 1)
+            ))
+
+(setq TeX-engine 'xetex)
+
+(global-set-key (kbd "M-s RET") 'eval-expression)
+
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value. Useful!"
+  (interactive)
+  (let ((value (eval (preceding-sexp))))
+    (backward-kill-sexp)
+    (insert (format "%s" value))))
+(global-set-key (kbd "C-x á") 'eval-and-replace)
+(global-set-key (kbd "M-é") 'backward-word)
+(global-set-key (kbd "M-á") 'forward-word)
+
+(setq org-confirm-babel-evaluate nil)  
 (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")

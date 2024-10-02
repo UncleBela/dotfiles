@@ -524,9 +524,18 @@ dl dd {
 
 /* Center align author name, use small caps and add vertical spacing  */
 .author {
-  margin: 0.85rem 0;
+  margin: 0;
   font-variant-caps: small-caps;
+}
+
+.author p {
   text-align: center;
+}
+
+.date p {
+    text-align: center;
+    margin: 0;
+    font-variant-caps: small-caps;    
 }
 
 /* Sidenotes */
@@ -668,7 +677,7 @@ input.sidenote-toggle {
 
 /* Heading typography */
 h1 {
-  font-size: 2.5rem;
+  font-size: 3.75rem;
   line-height: 3.25rem;
   margin-bottom: 1.625rem;
 }
