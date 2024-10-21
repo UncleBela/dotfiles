@@ -2,7 +2,7 @@
 
 * Headers
 #+BEGIN_SRC emacs-lisp
-    ;;;; Uncle Béla's Emacs config
+    ;;; Uncle Béla's Emacs config
     ;;; Author: Uncle Béla
 #+END_SRC
 
@@ -96,6 +96,8 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :background "#d1d1d1"  ; Dark background color
                         :foreground "#000000") ; Light text color
     )
+
+  (set-face-attribute 'font-lock-variable-name-face nil :foreground "#1fe7fd")  
 #+end_src
 ** Dark Mode
 #+begin_src emacs-lisp
@@ -183,7 +185,6 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (global-set-key (kbd "C-c q") 'indent-region)
   (global-set-key (kbd "C-c c") 'comment-dwim)
   (global-set-key (kbd "C-c e") 'eval-buffer)
-  (global-set-key (kbd "C-c r") 'replace-regexp)  
 
   (global-set-key (kbd "C-c l") 'org-open-at-point)
 #+end_src
@@ -216,7 +217,6 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
   (set-face-attribute 'font-lock-delimiter-face nil :foreground "#ffe600")
   (set-face-attribute 'org-meta-line nil :foreground "#e69a37")    
   (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
-  (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
   (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
 #+end_src
 
@@ -269,6 +269,58 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     (which-key-mode))
 #+end_src
 
+#+BEGIN_SRC emacs-lisp
+  (use-package consult :ensure t)  
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-latex :ensure t)
+
+  (with-eval-after-load "tex-mode"
+    (add-hook 'tex-mode-hook 'lsp)
+    (add-hook 'latex-mode-hook 'lsp))
+#+END_SRC
+
+#+begin_src emacs-lisp
+  ;; Silence specific LSP warnings
+  (defun my-filter-lsp-warnings (format-string &rest args)
+    "Filter out specific lsp-mode warnings."
+    (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
+      (apply #'message format-string args)))
+
+  (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+  ;; Julia LSP
+  (use-package vterm :ensure t)
+
+  (use-package julia-mode
+    :ensure t)
+
+  (use-package julia-repl
+    :ensure t
+    :hook (julia-mode . julia-repl-mode)
+
+    :init
+    (setenv "JULIA_NUM_THREADS" "8")
+
+    :config
+    ;; Set the terminal backend
+    (julia-repl-set-terminal-backend 'vterm)
+
+    ;; Keybindings for quickly sending code to the REPL
+    (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
+    (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
+    (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
+
+  (use-package lsp-julia
+    :config
+    (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
+
+  (add-hook 'julia-mode-hook #'lsp-mode)  
+#+END_SRC
+
 * Major Modes and Packages
 Set up various major modes and additional packages.
 ** Magit
@@ -290,11 +342,6 @@ Set up various major modes and additional packages.
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t)
 #+END_SRC
-
-** Org LaTeX support
-#+begin_src emacs-lisp
-  (setq org-pretty-entities t)
-#+end_src
 
 ** Org Bullets
 #+begin_src emacs-lisp
@@ -321,6 +368,21 @@ Set up various major modes and additional packages.
 
   (add-hook 'org-export-before-processing-hook 'replace-toc-title)
 #+end_src 
+
+** Org Mode Heights
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'org-faces
+    (dolist (face '(
+                    org-level-1
+                    org-level-2
+                    org-level-3))
+      (set-face-attribute face nil :height 1.1)))
+
+  (with-eval-after-load 'org-faces
+    (dolist (face '(
+                    org-document-title))
+      (set-face-attribute face nil :height 2.5)))
+#+END_SRC
 
 ** Emacs-Jupyter interface
 #+BEGIN_SRC emacs-lisp
@@ -416,6 +478,7 @@ Set up various major modes and additional packages.
 ** Writeroom - Center buffer text
 #+BEGIN_SRC emacs-lisp
   (use-package writeroom-mode :ensure t)
+  (setq writeroom-fullscreen-effect nil)  
 #+end_src     
 #+END_SRC
 ** Windresize
@@ -489,6 +552,20 @@ Set up various major modes and additional packages.
   (use-package undo-tree :ensure t)
 #+END_SRC
    
+* EMMS
+#+BEGIN_SRC emacs-lisp
+  (use-package emms :ensure t)
+
+  (require 'emms-setup)
+  (require 'emms-tag-editor)
+  (emms-all)
+  (setq emms-source-file-default-directory "~/Music/")  ;; Set your default music directory
+
+  ;; Use id3v2 for MP3 tag editing
+  (setq emms-tag-editor-id3v2-command "id3v2")
+
+#+END_SRC
+
 * Additional Configurations
 Include miscellaneous settings and functions.
 ** Line Numbering
@@ -682,46 +759,6 @@ Include miscellaneous settings and functions.
     (setq lsp-ui-doc-enable t))
 #+end_src
 
-* LSP
-#+begin_src emacs-lisp
-  (defun my-filter-lsp-warnings (format-string &rest args)
-    "Filter out specific lsp-mode warnings."
-    (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
-      (apply #'message format-string args)))
-
-  (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
-#+end_src
-
-* Julia LSP
-#+BEGIN_SRC emacs-lisp
-  (use-package vterm :ensure t)
-
-  (use-package julia-mode
-    :ensure t)
-
-  (use-package julia-repl
-    :ensure t
-    :hook (julia-mode . julia-repl-mode)
-
-    :init
-    (setenv "JULIA_NUM_THREADS" "8")
-
-    :config
-    ;; Set the terminal backend
-    (julia-repl-set-terminal-backend 'vterm)
-
-    ;; Keybindings for quickly sending code to the REPL
-    (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
-    (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
-    (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
-
-  (use-package lsp-julia
-    :config
-    (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
-
-  (add-hook 'julia-mode-hook #'lsp-mode)  
-#+END_SRC
-
 * Highlight Indent Guides
 #+begin_src emacs-lisp
   (use-package highlight-indent-guides :ensure t)
@@ -748,6 +785,7 @@ Include miscellaneous settings and functions.
 
   (advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)
 #+END_SRC
+
 * Date
 #+BEGIN_SRC emacs-lisp
   (defun ub/org-html-date ()
@@ -801,14 +839,52 @@ Include miscellaneous settings and functions.
               ))  
 #+END_SRC
 
-* LaTeX engine
+* LaTeX
 #+BEGIN_SRC emacs-lisp
   (setq TeX-engine 'xetex)
+  (setq TeX-command-default "XeLaTeX")  
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "M-s RET") 'eval-expression)
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (defun compile-xelatex ()
+    "Compile current .tex file with xelatex in the background."
+    (interactive)
+    (let ((file (shell-quote-argument (buffer-file-name))))
+      (start-process "xelatex-process" "*xelatex-output*" "xelatex" file)))
+
+  (global-set-key (kbd "<f1> <f1>") 'compile-xelatex)
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq org-latex-text-markup-alist
+      '((bold . "\\textbf{%s}")
+        (italic . "\\emph{%s}")
+        (underline . "\\underline{%s}")
+        (verbatim . "\\texttt{%s}")
+        (strike-through . "\\sout{%s}")
+        (code . verb)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-LaTeX t)
+#+END_SRC
+
+* Export via keybind
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f1> <f2>") 'org-html-export-to-html)
+  (global-set-key (kbd "<f2> <f3>") 'org-latex-export-to-pdf)
+#+END_SRC
+
+* Helm Colors
+#+BEGIN_SRC emacs-lisp
+(use-package helm :ensure t)
+#+END_SRC
+
 * Preceding expression
 #+BEGIN_SRC emacs-lisp
   (defun eval-and-replace ()
@@ -821,6 +897,7 @@ Include miscellaneous settings and functions.
   (global-set-key (kbd "M-é") 'backward-word)
   (global-set-key (kbd "M-á") 'forward-word)  
   #+END_SRC
+  
 * TODO Tartalom
 #+BEGIN_SRC todo
   ;;; org-tartalom.el --- Automated Tartalom (ToC) Generation for Org Mode -*- lexical-binding: t; -*-

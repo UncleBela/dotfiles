@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: svg.circle
+# key: svg.circle
+# --
+<svg width="$1" height="$2">
+<circle
+    cx="$3"
+    cy="$4"
+    r="$5"
+    style="$6">
+</svg>
+$0

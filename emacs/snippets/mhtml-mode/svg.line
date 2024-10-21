@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: svg.line
+# key: svg.line
+# --
+<svg width="$1" height="$2">
+<line
+    x1="$3"
+    y1="$4"
+    x2="$5"
+    y2="$6"
+    style="stroke:$7"
+>
+</svg>
+$0

@@ -1,7 +1,7 @@
-# -*- mode: snippet -*-
-# name: org-latex
-# key: org-latex
-# --
+#+OPTIONS: toc:nil
+#+LANGUAGE: hu
+#+LATEX_COMPILER: xelatex
+
 #+MACRO: myname $1
 #+MACRO: doctitle $2
 #+MACRO: docsubject $3
@@ -15,10 +15,13 @@
 #+DATE: {{{docdate}}}
 #+LATEX_CLASS: article
 
-#+LATEX_HEADER: \usepackage[magyar,english]{babel}
+#+LATEX_HEADER: \usepackage[magyar]{babel}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
 #+LATEX_HEADER: \selectlanguage{magyar}
 
-#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{bm}
+
 #+LATEX_HEADER: \usepackage{geometry}
 #+LATEX_HEADER: \geometry{
 #+LATEX_HEADER:   a4paper,
@@ -31,12 +34,14 @@
 #+LATEX_HEADER: \usepackage{fancyhdr}
 #+LATEX_HEADER: \fancypagestyle{plain}{
 #+LATEX_HEADER:     \fancyhf{}
-#+LATEX_HEADER:     \fancyfoot[R]{\includegraphics[width=2cm]{Tux.png}}
+#+LATEX_HEADER:     \fancyfoot[R]{\includegraphics[width=1cm]{Tux.png}}
 #+LATEX_HEADER:     \fancyfoot[L]{\thedate}
-#+LATEX_HEADER:     \fancyhead[L]{Leírás}
+#+LATEX_HEADER:     \fancyhead[L]{$5}
 #+LATEX_HEADER:     \fancyhead[R]{\theauthor}
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \renewcommand{\contentsname}{Tartalomjegyzék}
+#+LATEX_HEADER: \newcommand*{\currentname}{\@currentlabelname}
 #+LATEX_HEADER: \def\@maketitle{
 #+LATEX_HEADER:   \newpage
 #+LATEX_HEADER:   \null
@@ -50,30 +55,19 @@
 #+LATEX_HEADER:   \vskip 1em}
 #+LATEX_HEADER: \makeatother
 #+LATEX_HEADER: \usepackage{lipsum}
-#+LATEX_HEADER: \usepackage{cmbright}
+#+LATEX_HEADER: \usepackage{lmodern}
 
-#+BEGIN_LaTeX
-\maketitle
-#+END_LaTeX
+#+LATEX_HEADER: \setlength{\parindent}{0pt}
+#+LATEX_HEADER: \setlength{\parskip}{0.5em}
 
 | Készítette:  | {{{myname}}} |
-| Tárgy: | {{{docsubject}}} |
 | Téma: | {{{doctitle}}} |
+| Tárgy: | {{{docsubject}}} |
 
-* Positioning of the thesis
-#+BEGIN_LaTeX
-\lipsum[1-2]
-#+END_LaTeX
+#+begin_export latex
+\maketitle
+\tableofcontents
+\pagebreak
+#+end_export
 
-* Objectives
-#+BEGIN_LaTeX
-\lipsum[3]
-#+END_LaTeX
-
-* Plan
-#+BEGIN_LaTeX
-\lipsum[4]
-#+END_LaTeX
-
-# Használt Arch csomagok: texlive-fontsextra texlive-latexextra texlive-plaingeneric
-# A nyelv beállítások nem működnek, de a felső kettő header optionbe raktam.
+$0

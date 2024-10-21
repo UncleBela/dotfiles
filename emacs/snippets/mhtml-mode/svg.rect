@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: svg.rect
+# key: svg.rect
+# --
+<svg width="$1" height="$2">
+     <rect
+     x="$3"
+     y="$4"
+     width="$5"
+     height="$6"
+     style="$7">
+</svg>
+$0

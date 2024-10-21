@@ -1,4 +1,4 @@
-;;;; Uncle Béla's Emacs config
+;;; Uncle Béla's Emacs config
 ;;; Author: Uncle Béla
 
 (setq debug-on-error nil) ;; Change to t, when in doubt
@@ -76,6 +76,8 @@
                       :foreground "#000000") ; Light text color
   )
 
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "#1fe7fd")
+
 (defun ub/darkmode ()
   "Activate Dark Mode"
   (interactive)
@@ -105,7 +107,7 @@
                       :background "#000000"  ; Dark background color
                       :foreground "#ffffff") ; Light text color
 
-  ;; ---------x
+  ;; ---------
 
   (set-face-foreground 'org-block "#ffffff")
   (set-face-background 'org-block "#0f0f0f")
@@ -151,7 +153,6 @@
 (global-set-key (kbd "C-c q") 'indent-region)
 (global-set-key (kbd "C-c c") 'comment-dwim)
 (global-set-key (kbd "C-c e") 'eval-buffer)
-(global-set-key (kbd "C-c r") 'replace-regexp)  
 
 (global-set-key (kbd "C-c l") 'org-open-at-point)
 
@@ -175,7 +176,6 @@
 (set-face-attribute 'font-lock-delimiter-face nil :foreground "#ffe600")
 (set-face-attribute 'org-meta-line nil :foreground "#e69a37")    
 (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
 (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
 
 (use-package lsp-mode
@@ -224,6 +224,50 @@
   :config
   (which-key-mode))
 
+(use-package consult :ensure t)
+
+(use-package lsp-latex :ensure t)
+
+(with-eval-after-load "tex-mode"
+  (add-hook 'tex-mode-hook 'lsp)
+  (add-hook 'latex-mode-hook 'lsp))
+
+;; Silence specific LSP warnings
+(defun my-filter-lsp-warnings (format-string &rest args)
+  "Filter out specific lsp-mode warnings."
+  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
+    (apply #'message format-string args)))
+
+(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
+
+;; Julia LSP
+(use-package vterm :ensure t)
+
+(use-package julia-mode
+  :ensure t)
+
+(use-package julia-repl
+  :ensure t
+  :hook (julia-mode . julia-repl-mode)
+
+  :init
+  (setenv "JULIA_NUM_THREADS" "8")
+
+  :config
+  ;; Set the terminal backend
+  (julia-repl-set-terminal-backend 'vterm)
+
+  ;; Keybindings for quickly sending code to the REPL
+  (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
+  (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
+  (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
+
+(use-package lsp-julia
+  :config
+  (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
+
+(add-hook 'julia-mode-hook #'lsp-mode)
+
 (use-package magit :ensure t)
 
 (use-package org :ensure t)
@@ -231,8 +275,6 @@
 (setq org-startup-folded t)
 
 (setq org-startup-indented t)
-
-(setq org-pretty-entities t)
 
 (use-package org-bullets
   :ensure t)
@@ -250,6 +292,18 @@
         (replace-match "Contents")))))
 
 (add-hook 'org-export-before-processing-hook 'replace-toc-title)
+
+(with-eval-after-load 'org-faces
+  (dolist (face '(
+                  org-level-1
+                  org-level-2
+                  org-level-3))
+    (set-face-attribute face nil :height 1.1)))
+
+(with-eval-after-load 'org-faces
+  (dolist (face '(
+                  org-document-title))
+    (set-face-attribute face nil :height 2.5)))
 
 (use-package "jupyter" :ensure t)
 
@@ -322,6 +376,7 @@
 (setq lsp-modeline-code-action-fallback-icon "💡")
 
 (use-package writeroom-mode :ensure t)
+(setq writeroom-fullscreen-effect nil)
 
 (use-package windresize :ensure t)
 
@@ -373,6 +428,16 @@
 (setq c-basic-offset 4)
 
 (use-package undo-tree :ensure t)
+
+(use-package emms :ensure t)
+
+(require 'emms-setup)
+(require 'emms-tag-editor)
+(emms-all)
+(setq emms-source-file-default-directory "~/Music/")  ;; Set your default music directory
+
+;; Use id3v2 for MP3 tag editing
+(setq emms-tag-editor-id3v2-command "id3v2")
 
 (setq display-line-numbers-type 'relative)
 (defun toggle-line-numbering-type ()
@@ -520,40 +585,6 @@
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-doc-enable t))
 
-(defun my-filter-lsp-warnings (format-string &rest args)
-  "Filter out specific lsp-mode warnings."
-  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
-    (apply #'message format-string args)))
-
-(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
-
-(use-package vterm :ensure t)
-
-(use-package julia-mode
-  :ensure t)
-
-(use-package julia-repl
-  :ensure t
-  :hook (julia-mode . julia-repl-mode)
-
-  :init
-  (setenv "JULIA_NUM_THREADS" "8")
-
-  :config
-  ;; Set the terminal backend
-  (julia-repl-set-terminal-backend 'vterm)
-
-  ;; Keybindings for quickly sending code to the REPL
-  (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
-  (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
-  (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
-
-(use-package lsp-julia
-  :config
-  (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
-
-(add-hook 'julia-mode-hook #'lsp-mode)
-
 (use-package highlight-indent-guides :ensure t)
 (setq highlight-indent-guides-auto-enabled nil)
 
@@ -623,8 +654,32 @@
             ))
 
 (setq TeX-engine 'xetex)
+(setq TeX-command-default "XeLaTeX")
 
 (global-set-key (kbd "M-s RET") 'eval-expression)
+
+(defun compile-xelatex ()
+  "Compile current .tex file with xelatex in the background."
+  (interactive)
+  (let ((file (shell-quote-argument (buffer-file-name))))
+    (start-process "xelatex-process" "*xelatex-output*" "xelatex" file)))
+
+(global-set-key (kbd "<f1> <f1>") 'compile-xelatex)
+
+(setq org-latex-text-markup-alist
+      '((bold . "\\textbf{%s}")
+        (italic . "\\emph{%s}")
+        (underline . "\\underline{%s}")
+        (verbatim . "\\texttt{%s}")
+        (strike-through . "\\sout{%s}")
+        (code . verb)))
+
+(setq org-export-with-LaTeX t)
+
+(global-set-key (kbd "<f1> <f2>") 'org-html-export-to-html)
+(global-set-key (kbd "<f2> <f3>") 'org-latex-export-to-pdf)
+
+(use-package helm :ensure t)
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value. Useful!"

@@ -7,13 +7,9 @@
 #+AUTHOR: $2
 #+OPTIONS: num:nil toc:nil html-postamble:nil
 #+OPTIONS: tex:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./style.css">
-# #+HTML_HEAD: <script src="./script.js"></script>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="/jegyzetek/style.css">
+# #+HTML_HEAD: <script src="/jegyzetek/script.js"></script>
 
 #+begin_author
 $3
 #+end_author
-
-#+BEGIN_EXPORT html
-<div class="date">$4</div>
-#+END_EXPORT

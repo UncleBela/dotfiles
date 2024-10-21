@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: svg.ellipse
+# key: svg.ellipse
+# --
+<svg width="$1" height="$2">
+     <ellipse
+     cx="$3"
+     cy="$4"
+     rx="$5"
+     ry="$6"
+     style="$7">
+</svg>
+$0

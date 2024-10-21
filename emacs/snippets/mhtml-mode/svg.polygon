@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: svg.polygon
+# key: svg.polygon
+# --
+<svg width="$1" height="$2">
+     <polygon
+     points="$3"
+     style="$4">
+</svg>

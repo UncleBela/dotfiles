@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name: tex-new
+# key: tex-new
+# --
+\def \myname {$1}
+\def \mydoctitle {$2}
+\def \mysubtitle {$3}
+\def \mydocdate {$4}
+
+\documentclass[16pt]{beamer}
+\usepackage{tikz}
+\usetheme{Szeged}
+\usecolortheme{beaver}
+\title[\mydoctitle] % (optional)
+{\mydoctitle}
+\subtitle{\mysubtitle}
+\author[\myname] % (optional)
+{\myname}
+
+\date[\mydocdate] % (optional)
+{\mydocdate}
+
+% Logo
+\logo{
+\includegraphics[width=0.7cm]{Tux.png}    
+}
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Demonstrating large fonts$0}
+\end{frame}
+
+\end{document}
