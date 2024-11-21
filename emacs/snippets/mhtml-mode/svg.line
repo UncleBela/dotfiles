@@ -8,7 +8,6 @@
     y1="$4"
     x2="$5"
     y2="$6"
-    style="stroke:$7"
->
+    style="stroke:$7"/>
 </svg>
 $0

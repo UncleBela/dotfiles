@@ -1,0 +1,78 @@
+# -*- mode: snippet -*-
+# name: gyb-org-latex
+# key: gyb-org-latex
+# author: Gyenes Béla (www.gyenes.xyz)
+# --
+#+OPTIONS: toc:nil
+#+LANGUAGE: hu
+#+LATEX_COMPILER: xelatex
+
+#+MACRO: myname $1
+#+MACRO: doctitle $2
+#+MACRO: docsubject $3
+#+MACRO: docdate $4
+
+#+PROPERTY: header-args:emacs-lisp :eval yes
+#+OPTIONS: html-postamble:nil
+
+#+TITLE: {{{doctitle}}}
+#+AUTHOR: {{{myname}}}
+#+DATE: {{{docdate}}}
+#+LATEX_CLASS: article
+
+#+LATEX_HEADER: \usepackage[magyar]{babel}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \selectlanguage{magyar}
+
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{bm}
+
+#+LATEX_HEADER: \usepackage{geometry}
+#+LATEX_HEADER: \geometry{
+#+LATEX_HEADER:   a4paper,
+#+LATEX_HEADER:   total={170mm,257mm},
+#+LATEX_HEADER:   left=20mm,
+#+LATEX_HEADER:   top=20mm,
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{titling}
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \fancypagestyle{plain}{
+#+LATEX_HEADER:     \fancyhf{}
+#+LATEX_HEADER:     \fancyfoot[R]{\includegraphics[width=1cm]{Tux.png}}
+#+LATEX_HEADER:     \fancyfoot[L]{\thedate}
+#+LATEX_HEADER:     \fancyhead[L]{$5}
+#+LATEX_HEADER:     \fancyhead[R]{\theauthor}
+#+LATEX_HEADER: }
+#+LATEX_HEADER: \makeatletter
+#+LATEX_HEADER: \renewcommand{\contentsname}{Tartalomjegyzék}
+#+LATEX_HEADER: \newcommand*{\currentname}{\@currentlabelname}
+#+LATEX_HEADER: \def\@maketitle{
+#+LATEX_HEADER:   \newpage
+#+LATEX_HEADER:   \null
+#+LATEX_HEADER:   \vskip 1em%
+#+LATEX_HEADER:   \begin{center}%
+#+LATEX_HEADER:   \let \footnote \thanks
+#+LATEX_HEADER:     {\LARGE \@title \par}%
+#+LATEX_HEADER:     \vskip 1em%
+#+LATEX_HEADER:   \end{center}%
+#+LATEX_HEADER:   \par
+#+LATEX_HEADER:   \vskip 1em}
+#+LATEX_HEADER: \makeatother
+#+LATEX_HEADER: \usepackage{lipsum}
+#+LATEX_HEADER: \usepackage{lmodern}
+
+#+LATEX_HEADER: \setlength{\parindent}{0pt}
+#+LATEX_HEADER: \setlength{\parskip}{0.5em}
+
+| Készítette:  | {{{myname}}} |
+| Téma: | {{{doctitle}}} |
+| Tárgy: | {{{docsubject}}} |
+
+#+begin_export latex
+\maketitle
+\tableofcontents
+\pagebreak
+#+end_export
+
+$0

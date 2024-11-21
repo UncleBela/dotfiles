@@ -1,0 +1,2 @@
+#+MACRO: today (eval (format-time-string "%Y / %m / %d"))
+#+MACRO: color @@html:<font color="$1">$2</font>@@

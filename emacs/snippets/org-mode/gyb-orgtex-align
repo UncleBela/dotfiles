@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: gyb-orgtex-align
+# key: gyb-orgtex-align
+# author: Gyenes Béla (www.gyenes.xyz)
+# --
+
+#+begin_latex
+\begin{align}
+$0  \\\
+\end{align}
+#+end_latex

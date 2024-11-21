@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: gyb-org-heading
+# key: ~goh
+# --
+*$1 $2 
+:PROPERTIES:
+:CUSTOM_ID: ${3}
+:END:
+$0

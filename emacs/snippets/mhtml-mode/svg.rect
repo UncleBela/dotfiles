@@ -8,6 +8,6 @@
      y="$4"
      width="$5"
      height="$6"
-     style="$7">
+     style="$7"/>
 </svg>
 $0

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: svg.path
+# key: svg.path
+# --
+<svg width="$1" height="$2">
+<path
+    d="$3"
+    style="$4"/>
+</svg>
+$5

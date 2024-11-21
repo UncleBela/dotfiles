@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: gyb-org-src-tangle
+# key: gyb-org-src-tangle
+# author: Gyenes Béla (www.gyenes.xyz)
+# --
+#+begin_src emacs-lisp :tangle "gyb-lisp/$1" :mkdirp yes
+$0
+#+end_src

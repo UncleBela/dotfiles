@@ -1,0 +1,10 @@
+
+# -*- mode: snippet -*-
+# name: ub-header
+# key: ub-header
+# author: Gyenes Béla (www.gyenes.xyz)
+# --
+#+TITLE: $1
+#+AUTHOR: $2
+#+LANGUAGE: $3
+$0

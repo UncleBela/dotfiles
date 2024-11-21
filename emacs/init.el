@@ -25,286 +25,6 @@
 
 (require 'ox-texinfo)
 
-(defun ub/lightmode ()
-  "Activate Light Mode"
-  (interactive)
-  (set-face-attribute 'default nil :foreground "black" :background "#faf7ee")
-  (set-face-attribute 'fringe nil :background "#faf7ee")
-  (set-cursor-color "#2a9b00")
-
-  (set-face-attribute 'region nil :background "#b3b3b3")
-  (set-face-attribute 'highlight nil :background "#dbdbdb")
-  (set-face-background 'hl-line "#dbdbdb")
-  (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")     
-  (set-face-foreground 'font-lock-string-face "#be3c16")
-  (set-face-foreground 'org-level-1 "DodgerBlue")
-  (set-face-foreground 'org-level-2 "LimeGreen")
-  (set-face-foreground 'org-level-3 "LightSeaGreen")
-  "white"
-  (set-frame-parameter nil 'alpha-background 100)
-  (add-to-list 'default-frame-alist '(alpha-background . 100))
-  (set-face-foreground 'line-number-current-line "#338b41")
-
-  (set-face-attribute 'font-lock-comment-face nil :foreground "#3d3d3d")
-
-  ;; ---
-
-  (set-face-foreground 'org-block "#00007f")
-  (set-face-background 'org-block "#ccc9c0")
-
-  (set-face-foreground 'org-block-begin-line "#545454")
-  (set-face-background 'org-block-begin-line "#b3afa6")
-
-  (set-face-foreground 'org-block-end-line "#545454")
-  (set-face-background 'org-block-end-line "#b3afa6")
-
-  (set-face-attribute 'font-lock-keyword-face nil :foreground "#087e1b")
-
-  ;; ----
-
-  (set-face-attribute 'mode-line nil
-                      :background "#334455") ; #334455: Dark Blue
-
-  ;; Customize the default mode line faces for your lambda line
-  (set-face-attribute 'mode-line nil
-                      :background "#d1d1d1"  ; Dark background color
-                      :foreground "#000000"  ; Light text color
-                      )
-
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#d1d1d1"  ; Dark background color
-                      :foreground "#000000") ; Light text color
-  )
-
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "#1fe7fd")
-
-(defun ub/darkmode ()
-  "Activate Dark Mode"
-  (interactive)
-  (set-face-attribute 'region nil :background "#757474")
-  (set-face-attribute 'highlight nil :background "#262626")
-  (set-face-attribute 'fringe nil :background "#1a181b")
-  (set-face-background 'hl-line "#454545")
-  (set-face-attribute 'default nil :foreground "white" :background "#1a181b")
-  (set-face-foreground 'org-level-1 "#F05941")
-  (set-face-foreground 'org-level-2 "#BE3144")
-  (set-face-foreground 'org-level-3 "#872341")
-  (set-face-foreground 'org-level-4 "#94485f")
-  (set-face-foreground 'org-link "#2e8bf0")
-  (set-frame-parameter nil 'alpha-background 100)
-  (add-to-list 'default-frame-alist '(alpha-background . 100))
-  (set-face-foreground 'line-number-current-line "#ffe600") 
-
-  (set-face-attribute 'font-lock-comment-face nil :foreground "#ffe600")
-
-  (set-face-attribute 'mode-line nil
-                      :background "#000000"  ; Dark background color
-                      :foreground "#ffffff"  ; Light text color
-                      )
-
-
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#000000"  ; Dark background color
-                      :foreground "#ffffff") ; Light text color
-
-  ;; ---------
-
-  (set-face-foreground 'org-block "#ffffff")
-  (set-face-background 'org-block "#0f0f0f")
-  (set-face-foreground 'org-block-begin-line "#cc0433")
-  (set-face-background 'org-block-begin-line "#141414")
-  (set-face-foreground 'org-block-end-line "#cc0433")
-  (set-face-background 'org-block-end-line "#141414")
-  (set-face-attribute 'font-lock-keyword-face nil :foreground "#ffc400")    
-
-
-  ;; --------x
-
-  (set-face-attribute 'mode-line nil
-                      :background "#334455") ; #334455: Dark Blue
-
-  ;; Customize the default mode line faces for your lambda line
-  (set-face-attribute 'mode-line nil
-                      :background "#141414"  ; Dark background color
-                      :foreground "#ffffff"  ; Light text color
-                      )
-
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#141414"  ; Dark background color
-                      :foreground "#ffffff") ; Light text color
-  )
-
-(set-face-foreground 'org-meta-line "#00781a")
-
-(defun ub/tp ()
-  (interactive)
-  (set-frame-parameter nil 'alpha-background 80)
-  (add-to-list 'default-frame-alist '(alpha-background . 80))    
-  )
-
-(global-set-key (kbd "M-j") 'copy-line-down)
-(global-set-key (kbd "M-k") 'copy-line-up)
-(global-set-key (kbd "C-j") 'move-line-down)
-(global-set-key (kbd "C-k") 'move-line-up)
-(global-set-key (kbd "C-z") 'undo-only)
-(global-set-key (kbd "C-u") 'undo-redo)
-(global-set-key (kbd "C-x u") 'universal-argument)
-
-(global-set-key (kbd "C-c q") 'indent-region)
-(global-set-key (kbd "C-c c") 'comment-dwim)
-(global-set-key (kbd "C-c e") 'eval-buffer)
-
-(global-set-key (kbd "C-c l") 'org-open-at-point)
-
-(global-hl-line-mode 1)
-
-(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono-18")
-
-;;;; Light Mode
-(ub/lightmode)
-
-;; Dark Mode
-;; (ub/darkmode)
-
-;; Transparent Mode
-;; (ub/tp)
-
-(add-hook 'server-after-make-frame-hook
-          (lambda ()
-            (set-frame-font "Iosevka Nerd Font Mono-18")))
-
-(set-face-attribute 'font-lock-delimiter-face nil :foreground "#ffe600")
-(set-face-attribute 'org-meta-line nil :foreground "#e69a37")    
-(set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
-(set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
-
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :hook ((bash-mode . lsp)
-         (python-mode . lsp)
-         (julia-mode . lsp)
-         (html-mode . lsp)
-         (css-mode . lsp)
-         (js-mode . lsp)
-         (typescript-mode . lsp)
-         (sh-mode . lsp)
-         (c-mode . lsp)
-         (c++-mode . lsp))
-  :custom
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-completion-provider :capf)  ; Common setting for completion
-  (lsp-clients-clangd-executable "/usr/bin/clangd"))
-
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-
-(use-package company
-  :ensure t
-  :config
-  (setq company-idle-delay 0.2
-        company-minimum-prefix-length 1)
-  (global-company-mode t))
-
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
-
-(use-package yasnippet-snippets
-  :ensure t)
-
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode))
-
-(use-package consult :ensure t)
-
-(use-package lsp-latex :ensure t)
-
-(with-eval-after-load "tex-mode"
-  (add-hook 'tex-mode-hook 'lsp)
-  (add-hook 'latex-mode-hook 'lsp))
-
-;; Silence specific LSP warnings
-(defun my-filter-lsp-warnings (format-string &rest args)
-  "Filter out specific lsp-mode warnings."
-  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
-    (apply #'message format-string args)))
-
-(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
-
-;; Julia LSP
-(use-package vterm :ensure t)
-
-(use-package julia-mode
-  :ensure t)
-
-(use-package julia-repl
-  :ensure t
-  :hook (julia-mode . julia-repl-mode)
-
-  :init
-  (setenv "JULIA_NUM_THREADS" "8")
-
-  :config
-  ;; Set the terminal backend
-  (julia-repl-set-terminal-backend 'vterm)
-
-  ;; Keybindings for quickly sending code to the REPL
-  (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
-  (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
-  (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
-
-(use-package lsp-julia
-  :config
-  (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
-
-(add-hook 'julia-mode-hook #'lsp-mode)
-
-(use-package magit :ensure t)
-
-(use-package org :ensure t)
-
-(setq org-startup-folded t)
-
-(setq org-startup-indented t)
-
-(use-package org-bullets
-  :ensure t)
-(add-hook 'org-mode-hook 'org-bullets-mode)
-
-(setq org-descriptive-links t)
-(global-set-key (kbd "C-c o") 'org-toggle-link-display)
-
-;; Replace "Table of Contents" text with "Contents"
-(defun replace-toc-title (backend)
-  (when (org-export-derived-backend-p backend 'html)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "Table of Contents" nil t)
-        (replace-match "Contents")))))
-
-(add-hook 'org-export-before-processing-hook 'replace-toc-title)
-
-(with-eval-after-load 'org-faces
-  (dolist (face '(
-                  org-level-1
-                  org-level-2
-                  org-level-3))
-    (set-face-attribute face nil :height 1.1)))
-
-(with-eval-after-load 'org-faces
-  (dolist (face '(
-                  org-document-title))
-    (set-face-attribute face nil :height 2.5)))
-
 (use-package "jupyter" :ensure t)
 
 (require 'ob-jupyter)
@@ -314,46 +34,6 @@
    (emacs-lisp . t)
    (python . t)
    (julia . t)))  ;; Enable Julia language support
-
-(use-package gdscript-mode
-  :straight (gdscript-mode
-             :type git
-             :host github
-             :repo "godotengine/emacs-gdscript-mode"))
-
-(unless (package-installed-p 'counsel)
-  (package-refresh-contents)
-  (package-install 'counsel))
-
-(unless (package-installed-p 'ivy)
-  (package-refresh-contents)
-  (package-install 'ivy))
-
-(unless (package-installed-p 'ivy-rich)
-  (package-refresh-contents)
-  (package-install 'ivy-rich))
-
-
-(require 'ivy)
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(setq ivy-height 10)
-(setq ivy-display-style 'fancy)
-(setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-
-;; Disabling ido mode to disable jankiness in buffer menus and file menus
-(ido-mode -1)
-
-;; Ivy-rich configuration
-(require 'ivy-rich)
-(ivy-rich-mode 1)
-
-;; Use counsel for better integration
-(require 'counsel)
-(counsel-mode 1)
-
-(setq ivy-format-function 'ivy-format-function-line)
 
 (use-package projectile
   :ensure t
@@ -379,28 +59,6 @@
 (setq writeroom-fullscreen-effect nil)
 
 (use-package windresize :ensure t)
-
-(use-package websocket :ensure t)
-(use-package simple-httpd :ensure t)
-(use-package f :ensure t)
-(use-package org-roam-ui :ensure t)
-(use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today))
-  :config
-  ;; If you're using a vertical completion framework, you might want a more informative completion interface
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-  (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol))
 
 (use-package fireplace :ensure t)
 
@@ -428,16 +86,6 @@
 (setq c-basic-offset 4)
 
 (use-package undo-tree :ensure t)
-
-(use-package emms :ensure t)
-
-(require 'emms-setup)
-(require 'emms-tag-editor)
-(emms-all)
-(setq emms-source-file-default-directory "~/Music/")  ;; Set your default music directory
-
-;; Use id3v2 for MP3 tag editing
-(setq emms-tag-editor-id3v2-command "id3v2")
 
 (setq display-line-numbers-type 'relative)
 (defun toggle-line-numbering-type ()
@@ -516,11 +164,11 @@
 
 (global-set-key (kbd "<f6>") (lambda () (interactive)
                                (find-file "/home/anon/Projects/Personal/org-files/index.org")
-                               (message: "Opened %s" (buffer-name))))
+                               (message "Opened %s" (buffer-name))))
 
 (global-set-key (kbd "<f5>") (lambda () (interactive)
-                               (find-file "/home/anon/.emacs.d/init.org")
-                               (message: "Opened %s" (buffer-name))))
+                               (find-file "~/.emacs.d/init.org")
+                               (message "Opened %s" (buffer-name))))
 
 (setq Info-default-directory-list
       (append '("/usr/share/info")
@@ -542,7 +190,7 @@
 (defun ivy-my-yasnippet ()
   "Custom yasnippet selection with ivy from ~/.emacs.d/snippets dir"
   (interactive)
-  (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Default *snippets* directory
+  (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Default *snippets*
          (choices (yas--all-templates (yas--get-snippet-tables)))
          (my-snippets (seq-filter
                        (lambda (template)
@@ -561,29 +209,6 @@
                           (when template
                             (yas-expand-snippet (yas--template-content template))))))))
 (global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
-
-;; Company mode setup
-(use-package company
-  :ensure t
-  :config
-  (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0.0))  ;; Show suggestions immediately
-
-;; TypeScript specific setup
-(use-package typescript-mode
-  :ensure t
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2))
-
-;; Optional: setup lsp-ui for better UI
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-doc-enable t))
 
 (use-package highlight-indent-guides :ensure t)
 (setq highlight-indent-guides-auto-enabled nil)
@@ -606,25 +231,27 @@
 
 (advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)
 
-(defun ub/org-html-date ()
-  "Current 'date' insertion. Format is YYYY. MM. DD."
-  (interactive)
-  (let ((current-date (format-time-string "%Y. %m. %d.")))
-    (insert (format "#+BEGIN_EXPORT html\n<div class=\"date\">%s</div>\n#+END_EXPORT" current-date))))
-
-(defun ubfuns/pretty-funs ()
+(defun gybfuns/pretty-funs ()
   (writeroom-mode 1)
   (display-line-numbers-mode -1)
   (visual-line-mode 1))
 
-(defun ubfuns/dired-funs ()
+(defun gybfuns/dired-funs ()
   (dired-hide-details-mode t)
   (dired-omit-mode t))
 
-(add-hook 'org-mode-hook 'ubfuns/pretty-funs)
+(add-hook 'org-mode-hook 'gybfuns/pretty-funs)
 
-(add-hook 'dired-mode-hook 'ubfuns/pretty-funs)
-(add-hook 'dired-mode-hook 'ubfuns/dired-funs)
+(add-hook 'dired-mode-hook 'gybfuns/pretty-funs)
+(add-hook 'dired-mode-hook 'gybfuns/dired-funs)
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (company-mode -1)
+            (display-line-numbers-mode -1)
+            (lsp-mode -1)
+            (hl-line-mode -1)              
+            ))
 
 (add-hook 'term-mode-hook
           (lambda ()
@@ -653,18 +280,7 @@
             (display-line-numbers-mode 1)
             ))
 
-(setq TeX-engine 'xetex)
-(setq TeX-command-default "XeLaTeX")
-
 (global-set-key (kbd "M-s RET") 'eval-expression)
-
-(defun compile-xelatex ()
-  "Compile current .tex file with xelatex in the background."
-  (interactive)
-  (let ((file (shell-quote-argument (buffer-file-name))))
-    (start-process "xelatex-process" "*xelatex-output*" "xelatex" file)))
-
-(global-set-key (kbd "<f1> <f1>") 'compile-xelatex)
 
 (setq org-latex-text-markup-alist
       '((bold . "\\textbf{%s}")
@@ -676,13 +292,18 @@
 
 (setq org-export-with-LaTeX t)
 
-(global-set-key (kbd "<f1> <f2>") 'org-html-export-to-html)
-(global-set-key (kbd "<f2> <f3>") 'org-latex-export-to-pdf)
+(defun compile-xelatex ()
+  "Compile current .tex file with xelatex in the background."
+  (interactive)
+  (let ((file (shell-quote-argument (buffer-file-name))))
+    (start-process "xelatex-process" "*xelatex-output*" "xelatex" file)))
+
+(global-set-key (kbd "<f1> <f3>") 'compile-xelatex)
 
 (use-package helm :ensure t)
 
 (defun eval-and-replace ()
-  "Replace the preceding sexp with its value. Useful!"
+  "Replace the preceding sexp with its value. Magnificent!"
   (interactive)
   (let ((value (eval (preceding-sexp))))
     (backward-kill-sexp)
@@ -691,5 +312,9 @@
 (global-set-key (kbd "M-é") 'backward-word)
 (global-set-key (kbd "M-á") 'forward-word)
 
-(setq org-confirm-babel-evaluate nil)  
-(org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
+(defun load-directory (dir)
+  "This function loads all elisp files."
+  (dolist (file (directory-files dir t "\\.el$"))
+    (load file)))
+
+(load-directory "~/.emacs.d/gyb-lisp/")
