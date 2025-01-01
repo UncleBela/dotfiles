@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: gyb-org-src
-# key: gyb-org-src
+# name: src
+# key: src
 # --
 #+begin_src $1
 $0

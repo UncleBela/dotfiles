@@ -7,8 +7,8 @@
 #+LANGUAGE: hu
 #+LATEX_COMPILER: xelatex
 
-#+MACRO: myname $1
-#+MACRO: doctitle $2
+#+MACRO: myname ${1}
+#+MACRO: doctitle ${2}
 #+MACRO: docsubject $3
 #+MACRO: docdate $4
 
@@ -39,9 +39,9 @@
 #+LATEX_HEADER: \usepackage{fancyhdr}
 #+LATEX_HEADER: \fancypagestyle{plain}{
 #+LATEX_HEADER:     \fancyhf{}
-#+LATEX_HEADER:     \fancyfoot[R]{\includegraphics[width=1cm]{Tux.png}}
+#+LATEX_HEADER:     \fancyfoot[R]{\includegraphics[width=1cm]{/home/anon/born.jpg}}
 #+LATEX_HEADER:     \fancyfoot[L]{\thedate}
-#+LATEX_HEADER:     \fancyhead[L]{$5}
+#+LATEX_HEADER:     \fancyhead[L]{\thetitle}
 #+LATEX_HEADER:     \fancyhead[R]{\theauthor}
 #+LATEX_HEADER: }
 #+LATEX_HEADER: \makeatletter
@@ -65,9 +65,10 @@
 #+LATEX_HEADER: \setlength{\parindent}{0pt}
 #+LATEX_HEADER: \setlength{\parskip}{0.5em}
 
-| Készítette:  | {{{myname}}} |
-| Téma: | {{{doctitle}}} |
-| Tárgy: | {{{docsubject}}} |
+| Készítette: | {{{myname}}}     |
+| Téma:       | {{{doctitle}}}   |
+| Tárgy:      | {{{docsubject}}} |
+| Program:    | \TeX             |
 
 #+begin_export latex
 \maketitle

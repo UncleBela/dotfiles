@@ -1,14 +1,31 @@
-#+PROPERTY: header-args:emacs-lisp :tangle init.el
+#+title: GNU Emacs Configuration
+#+author: Gyenes Béla
+#+email: contact@gyenes.xyz
+#+options: toc:t author:t email:t num:t
+#+language: en
+#+property: header-args:emacs-lisp :tangle init.el
 
-* Package Management
-First of all, we will add MEPLA as a repository, thus, it will unlock us many other packages that are handy.
+* Headers
+:PROPERTIES:
+:CUSTOM_ID: headers
+:END:
 #+begin_src emacs-lisp
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+    ;;; Uncle Béla's Emacs config
+    ;;; Author: Uncle Béla
+#+end_src
+
+* Debugging (in case it's needed)
+:PROPERTIES:
+:CUSTOM_ID: debugging
+:END:
+#+begin_src emacs-lisp
+(setq debug-on-error nil) ;; Change to t, when in doubt
 #+end_src
 
 * Bootstrap straight.el
+:PROPERTIES:
+:CUSTOM_ID: straightel
+:END:
 #+begin_src emacs-lisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
@@ -28,40 +45,78 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
 #+end_src
 
 * Loading Packages
+:PROPERTIES:
+:CUSTOM_ID: loading_packages
+:END:
 #+begin_src emacs-lisp
   (require 'ox-texinfo)
 #+end_src
 
-* UB Settings
+* External packages
+** Xah Lee Wolfram mode
+#+begin_src emacs-lisp :tangle "gyb-lisp/external-packages.el" :mkdirp yes
+  (add-to-list 'load-path "~/.emacs.d/custom-packages/gyb-wolfram-mode")
+  (require 'gyb-wolfram-mode)
+#+end_src
+
+* GYB Themes
+:PROPERTIES:
+:CUSTOM_ID: gyb_themes
+:END:
+:LOGBOOK:
+CLOCK: [2024-12-23 h 14:52]--[2024-12-23 h 14:52] =>  0:00
+CLOCK: [2024-12-23 h 14:52]--[2024-12-23 h 14:52] =>  0:00
+CLOCK: [2024-12-23 h 14:52]--[2024-12-23 h 14:52] =>  0:00
+:END:
 ** Light Mode
-#+begin_src emacs-lisp
-  (defun ub-lightmode ()
+:PROPERTIES:
+:CUSTOM_ID: light_mode
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-themes.el" :mkdirp yes
+  (defun gyb/lightmode ()
     "Activate Light Mode"
     (interactive)
+    (set-face-attribute 'default nil :foreground "black" :background "#ffffff")
+    (set-face-attribute 'fringe nil :background "#ffffff")
+    (set-cursor-color "#000000")
+
     (set-face-attribute 'region nil :background "#b3b3b3")
     (set-face-attribute 'highlight nil :background "#dbdbdb")
-    (set-face-attribute 'fringe nil :background "white")
     (set-face-background 'hl-line "#dbdbdb")
-    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")
-    (set-face-foreground 'font-lock-string-face "red")
-    (set-face-foreground 'org-level-1 "DodgerBlue")
-    (set-face-foreground 'org-level-2 "LimeGreen")
-    (set-face-foreground 'org-level-3 "LightSeaGreen")
-    (set-face-attribute 'default nil :foreground "black" :background "white")
+    (set-face-foreground 'font-lock-function-name-face "MediumVioletRed")     
+    (set-face-foreground 'font-lock-string-face "#be3c16")
+
     (set-frame-parameter nil 'alpha-background 100)
     (add-to-list 'default-frame-alist '(alpha-background . 100))
+    (set-face-foreground 'line-number-current-line "#338b41")
+
+    (set-face-attribute 'font-lock-comment-face nil :foreground "#55a630")
+    (set-face-foreground 'flycheck-info "#55a630")    
 
     ;; ---
 
     (set-face-foreground 'org-block "#00007f")
-    (set-face-background 'org-block "#f8f8eb")
+    (set-face-background 'org-block "#ccc9c0")
 
     (set-face-foreground 'org-block-begin-line "#545454")
-    (set-face-background 'org-block-begin-line "#e0dfd1")
+    (set-face-background 'org-block-begin-line "#b3afa6")
 
     (set-face-foreground 'org-block-end-line "#545454")
-    (set-face-background 'org-block-end-line "#e0dfd1")
+    (set-face-background 'org-block-end-line "#b3afa6")
+
+    (set-face-foreground 'org-level-1 "DodgerBlue")
+    (set-face-foreground 'org-level-2 "LimeGreen")
+    (set-face-foreground 'org-level-3 "LightSeaGreen")
+    "white"
+    (set-face-foreground 'org-hide "#ffffff")
+    (set-face-foreground 'org-document-title "#4695bd")
+
+    (set-face-foreground 'dired-directory "#16a9ce")
     
+    (set-face-foreground 'org-link "#4695bd")    
+
+    (set-face-attribute 'font-lock-keyword-face nil :foreground "#087e1b")
+
     ;; ----
 
     (set-face-attribute 'mode-line nil
@@ -73,24 +128,50 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :foreground "#000000"  ; Light text color
                         )
 
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#d1d1d1"  ; Dark background color
-                      :foreground "#000000") ; Light text color
-)
+    (set-face-attribute 'mode-line-inactive nil
+                        :background "#d1d1d1"  ; Dark background color
+                        :foreground "#000000") ; Light text color
+    )
+
+  (set-face-attribute 'font-lock-variable-name-face nil :foreground "#1fe7fd")  
 #+end_src
+
 ** Dark Mode
-#+begin_src emacs-lisp
-  (defun ub-darkmode ()
+:PROPERTIES:
+:CUSTOM_ID: dark_mode
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-themes.el" :mkdirp yes
+  (defun gyb/darkmode ()
     "Activate Dark Mode"
     (interactive)
     (set-face-attribute 'region nil :background "#757474")
     (set-face-attribute 'highlight nil :background "#262626")
-    (set-face-attribute 'fringe nil :background "black")
+    (set-face-attribute 'fringe nil :background "#000000")
     (set-face-background 'hl-line "#454545")
     (set-face-attribute 'default nil :foreground "white" :background "black")
-    (set-face-foreground 'org-level-1 "GreenYellow")
+
+    (set-face-foreground 'org-level-1 "#e8fcb3")
+    (set-face-foreground 'org-level-2 "#e8fcb3")
+    (set-face-foreground 'org-level-3 "#e8fcb3")
+    (set-face-foreground 'org-level-4 "#e8fcb3")
+    (set-face-foreground 'org-hide "#000000")
+    (set-face-foreground 'org-link "#65d4eb")
+    (set-face-foreground 'org-document-title "#ffffff")
+    (set-face-foreground 'org-document-info "#ffffff")
+    (set-face-foreground 'org-document-info-keyword "#ffffff")
+    (set-face-foreground 'org-meta-line "#1fdab7")
+
+    (set-face-foreground 'font-lock-function-name-face "#d43cc0")
+    (set-face-foreground 'font-lock-string-face "#9befdb")
+
+    (set-face-foreground 'flycheck-info "#9befdb")
+    (set-face-foreground 'font-lock-comment-face "#9befdb")
+
+    (set-cursor-color "#ffffff")
+
     (set-frame-parameter nil 'alpha-background 100)
     (add-to-list 'default-frame-alist '(alpha-background . 100))
+    (set-face-foreground 'line-number-current-line "#ffe600") 
 
     (set-face-attribute 'mode-line nil
                         :background "#000000"  ; Dark background color
@@ -102,17 +183,22 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :background "#000000"  ; Dark background color
                         :foreground "#ffffff") ; Light text color
 
-    ;; ---------x
+    ;; ---------
 
     (set-face-foreground 'org-block "#ffffff")
     (set-face-background 'org-block "#0f0f0f")
-    (set-face-foreground 'org-block-begin-line "#146dfc")
+    (set-face-foreground 'org-block-begin-line "#16df72")
     (set-face-background 'org-block-begin-line "#141414")
-    (set-face-foreground 'org-block-end-line "#146dfc")
+    (set-face-foreground 'org-block-end-line "#16df72")    
     (set-face-background 'org-block-end-line "#141414")
+    (set-face-attribute 'font-lock-keyword-face nil :foreground "#2dd3b8")    
 
 
-    ;; --------x
+    ;; --------
+
+    (set-face-foreground 'dired-directory "#86adf9")
+
+    ;; --------    
 
     (set-face-attribute 'mode-line nil
                         :background "#334455") ; #334455: Dark Blue
@@ -123,23 +209,44 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
                         :foreground "#ffffff"  ; Light text color
                         )
 
-  (set-face-attribute 'mode-line-inactive nil
-                      :background "#141414"  ; Dark background color
-                      :foreground "#ffffff") ; Light text color
-  )
+    (set-face-attribute 'mode-line-inactive nil
+                        :background "#141414"  ; Dark background color
+                        :foreground "#ffffff") ; Light text color
+    )
 #+end_src
 
 ** Transparent Emacs
-#+begin_src emacs-lisp
-  (defun ub-tp ()
+:PROPERTIES:
+:CUSTOM_ID: transparent_emacs
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-themes.el" :mkdirp yes
+  (defun gyb/tp ()
     (interactive)
     (set-frame-parameter nil 'alpha-background 80)
-    (add-to-list 'default-frame-alist '(alpha-background . 80))    
+    (add-to-list 'default-frame-alist '(alpha-background . 80))
     )
 #+end_src   
 
 ** Custom Keybindings
-#+begin_src emacs-lisp
+:PROPERTIES:
+:CUSTOM_ID: custom_keybinds
+:END:
+
+*** Prefix Keybinds 
+:PROPERTIES:
+:CUSTOM_ID: prefix_keybinds
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-keybinds.el" :mkdirp yes
+  (global-set-key (kbd "s-1 g o") 'gnus)
+  (global-set-key (kbd "s-1 g RET") 'eww-follow-link)
+#+end_src
+
+*** Basic keybinds 
+:PROPERTIES:
+:CUSTOM_ID: basic_keybinds
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-keybinds.el" :mkdirp yes
   (global-set-key (kbd "M-j") 'copy-line-down)
   (global-set-key (kbd "M-k") 'copy-line-up)
   (global-set-key (kbd "C-j") 'move-line-down)
@@ -148,498 +255,184 @@ First of all, we will add MEPLA as a repository, thus, it will unlock us many ot
   (global-set-key (kbd "C-u") 'undo-redo)
   (global-set-key (kbd "C-x u") 'universal-argument)
 
-  (global-set-key (kbd "C-c q") 'indent-region)
-  (global-set-key (kbd "C-c c") 'comment-dwim)
   (global-set-key (kbd "C-c e") 'eval-buffer)
-  (global-set-key (kbd "C-c r") 'replace-regexp)  
+
+  (global-set-key (kbd "M-é i") 'indent-region)  
+  (global-set-key (kbd "M-é TAB") 'indent-rigidly)
+
+  (global-set-key (kbd "M-é r") 'replace-string)
+  (global-set-key (kbd "M-é q") 'query-replace)
+
+  (global-set-key (kbd "M-é c") 'comment-dwim)  
+  (global-set-key (kbd "M-s RET") 'eval-and-replace)
+  (global-set-key (kbd "M-ú") 'backward-word)
+  (global-set-key (kbd "M-ű") 'forward-word)
 
   (global-set-key (kbd "C-c l") 'org-open-at-point)
 #+end_src
 
-* UI Enhancements: Fonts and Colors
-  Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
+* UI Enhancements
+:PROPERTIES:
+:CUSTOM_ID: ui_enhancements
+:END:
+Next up, we will customize our fonts and colors here, additionally, we will add syntax highlighting and more.
 ** UI Enhancements: Fonts and Colors
-#+begin_src emacs-lisp
+:PROPERTIES:
+:CUSTOM_ID: fonts_and_colors
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-themes.el" :mkdirp yes
   (global-hl-line-mode 1)
 
-  (set-face-attribute 'default nil :font "DejaVu Sans Mono-18")
+  (set-face-attribute 'default nil :font "Iosevka Comfy Fixed-20")
 
   ;;;; Light Mode
-  ;; (ub-lightmode)
+  ;; (gyb/lightmode)
 
   ;; Dark Mode
-  (ub-darkmode)
+  (gyb/darkmode)
 
   ;; Transparent Mode
-  ;; (ub-tp)
-
-  (set-face-foreground 'line-number-current-line "green") 
+  ;; (gyb/tp)
 
   (add-hook 'server-after-make-frame-hook
             (lambda ()
-              (set-frame-font "DejaVu Sans Mono-18")))
+              (set-frame-font "Iosevka Comfy Fixed-20")))
 
 #+end_src
 
 ** UI Enhancements: Syntax Highlighting
-#+begin_src emacs-lisp
-  (set-face-attribute 'font-lock-comment-face nil :foreground "#757575")
-  (set-face-attribute 'font-lock-keyword-face nil :foreground "#F92672")
+:PROPERTIES:
+:CUSTOM_ID: syntax_highlighting
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-themes.el" :mkdirp yes
+  (set-face-attribute 'font-lock-delimiter-face nil :foreground "#ffe600")
   (set-face-attribute 'font-lock-type-face nil :foreground "#66D9EF")
-  (set-face-attribute 'font-lock-variable-name-face nil :foreground "#FD971F")
   (set-face-attribute 'font-lock-constant-face nil :foreground "#AE81FF")
 #+end_src
 
-** UI Enhancements: Lambda-line
-#+begin_src emacs-lisp
-  (use-package lambda-line
-    :straight (:type git :host github :repo "lambda-emacs/lambda-line") 
-    :custom
-    (lambda-line-icon-time t) ;; requires ClockFace font (see below)
-    (lambda-line-clockface-update-fontset "⏰") ;; set clock icon
-    (lambda-line-position bottom) ;; Set position of status-line 
-    (lambda-line-abbrev t) ;; abbreviate major modes
-    (lambda-line-hspace "  ")  ;; add some cushion
-    (lambda-line-prefix t) ;; use a prefix symbol
-    (lambda-line-prefix-padding nil) ;; no extra space for prefix 
-    (lambda-line-status-invert nil)  ;; no invert colors
-    (lambda-line-gui-ro-symbol  " ⨂") ;; symbols
-    (lambda-line-gui-mod-symbol " ⬤") 
-    (lambda-line-gui-rw-symbol  " ◯") 
-    (lambda-line-space-top +.20)  ;; padding on top and bottom of line
-    (lambda-line-space-bottom -.20)
-    (lambda-line-symbol-position 0.1) ;; adjust the vertical placement of symbol
-)
-
-      (lambda-line-mode 1)  ; Enable lambda-line mode
-
-      (setq visible-bell nil)  ; Turn off visual bell
-      (setq ring-bell-function 'ignore)  ; Ignore the bell function
-#+end_src
-
-** UI Enhancements: Lambda Themes
-#+begin_src emacs-lisp
-  (use-package lambda-themes
-    :straight (:type git :host github :repo "lambda-emacs/lambda-themes") 
-    :custom
-    (lambda-themes-set-italic-comments t)
-    (lambda-themes-set-italic-keywords t)
-    (lambda-themes-set-variable-pitch t))
-#+end_src
-
 * LSP Configuration
-#+begin_src emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :hook ((bash-mode . lsp)
-         (python-mode . lsp)
-         (julia-mode . lsp)
-         (html-mode . lsp)
-         (css-mode . lsp)
-         (js-mode . lsp)
-         (typescript-mode . lsp)
-         (sh-mode . lsp)
-         (c-mode . lsp)
-         (c++-mode . lsp))
-  :custom
-  (lsp-headerline-breadcrumb-enable nil)
-  (lsp-completion-provider :capf)  ; Common setting for completion
-  (lsp-clients-clangd-executable "/usr/bin/clangd"))
-
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-
-(use-package company
-  :ensure t
-  :config
-  (setq company-idle-delay 0.2
-        company-minimum-prefix-length 1)
-  (global-company-mode t))
-
-(use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
-
-(use-package yasnippet-snippets
-  :ensure t)
-
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode))
-#+end_src
-
-* Major Modes and Packages
-  Set up various major modes and additional packages.
-** Magit
-#+begin_src emacs-lisp
-(use-package magit :ensure t)
-#+end_src
-
-** Org Mode
-#+begin_src emacs-lisp
-(use-package org :ensure t)
-#+end_src
-
-** Org Mode Folds
-#+begin_src emacs-lisp
-(setq org-startup-folded t)
-#+end_src
-
-** Org Indent Content At Headers
-#+begin_src emacs-lisp
-(setq org-adapt-indentation t)
-#+end_src
-
-** Org LaTeX support
-#+begin_src emacs-lisp
-(setq org-pretty-entities t)
-#+end_src
-
-** Org Bullets
-#+begin_src emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :hook (org-mode . org-bullets-mode))
-#+end_src
-
-** Org Mode Descriptive Links
-#+begin_src emacs-lisp
-(setq org-descriptive-links t)
-#+end_src
-
-** Org Mode Other Settings
-#+begin_src emacs-lisp
- ;; Replace "Table of Contents" text with "Contents"
- (defun replace-toc-title (backend)
-  (when (org-export-derived-backend-p backend 'html)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "Table of Contents" nil t)
-        (replace-match "Contents")))))
-
-(add-hook 'org-export-before-processing-hook 'replace-toc-title)
-#+end_src 
-
-** Godot - GDScript Mode
-  #+begin_src emacs-lisp
-    (use-package gdscript-mode
-      :straight (gdscript-mode
-		 :type git
-		 :host github
-		 :repo "godotengine/emacs-gdscript-mode"))
-  #+end_src 
-
-** Ivy and Counsel
-#+begin_src emacs-lisp
-  (unless (package-installed-p 'counsel)
-  (package-refresh-contents)
-  (package-install 'counsel))
-  
-  (unless (package-installed-p 'ivy)
-  (package-refresh-contents)
-  (package-install 'ivy))
-
-  (unless (package-installed-p 'ivy-rich)
-  (package-refresh-contents)
-  (package-install 'ivy-rich))
-
-
-  (require 'ivy)
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-height 10)
-  (setq ivy-display-style 'fancy)
-  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-
-  ;; Disabling ido mode to disable jankiness in buffer menus and file menus
-  (ido-mode -1)
-
-  ;; Ivy-rich configuration
-  (require 'ivy-rich)
-  (ivy-rich-mode 1)
-
-  ;; Use counsel for better integration
-  (require 'counsel)
-  (counsel-mode 1)
-
-  (setq ivy-format-function 'ivy-format-function-line)
-#+end_src
-
-** Projectile
-#+begin_src emacs-lisp
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1)
-  :bind-keymap
-  ("C-c p" . projectile-command-map))
-#+end_src
-
-** Flycheck
-#+begin_src emacs-lisp
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode))
-#+end_src
-
-** Nerd Icons and All The Icons
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons :ensure t)  
-  (use-package nerd-icons :ensure t)
-
-  (setq lsp-modeline-code-action-fallback-icon "💡")  
-#+END_SRC
-
-** Writeroom - Center buffer text
-   #+BEGIN_SRC emacs-lisp
-     (use-package writeroom-mode :ensure t)
-#+end_src     
-   #+END_SRC
-** Windresize
-#+begin_src emacs-lisp
-  (use-package windresize :ensure t)
-#+end_src
-
-** Org Roam with UI
-#+begin_src emacs-lisp
-  (use-package websocket :ensure t)
-  (use-package simple-httpd :ensure t)
-  (use-package f :ensure t)
-  (use-package org-roam-ui :ensure t)
-  (use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n c" . org-roam-capture)
-         ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today))
-  :config
-  ;; If you're using a vertical completion framework, you might want a more informative completion interface
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
-  (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol))
-#+end_src
-
-** Fireplace
-#+begin_src emacs-lisp
-  (use-package fireplace :ensure t)
-
-  (defun my-disable-line-numbers-in-fireplace ()
-  "Disable line numbers in Fireplace."
-  (when (eq major-mode 'fireplace-mode)
-  (display-line-numbers-mode -1)))
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
-#+END_SRC
-
-** Multiple Cursors
-#+begin_src emacs-lisp
-  (use-package multiple-cursors
+:PROPERTIES:
+:CUSTOM_ID: lsp 
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
+  ;; Defining hooks, uses, and other options.
+  (use-package lsp-mode
     :ensure t
-    :bind (("C-c m <down>" . mc/mark-next-lines)
-	   ("C-c m <up>" . mc/mark-previous-lines)
-	   ("C-c m n" . mc/mark-next-like-this)
-	   ("C-c m p" . mc/mark-previous-like-this)
-	   ("C-c m a" . mc/mark-all-like-this)))
-  
-  (setq mc/cmds-to-run-for-all nil)
+    :commands lsp
+    :hook ((bash-mode . lsp)
+           (python-mode . lsp)
+           (julia-mode . lsp)
+           (html-mode . lsp)
+           (css-mode . lsp)
+           (js-mode . lsp)
+           (typescript-mode . lsp)
+           (sh-mode . lsp)
+           (c-mode . lsp)
+           (c++-mode . lsp))
+    :custom
+    (lsp-headerline-breadcrumb-enable nil)
+    (lsp-completion-provider :capf)  ; Common setting for completion
+    (lsp-clients-clangd-executable "/usr/bin/clangd"))
+
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode)
+
+  (use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0.2
+          company-minimum-prefix-length 1)
+    (global-company-mode t))
+
+  (use-package yasnippet
+    :ensure t
+    :config
+    (yas-global-mode 1))
+
+  (use-package yasnippet-snippets
+    :ensure t)
+
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+
+  (use-package which-key
+    :ensure t
+    :config
+    (which-key-mode))
 #+end_src
 
-** Tab indentations
-#+begin_src emacs-lisp
-  (setopt indent-tabs-mode nil)
-  (setopt tab-width 4)
-  (setq-default indent-tabs-mode nil)
-  (setq standard-indent 4)
-  (setq c-basic-offset 4)
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
+  (use-package consult :ensure t)  
 #+end_src
 
-* Additional Configurations
-  Include miscellaneous settings and functions.
-** Line Numbering
-#+begin_src emacs-lisp
-  (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode t)
-    (defun toggle-line-numbering-type ()
-      "Toggle between relative and absolute line numbering."
-      (interactive)
-      (setq display-line-numbers-type
-        (if (eq display-line-numbers-type 'relative)
-        'absolute
-        'relative))
-      (global-display-line-numbers-mode -1) ; Turn off line numbering
-      (global-display-line-numbers-mode 1)) ; Turn it back on
-    (global-set-key (kbd "M-g") 'toggle-line-numbering-type)
+** LaTeX LSP
+:PROPERTIES:
+:CUSTOM_ID: lsp_latex
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
+  ;; Language Server for LaTeX
+  (use-package lsp-latex :ensure t)
+
+  (with-eval-after-load "tex-mode"
+    (add-hook 'tex-mode-hook 'lsp)
+    (add-hook 'latex-mode-hook 'lsp))
 #+end_src
 
-** Move and Copy Current Line Above And Below
-#+begin_src emacs-lisp
-  (defun copy-line-up ()
-    "Copy the current line and paste it above the current line, and remain on the copied line."
-    (interactive)
-    (let ((current-line (thing-at-point 'line)))
-      ;; Copy and paste the line immediately below
-      (move-beginning-of-line 1)
-      (kill-line)
-      (yank)
-      (newline)
-      (yank)
-      (forward-line -1)))
+** Silence LSP Warnings
+:PROPERTIES:
+:CUSTOM_ID: lsp_warnings
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
+  ;; Silencing some specific LSP warnings.
+  (defun my-filter-lsp-warnings (format-string &rest args)
+    "Filter out specific lsp-mode warnings."
+    (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
+      (apply #'message format-string args)))
 
-    (defun copy-line-down()
-    (interactive)
-    (move-beginning-of-line 1)
-    (kill-line)
-    (yank)
-    (open-line 1)
-    (next-line 1)
-    (yank)
-    )
-
-    (defun move-line-up ()
-    "Move the current line up by one."
-    (interactive)
-    (transpose-lines 1)
-    (previous-line 2))
-
-    (defun move-line-down ()
-    "Move the current line down by one."
-    (interactive)
-    (next-line 1)
-    (transpose-lines 1)
-    (previous-line 1))
+  (advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
 #+end_src
 
-** Windmove keybinds
-#+begin_src emacs-lisp
-    (global-set-key (kbd "C-c C-<left>")  'windmove-left)
-    (global-set-key (kbd "C-c C-<right>") 'windmove-right)
-    (global-set-key (kbd "C-c C-<up>")    'windmove-up)
-    (global-set-key (kbd "C-c C-<down>")  'windmove-down)
+** Julia LSP
+:PROPERTIES:
+:CUSTOM_ID: lsp_julia
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
+  ;; Julia LSP
+  (use-package vterm :ensure t)
+
+  (use-package julia-mode
+    :ensure t)
+
+  (use-package julia-repl
+    :ensure t
+    :hook (julia-mode . julia-repl-mode)
+
+    :init
+    (setenv "JULIA_NUM_THREADS" "8")
+
+    :config
+    ;; Set the terminal backend
+    (julia-repl-set-terminal-backend 'vterm)
+
+    ;; Keybindings for quickly sending code to the REPL
+    (define-key julia-repl-mode-map (kbd "<C-RET>") 'my/julia-repl-send-cell)
+    (define-key julia-repl-mode-map (kbd "<M-RET>") 'julia-repl-send-line)
+    (define-key julia-repl-mode-map (kbd "<S-return>") 'julia-repl-send-buffer))
+
+  (use-package lsp-julia
+    :config
+    (setq lsp-julia-default-environment "~/.julia/environments/v1.10"))
+
+  (add-hook 'julia-mode-hook #'lsp-mode)  
 #+end_src
 
-** Bracket completion
-#+begin_src emacs-lisp
-    (electric-pair-mode t)
-#+end_src
-
-** st (suckless terminal) completion
-#+begin_src emacs-lisp
-  (defun open-terminal-in-current-directory ()
-    "Open a terminal in the current directory using `st` and also disown it."
-    (interactive)
-    (let ((current-directory (expand-file-name default-directory)))
-      (start-process-shell-command
-       "st" nil
-       (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
-  (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
-#+end_src
-
-** Windresize keybindings
-#+begin_src emacs-lisp
-    (global-set-key (kbd "s-r") 'windresize) ; This is nice.
-#+end_src
-
-** Stop creating ~ and # files
-#+begin_src emacs-lisp
-    (setq backup-directory-alist
-	    `((".*" . ,temporary-file-directory)))
-    (setq auto-save-file-name-transforms
-	    `((".*" ,temporary-file-directory t)))
-    (setq make-backup-files nil) ; stop creating ~ files
-#+end_src
-
-** Opening new buffers in the same window
-#+begin_src emacs-lisp
-(setq display-buffer-alist
-      '((".*" (display-buffer-same-window))))
-#+end_src
-
-** Quickly open encyclopedia.org
-#+begin_src emacs-lisp
-  (global-set-key (kbd "<f6>") (lambda () (interactive)
-  (find-file "/home/anon/Projects/Personal/org-files/encyclopedia/encyclopedia.org")
-  (message: "Opened %s" (buffer-name))))
-#+end_src
-
-** Quickly open init.org
-#+begin_src emacs-lisp
-  (global-set-key (kbd "<f5>") (lambda () (interactive)
-  (find-file "/home/anon/.emacs.d/init.org")
-  (message: "Opened %s" (buffer-name))))
-#+end_src
-
-** Additional info files directory
-#+begin_src emacs-lisp
-(setq Info-default-directory-list
-(append '("/usr/share/info")
-Info-default-directory-list
-'("~/.emacs.d/info")))
-#+end_src
-
-** Open new file in a new frame
- #+begin_src emacs-lisp
-   (defun my-open-file-in-new-buffer ()
-     "Open the file at point in a new buffer."
-     (interactive)
-     (let ((file (org-element-property :path (org-element-context))))
-       (if file
-       (find-file file)
-     (message "No file at point"))))
-
-   (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
- #+end_src 
-
-** Unbind freeze buffer keybind
-#+begin_src emacs-lisp
-  (global-unset-key (kbd "C-x C-z"))
-#+end_src
-
-* Ivy and Yasnippet
-#+begin_src emacs-lisp
-  (defun ivy-my-yasnippet ()
-    "Custom yasnippet selection with ivy from ~/.emacs.d/snippets dir"
-    (interactive)
-    (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Default *snippets* directory
-           (choices (yas--all-templates (yas--get-snippet-tables)))
-           (my-snippets (seq-filter
-                         (lambda (template)
-                           (let ((file (yas--template-load-file template)))
-                             (and file
-                                  (cl-some (lambda (dir)
-                                             (string-prefix-p (expand-file-name dir) (expand-file-name file)))
-                                           yas-snippet-dirs))))
-                         choices))
-           (snippets (mapcar (lambda (template)
-                               (cons (yas--template-name template) template))
-                             my-snippets)))
-      (ivy-read "Snippet: " (mapcar #'car snippets)
-                :action (lambda (snippet-name)
-                          (let ((template (cdr (assoc snippet-name snippets))))
-                            (when template
-                              (yas-expand-snippet (yas--template-content template))))))))
-  (global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
-#+end_src
-
-* Typescript
-#+begin_src emacs-lisp
+** Typescript
+:PROPERTIES:
+:CUSTOM_ID: lsp_typescript
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
   ;; Company mode setup
   (use-package company
     :ensure t
@@ -664,36 +457,981 @@ Info-default-directory-list
     (setq lsp-ui-doc-enable t))
 #+end_src
 
-* LSP
-  #+begin_src emacs-lisp
-    (defun my-filter-lsp-warnings (format-string &rest args)
-  "Filter out specific lsp-mode warnings."
-  (unless (string-match-p "Unknown request method: workspace/diagnostic/refresh" format-string)
-    (apply #'message format-string args)))
+* Major Modes and Packages
+:PROPERTIES:
+:CUSTOM_ID: major_modes
+:END:
+Set up various major modes and additional packages.
 
-(advice-add 'lsp-warn :override #'my-filter-lsp-warnings)
-  #+end_src
+** Magit
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
+  (use-package magit :ensure t)
+#+end_src
 
-* Highlight Indent Guides
+** Org
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
+  (use-package org :ensure t)
+  (setq org-use-speed-commands 1)
+#+end_src
+
+** Emmet mode for web mode
+:PROPERTIES:
+:CUSTOM_ID: emmet_mode
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
+  (use-package emmet-mode :ensure t)
+#+end_src
+
+** Emacs-Jupyter interface
+:PROPERTIES:
+:CUSTOM_ID: emacs-jupyter
+:END:
 #+begin_src emacs-lisp
-  (use-package highlight-indent-guides :ensure t)
-  (setq highlight-indent-guides-auto-enabled nil)
-
-  ;; Set the method to use character displays
-  (setq highlight-indent-guides-method 'character)
-
-  ;; Enable the mode in programming modes and web-mode
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-  (add-hook 'web-mode-hook 'highlight-indent-guides-mode)
-
-  (setq highlight-indent-guides-responsive 'top)
-  (setq highlight-indent-guides-delay 0)
-  (set-face-foreground 'highlight-indent-guides-character-face "black")
-  (set-face-foreground 'highlight-indent-guides-top-character-face "dimgray")  
+  (use-package "jupyter" :ensure t)
 #+end_src
 
-* Export to init.el
-This block will convert all org-babel code blocks to a plain `init.el`.
-#+begin_src emacs-lisp :exports none
-  (org-babel-tangle-file "init.org" "init.el" "emacs-lisp")
+#+begin_src emacs-lisp
+  (require 'ob-jupyter)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((jupyter . t)  ;; Enable Jupyter support
+     (emacs-lisp . t)
+     (python . t)
+     (julia . t)))  ;; Enable Julia language support
+
 #+end_src
+
+** Ivy and Counsel
+:PROPERTIES:
+:CUSTOM_ID: ivy-counsel
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
+  (unless (package-installed-p 'counsel)
+    (package-refresh-contents)
+    (package-install 'counsel))
+
+  (unless (package-installed-p 'ivy)
+    (package-refresh-contents)
+    (package-install 'ivy))
+
+  (unless (package-installed-p 'ivy-rich)
+    (package-refresh-contents)
+    (package-install 'ivy-rich))
+
+
+  (require 'ivy)
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-height 10)
+  (setq ivy-display-style 'fancy)
+  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+
+  ;; Disabling ido mode to disable jankiness in buffer menus and file menus
+  ;; (ido-mode -1)
+
+  ;; Ivy-rich configuration
+  (require 'ivy-rich)
+  (ivy-rich-mode nil)
+
+  ;; Use counsel for better integration
+  (require 'counsel)
+  (counsel-mode 1)
+
+  (setq ivy-format-function 'ivy-format-function-line)
+#+end_src
+
+** Ido Grid Mode 
+:PROPERTIES:
+:CUSTOM_ID: ido
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-ido-mode.el" :mkdirp yes
+    (use-package ido-grid-mode :ensure t)
+
+  (setq ido-grid-mode-max-columns 4
+        ido-grid-mode-max-rows 8
+        ido-grid-mode-prefix-scrolls t
+        ido-grid-mode-scroll-down #'ido-grid-mode-next-row
+        ido-grid-mode-scroll-up #'ido-grid-mode-previous-row
+        ido-grid-mode-order nil
+        ido-grid-mode-start-collapsed nil)
+
+  (ido-mode 1)
+  (ido-grid-mode 1)
+#+end_src
+
+
+** Projectile
+:PROPERTIES:
+:CUSTOM_ID: projectile
+:END:
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (projectile-mode +1)
+    :bind-keymap
+    ("C-c p" . projectile-command-map))
+#+end_src
+
+** Flycheck
+:PROPERTIES:
+:CUSTOM_ID: flycheck
+:END:
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode))
+#+end_src
+
+** Nerd Icons and All The Icons
+:PROPERTIES:
+:CUSTOM_ID: icons
+:END:
+#+begin_src emacs-lisp
+  (use-package all-the-icons :ensure t)  
+  (use-package nerd-icons :ensure t)
+
+  (use-package all-the-icons-dired :ensure t)  
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+  (setq lsp-modeline-code-action-fallback-icon "💡")  
+#+end_src
+
+** Writeroom - Center buffer text
+:PROPERTIES:
+:CUSTOM_ID: writeroom
+:END:
+#+begin_src emacs-lisp
+  (use-package writeroom-mode :ensure t)
+  (setq writeroom-fullscreen-effect nil)  
+#+end_src     
+#+end_src
+** Windresize
+:PROPERTIES:
+:CUSTOM_ID: windresize
+:END:
+#+begin_src emacs-lisp
+  (use-package windresize :ensure t)
+#+end_src
+
+** Org Roam with UI
+:PROPERTIES:
+:CUSTOM_ID: org-roam
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  ;; Org Roam Setup
+  (use-package websocket :ensure t)
+  (use-package simple-httpd :ensure t)
+  (use-package f :ensure t)
+  (use-package org-roam-ui :ensure t)
+  (use-package org-roam
+    :ensure t
+    :custom
+    (org-roam-directory (file-truename "/home/anon/Projects/Personal/org-files/"))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ;; Dailies
+           ("C-c n j" . org-roam-dailies-capture-today))
+    :config
+    ;; If you're using a vertical completion framework, you might want a more informative completion interface
+    (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
+#+end_src
+
+** Fireplace
+:PROPERTIES:
+:CUSTOM_ID: fireplace
+:END:
+#+begin_src emacs-lisp
+  (use-package fireplace :ensure t)
+
+  (defun my-disable-line-numbers-in-fireplace ()
+    "Disable line numbers in Fireplace."
+    (when (eq major-mode 'fireplace-mode)
+      (display-line-numbers-mode -1)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (add-hook 'fireplace-mode-hook (lambda () (display-line-numbers-mode -1)))
+#+end_src
+
+** Multiple Cursors
+:PROPERTIES:
+:CUSTOM_ID: multiple-cursors
+:END:
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind (("C-c m <down>" . mc/mark-next-lines)
+           ("C-c m <up>" . mc/mark-previous-lines)
+           ("C-c m n" . mc/mark-next-like-this)
+           ("C-c m p" . mc/mark-previous-like-this)
+           ("C-c m a" . mc/mark-all-like-this)))
+
+  (setq mc/cmds-to-run-for-all nil)
+#+end_src
+
+** Tab indentations
+:PROPERTIES:
+:CUSTOM_ID: tab-indentations
+:END:
+#+begin_src emacs-lisp
+  (setopt indent-tabs-mode nil)
+  (setopt tab-width 4)
+  (setq-default indent-tabs-mode nil)
+  (setq standard-indent 4)
+  (setq c-basic-offset 4)
+#+end_src
+
+** Undo-tree
+:PROPERTIES:
+:CUSTOM_ID: undo-tree
+:END:
+#+begin_src emacs-lisp
+  (use-package undo-tree :ensure t)
+#+end_src
+   
+** Elfeed
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-elfeed.el" :mkdirp yes
+  (use-package elfeed :ensure t)
+
+  (custom-set-variables
+   '(elfeed-feeds
+     '(
+       "https://www.astronomy.com/tags/sky-this-week/feed/" "https://apod.com/feed.rss"
+       )))
+#+end_src
+
+** Eww Adjustments
+:PROPERTIES:
+:CUSTOM_ID: eww_adjustments
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-eww.el" :mkdirp yes
+  (add-hook 'eww-mode-hook 'visual-line-mode t)
+  (add-hook 'eww-mode-hook 'visual-line-fill-column-mode t)
+  (add-hook 'eww-mode-hook 'visual-fill-column-mode 0)
+  (add-hook 'eww-mode-hook 'writeroom-mode)
+#+end_src
+
+* Minor changes 
+:PROPERTIES:
+:CUSTOM_ID: minor_changes
+:END:
+** Enable some of the disabled commands 
+:PROPERTIES:
+:CUSTOM_ID: enable_disabled
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-minor-changes.el" :mkdirp yes
+(put 'dired-find-alternate-file 'disabled nil)
+#+end_src
+
+* Ispell used with Hungarian language
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-ispell.org" :mkdirp yes
+(setq ispell-program-name "hunspell")       ; Use Hunspell for ispell
+(setq ispell-dictionary "hu_HU")            ; Default dictionary
+
+;; Define Hunspell dictionaries
+(setq ispell-local-dictionary-alist
+      '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "'" nil ("-d" "en_US") nil)
+        ("hu_HU" "[[:alpha:]]" "[^[:alpha:]]" "'" nil ("-d" "hu_HU") nil)))
+#+end_src
+
+* Additional Configurations
+:PROPERTIES:
+:CUSTOM_ID: additional_configs
+:END:
+Include miscellaneous settings and functions.
+** Line Numbering
+:PROPERTIES:
+:CUSTOM_ID: line-numbering
+:END:
+#+begin_src emacs-lisp
+  (setq display-line-numbers-type 'relative)
+  (defun toggle-line-numbering-type ()
+    "Toggle between relative and absolute line numbering."
+    (interactive)
+    (setq display-line-numbers-type
+          (if (eq display-line-numbers-type 'relative)
+              'absolute
+            'relative))
+    (global-display-line-numbers-mode -1) ; Turn off
+    (global-display-line-numbers-mode 1)) ; Turn on
+  (global-set-key (kbd "C-x a q") 'toggle-line-numbering-type)
+  (global-set-key (kbd "C-x a w") 'display-line-numbers-mode)  
+#+end_src
+
+** Move and Copy Current Line Above And Below
+:PROPERTIES:
+:CUSTOM_ID: copy-lines
+:END:
+#+begin_src emacs-lisp
+  (defun copy-line-up ()
+    "Copy the current line and paste it above the current line, and remain on the copied line."
+    (interactive)
+    (let ((current-line (thing-at-point 'line)))
+      ;; Copy and paste the line immediately below
+      (move-beginning-of-line 1)
+      (kill-line)
+      (yank)
+      (newline)
+      (yank)
+      (forward-line -1)))
+
+  (defun copy-line-down()
+    (interactive)
+    (move-beginning-of-line 1)
+    (kill-line)
+    (yank)
+    (open-line 1)
+    (next-line 1)
+    (yank)
+    )
+
+  (defun move-line-up ()
+    "Move the current line up by one."
+    (interactive)
+    (transpose-lines 1)
+    (previous-line 2))
+
+  (defun move-line-down ()
+    "Move the current line down by one."
+    (interactive)
+    (next-line 1)
+    (transpose-lines 1)
+    (previous-line 1))
+#+end_src
+
+** Windmove keybinds
+:PROPERTIES:
+:CUSTOM_ID: windmove
+:END:
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c C-<left>")  'windmove-left)
+  (global-set-key (kbd "C-c C-<right>") 'windmove-right)
+  (global-set-key (kbd "C-c C-<up>")    'windmove-up)
+  (global-set-key (kbd "C-c C-<down>")  'windmove-down)
+#+end_src
+
+** Bracket completion
+:PROPERTIES:
+:CUSTOM_ID: bracket-completion
+:END:
+#+begin_src emacs-lisp
+  (electric-pair-mode t)
+#+end_src
+
+** st (suckless terminal) completion
+:PROPERTIES:
+:CUSTOM_ID: st
+:END:
+#+begin_src emacs-lisp
+  (defun open-terminal-in-current-directory ()
+    "Open a terminal in the current directory using `st` and also disown it."
+    (interactive)
+    (let ((current-directory (expand-file-name default-directory)))
+      (start-process-shell-command
+       "st" nil
+       (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
+  (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
+#+end_src
+
+** Windresize keybindings
+:PROPERTIES:
+:CUSTOM_ID: windresize
+:END:
+#+begin_src emacs-lisp
+  (global-set-key (kbd "s-r") 'windresize) ; This is nice.
+#+end_src
+
+** Stop creating ~ and # files
+:PROPERTIES:
+:CUSTOM_ID: no-temp-files
+:END:
+#+begin_src emacs-lisp
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+  (setq make-backup-files nil) ; stop creating ~ files
+  (setq make-backup-files nil)
+  (setq create-lockfiles nil)
+#+end_src
+
+** Opening new buffers in the same window
+:PROPERTIES:
+:CUSTOM_ID: new-buffers
+:END:
+#+begin_src emacs-lisp
+  (setq display-buffer-alist
+        '((".*" (display-buffer-same-window))))
+#+end_src
+
+** Quickly open index.org
+:PROPERTIES:
+:CUSTOM_ID: open_index_org
+:END:
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<f6>") (lambda () (interactive)
+                                 (find-file "/home/anon/Projects/Personal/org-files/index.org")
+                                 (message "Opened %s" (buffer-name))))
+#+end_src
+
+** Quickly open init.org
+:PROPERTIES:
+:CUSTOM_ID: open_init_org
+:END:
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<f5>") (lambda () (interactive)
+                                 (find-file "~/.emacs.d/init.org")
+                                 (message "Opened %s" (buffer-name))))
+#+end_src
+
+** Open new file in a new frame
+:PROPERTIES:
+:CUSTOM_ID: new_file_new_frame
+:END:
+#+begin_src emacs-lisp
+  (defun my-open-file-in-new-buffer ()
+    "Open the file at point in a new buffer."
+    (interactive)
+    (let ((file (org-element-property :path (org-element-context))))
+      (if file
+          (find-file file)
+        (message "No file at point"))))
+
+  (define-key org-mode-map (kbd "C-c C-o") 'my-open-file-in-new-buffer)
+#+end_src 
+
+** Unbind freeze buffer keybind
+:PROPERTIES:
+:CUSTOM_ID: unbind_freeze
+:END:
+#+begin_src emacs-lisp
+  (global-unset-key (kbd "C-x C-z"))
+#+end_src
+
+* Ivy and Yasnippet
+:PROPERTIES:
+:CUSTOM_ID: ivy_yasnippet
+:END:
+#+begin_src emacs-lisp
+  (defun ivy-my-yasnippet ()
+    "Custom yasnippet selection with ivy from ~/.emacs.d/snippets dir"
+    (interactive)
+    (let* ((yas-snippet-dirs '("~/.emacs.d/snippets")) ; Default *snippets*
+           (choices (yas--all-templates (yas--get-snippet-tables)))
+           (my-snippets (seq-filter
+                         (lambda (template)
+                           (let ((file (yas--template-load-file template)))
+                             (and file
+                                  (cl-some (lambda (dir)
+                                             (string-prefix-p (expand-file-name dir) (expand-file-name file)))
+                                           yas-snippet-dirs))))
+                         choices))
+           (snippets (mapcar (lambda (template)
+                               (cons (yas--template-name template) template))
+                             my-snippets)))
+      (ivy-read "Snippet: " (mapcar #'car snippets)
+                :action (lambda (snippet-name)
+                          (let ((template (cdr (assoc snippet-name snippets))))
+                            (when template
+                              (yas-expand-snippet (yas--template-content template))))))))
+  (global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
+#+end_src
+
+* Hooks
+:PROPERTIES:
+:CUSTOM_ID: emacs_hooks
+:END:
+#+begin_src emacs-lisp
+  (defun gybfuns/pretty-funs ()
+    (writeroom-mode 1)
+    (display-line-numbers-mode -1)
+    (visual-line-mode 1))
+
+  (defun gybfuns/dired-funs ()
+    (dired-hide-details-mode t)
+    (dired-omit-mode t))
+
+  (add-hook 'org-mode-hook 'gybfuns/pretty-funs)
+  (add-hook 'elfeed-new-entry-hook 'gybfuns/pretty-funs)
+
+  (add-hook 'dired-mode-hook 'gybfuns/pretty-funs)  
+  (add-hook 'dired-mode-hook 'gybfuns/dired-funs)
+
+  (add-hook 'html-mode-hook
+            (lambda ()
+              (display-line-numbers-mode 1)
+              (emmet-mode 1)
+              (sgml-electric-tag-pair-mode 1)
+              ))
+
+  (global-unset-key (kbd "C-<up>"))
+  (global-set-key (kbd "C-<up>") 'emmet-expand-line)
+  (add-hook 'html-mode
+            (lambda ()
+              (local-set-key (kbd "C-<up>") 'emmet-expand-line)
+              ))
+
+            (add-hook 'css-mode-hook
+                      (lambda ()
+                        (display-line-numbers-mode 1)
+                        ))
+
+            (add-hook 'c-mode-hook
+                      (lambda ()
+                        (display-line-numbers-mode 1)
+                        ))
+            (add-hook 'prog-mode-hook
+                      (lambda ()
+                        (display-line-numbers-mode 1)
+                        ))  
+#+end_src
+
+* LaTeX
+:PROPERTIES:
+:CUSTOM_ID: latex_settings
+:END:
+
+#+begin_src emacs-lisp
+(setq org-latex-text-markup-alist
+      '((bold . "\\textbf{%s}")
+        (italic . "\\emph{%s}")
+        (underline . "\\underline{%s}")
+        (verbatim . "\\texttt{%s}")
+        (strike-through . "\\sout{%s}")
+        (code . verb)))
+#+end_src
+
+#+begin_src emacs-lisp
+(setq org-export-with-LaTeX t)
+#+end_src
+
+* Xelatex
+:PROPERTIES:
+:CUSTOM_ID: xelatex
+:END:
+#+begin_src emacs-lisp
+  (defun compile-xelatex ()
+    "Compile current .tex file with xelatex in the background."
+    (interactive)
+    (let ((file (shell-quote-argument (buffer-file-name))))
+      (start-process "xelatex-process" "*xelatex-output*" "xelatex" file)))
+
+  (global-set-key (kbd "<f1> <f3>") 'compile-xelatex)
+#+end_src
+
+* Helm Colors
+:PROPERTIES:
+:CUSTOM_ID: helm_colors
+:END:
+#+begin_src emacs-lisp
+(use-package helm :ensure t)
+#+end_src
+
+* Evaluate preceding expression
+:PROPERTIES:
+:CUSTOM_ID: eval_preceding 
+:END:
+#+begin_src emacs-lisp
+  (defun eval-and-replace ()
+    "Replace the preceding sexp with its value. Magnificent!"
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (backward-kill-sexp)
+      (insert (format "%s" value))))
+  #+end_src
+  
+* Org LaTeX template
+:PROPERTIES:
+:CUSTOM_ID: latex_template
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (add-to-list 'org-latex-classes
+               '("gyb-article"
+                 "
+      \\documentclass[11pt]{article}
+      \\usepackage{graphicx}
+      \\usepackage{longtable}
+      \\usepackage{wrapfig}
+      \\usepackage{rotating}
+      \\usepackage[normalem]{ulem}
+      \\usepackage{amsmath}
+      \\usepackage{amssymb}
+      \\usepackage{capt-of}
+      \\usepackage{hyperref}
+      \\usepackage{tocloft}
+      \\usepackage[magyar]{babel}
+      \\usepackage[utf8]{inputenc}
+      \\selectlanguage{magyar}
+      \\addto\\captionsmagyar{
+        \\renewcommand{\\contentsname}%
+          {Tartalomjegyzék}
+      }
+      \\addto\\captionsenglish{
+        \\renewcommand{\\contentsname}%
+          {Contents}
+      }  
+      \\usepackage{amsmath}
+      \\usepackage{bm}
+      \\usepackage{geometry}
+
+      \\geometry{
+      a4paper,
+      total={170mm,257mm},
+      left=20mm,
+      top=20mm,
+      }
+      \\usepackage{titling}
+      \\usepackage{fancyhdr}
+      \\pagestyle{fancy}
+      \\fancyhf{}
+      \\fancyfoot[L]{\\today}
+      \\fancyhead[L]{gyenes.xyz}
+      \\fancyhead[R]{Gyenes Béla}
+      \\renewcommand{\\headrulewidth}{0.4pt}
+      \\renewcommand{\\footrulewidth}{0.4pt}
+      \\makeatletter
+      \\newcommand*{\\currentname}{\\@currentlabelname}
+      \\newpage
+            "
+
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (setq org-latex-default-class "gyb-article")
+
+#+end_src
+
+* Org Mode
+:PROPERTIES:
+:CUSTOM_ID: org_mode
+:END:
+** Org Mode Folds
+:PROPERTIES:
+:CUSTOM_ID: org-mode-folds
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (setq org-startup-folded t)
+#+end_src
+
+** Org Indent Mode
+:PROPERTIES:
+:CUSTOM_ID: org_mode_indentation
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (setq org-startup-indented t)
+#+end_src
+
+** Org Mode Descriptive Links
+:PROPERTIES:
+:CUSTOM_ID: org_mode_descriptive_links
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (setq org-descriptive-links t)
+  (global-set-key (kbd "C-c o") 'org-toggle-link-display)
+#+end_src
+
+** Org Mode Heights
+:PROPERTIES:
+:CUSTOM_ID: org_mode_heights
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (with-eval-after-load 'org-faces
+    (dolist (face '(
+                    org-level-1
+                    org-level-2
+                    org-level-3))
+      (set-face-attribute face nil :height 1.1)))
+
+  (with-eval-after-load 'org-faces
+    (dolist (face '(
+                    org-document-title))
+      (set-face-attribute face nil :height 2.5)))
+#+end_src
+
+** Export Settings
+:PROPERTIES:
+:CUSTOM_ID: org_mode_exports
+:END:
+*** Draft Mode
+:PROPERTIES:
+:CUSTOM_ID: org_mode_draft
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (add-to-list 'auto-mode-alist '("\\.draft\\'" . org-mode))
+#+end_src
+
+*** Redefine <h1> heading at the top of exported HTML file in =gyb-org-export.el=
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-export.el" :mkdirp yes
+(defun gyb-org/html-title-enhanced (func contents info)
+  "Insert author and dynamic current date into the exported HTML title in Org Mode."
+  (let* ((original-html (funcall func contents info))  ; Calling original html
+         (author (or (save-excursion
+                       (goto-char (point-min))
+                       (when (re-search-forward "^#\\+AUTHOR:[ \t]+\\(.*\\)$" nil t)
+                         (match-string 1)))
+                     "Béla Gyenes"))  ; Default author name if pinfo author is not set
+  )
+    ;; Title with author name
+    (if (string-match "<h1 class=\"title\">\\(.*?\\)</h1>" original-html)
+        (replace-match (concat "<div class=\"document-header\">"
+                               "<h1 class=\"title\">\\1</h1>"  ; Existing title in place
+                               (format "<div class=\"author\">%s</div>"
+                                       author)
+                               "</div>") t nil original-html)
+      original-html)))
+(advice-add 'org-html-template :around #'gyb-org/html-title-enhanced)
+#+end_src
+
+*** Table of Contents based on Org language in =gyb-org-export.el=.
+:PROPERTIES:
+:CUSTOM_ID: org_mode_toc
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-export.el" :mkdirp yes
+  (setq org-export-default-language "en")
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-export.el" :mkdirp yes
+(defun gyb-org/html-toc (depth info &optional scope)
+  "Custom Table of Contents title based on Org file language info."
+  (setq org-latex-toc-command "\\tableofcontents \\clearpage")
+  (let* ((lang (or (plist-get info :language) "en")) ;; Default language if we didn't set it
+         (toc-title (cond
+                     ((string= lang "ru") "оглавление")
+                     ((string= lang "en") "Contents")
+                     ((string= lang "hu") "Tartalomjegyzék")
+                     (t "Contents")))  ; Default to this
+         (toc-entries
+          (mapcar (lambda (headline)
+                    (cons (org-html--format-toc-headline headline info)
+                          (org-export-get-relative-level headline info)))
+                  (org-export-collect-headlines info depth scope))))
+    (message "Language in info plist: '%s', TOC title: '%s'" lang toc-title)
+    (when toc-entries
+      (let ((toc (concat "<div id=\"text-table-of-contents\" role=\"doc-toc\">"
+                         (org-html--toc-text toc-entries)
+                         "</div>\n")))
+        (if scope toc
+          (let ((outer-tag (if (org-html--html5-fancy-p info)
+                               "nav"
+                             "div")))
+            (concat (format "<%s id=\"table-of-contents\" role=\"doc-toc\">\n" outer-tag)
+                    (let ((top-level (plist-get info :html-toplevel-hlevel)))
+                      (format "<h%d>%s</h%d>\n"
+                              top-level
+                              toc-title
+                              top-level))
+                    toc
+                    (format "</%s>\n" outer-tag))))))))
+#+end_src
+
+*** Pagebreak after Table of Contents in =gyb-org-export.el=
+#+begin_src emacs-lisp :tangle "gyb-lisp/org-export.el" :mkdirp yes
+  (setq org-latex-toc-command "\\tableofcontents\n\\clearpage")
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/org-export.el" :mkdirp yes
+  (defun gyb-org/html-handle-src-blocks (src-block contents info)
+    "Wrapping src blocks in <pre><code>%s</pre></code> HTML tags."
+    (let* ((lang (org-element-property :language src-block))
+           (class (if lang (format "language-%s" lang) "language-unknown"))
+           (code (org-element-property :value src-block)))
+      (format "<pre><code class=\"%s\">%s</code></pre>"
+              class
+              (org-html-encode-plain-text code))))
+
+  (defun gyb-org/html-src-blocks (src-block contents info)
+    "Overriding default org html source blocks."
+    (if (org-element-property :language src-block)
+        (gyb-org/html-handle-src-blocks src-block contents info)
+      ;; If no programming language was specified as ~src~, fall back to default export behaviour.
+      (org-html-src-block src-block contents info)))
+
+  ;; Overriding default org-html-src-block function
+  (advice-add 'org-html-src-block :override 'gyb-org/html-src-blocks)
+#+end_src
+
+** Org Publish Settings =gyb-org-publish.el=
+:PROPERTIES:
+:CUSTOM_ID: org_publish
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-publish.el" :mkdirp yes
+  (defun gyb/org-html-preamble (info)
+    "HTML preamble with links"
+    (let* ((file-path (plist-get info :input-file))
+           (pdf-link (replace-regexp-in-string "\\.org$" ".pdf" (file-name-nondirectory file-path))))
+      (concat
+       "<div class='hb'>"
+       (if (string-match "/hu/" file-path)
+           (format "<a href='/index.html'>Főoldal</a> | <a href='./i.html'>Overview</a>")
+         (format "<a href='/index.html'>Home</a> | <a href='./i.html'>Sitemap</a>"))
+       "</div>"
+       )))
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-publish.el" :mkdirp yes
+  (defun gyb/html-footer (info)
+    "Custom footer"
+        (concat
+         "<footer>"
+         "<div id='footer-1'>"
+         "<a href='/index.html'>Home</a> ~ "
+         "<a href='/links.html'>Links</a> ~ "
+         "<a href='/contact.html'>Contact</a> ~ "
+         "<a href='/sitemap.html'>Sitemap</a> ~ "
+         "<a href='/webring.html'>Webring</a> ~ "
+         "<a href='/simulations/index.html'>Sim</a> | "
+         "<a href='https://github.com/UncleBela'>GitHub</a> ~ "
+         "<a href='https://www.youtube.com/@gyenesxyz'>YouTube</a>"
+         "</div>"
+         "<div id='footer-2'>"
+         "<p>Béla Gyenes ~ <a href='mailto:bela@gyenes.xyz'>bela@gyenes.xyz</a></p>"
+         "</div>"
+         "</footer>"))
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-publish.el" :mkdirp yes
+  ;; Define Macros in Org Publish
+  (defun gyb/add-org-macros (&rest args)
+    "Add custom global macros for every Org export."
+    (setq-local org-export-global-macros
+                '(("today" . "(eval (format-time-string \"%Y / %m / %d\"))")
+                  ("color" . "@@html:<font color=\"$1\">$2</font>@@"))))
+
+  ;; Overriding originalo function
+  (advice-add 'org-export-as :before #'gyb/add-org-macros)
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-publish.el" :mkdirp yes
+  ;; Actual publishing process
+  (require 'ox-publish)
+  (require 'ox-latex)
+
+  (setq my/root-directory "~/Projects/Websites/gyenes.xyz/")
+
+  (setq org-publish-project-alist
+    `(("notes"
+       :base-directory ,(expand-file-name "src/" my/root-directory)
+       :base-extension "org"
+       :publishing-directory ,(expand-file-name "public/" my/root-directory)
+       :recursive t
+       :publishing-function org-html-publish-to-html
+       :headline-levels 4
+       :section-numbers nil
+       :auto-preamble t
+       :with-toc t
+       :language "en"
+
+       :html-head "<link rel='stylesheet' href='/styles/notes.css'>"
+       :html-head-extra "<link rel='icon' href='/imgs/favicon.ico' type='image/gif'><script src='/scripts/notes.js'></script><link rel='stylesheet' href='/styles/prism.css'/><script src='/scripts/prism.js'></script>"
+
+       :html-preamble gyb/org-html-preamble
+       :html-postamble gyb/html-footer
+
+       :html-head-include-default-style nil
+
+       :html-doctype "html5"
+       :html-html5-fancy t
+
+       :author "Béla Gyenes"
+       :email "bela@gyenes.xyz"
+  )
+
+  ("static"
+   :base-directory ,(expand-file-name "src/" my/root-directory)
+   :base-extension "css\\|js\\|png\\|jpg\\|gif\\|mp3\\|ogg\\|swf\\|svg\\|wav\\|aac"
+   :publishing-directory ,(expand-file-name "public/" my/root-directory)
+   :recursive t
+   :publishing-function org-publish-attachment)
+
+  ;; rss will come here
+
+  ("blog" :components ("notes" "static" "pdf"))))
+
+  (global-set-key (kbd "<f1> <f1>") 'org-publish-current-file)
+  (global-set-key (kbd "<f1> <f2>") 'org-publish)
+#+end_src
+
+* Redefinition of keys 
+:PROPERTIES:
+:CUSTOM_ID: redefs
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-redefs.el" :mkdirp yes
+(global-set-key (kbd "C-x C-f") 'ido-find-file)
+(global-set-key (kbd "C-x b") 'ido-switch-buffer)
+#+end_src
+
+* Gnus 
+:PROPERTIES:
+:CUSTOM_ID: gnus
+:END:
+
+Setting up gpg for encryption/decryption.
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-email.el" :mkdirp yes
+(setq epg-gpg-program "gpg")
+(require 'epa-file)
+(epa-file-enable)
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-email.el" :mkdirp yes
+  (setq gnus-select-method '(nnnil))
+  (setq gnus-secondary-select-methods '((nntp "news.gwene.org")))
+
+  (setq user-mail-address "belagyenes25@gmail.com"
+        user-full-name "Béla Gyenes")
+
+  ;; SMTP
+  (setq send-mail-function 'smtpmail-send-it
+        message-send-mail-function 'smtpmail-send-it
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
+        smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+        smtpmail-auth-credentials
+        (expand-file-name "~/.authinfo.gpg")
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-user "belagyenes25@gmail.com"
+        smtpmail-stream-type 'starttls)
+
+  ;; Reading & Fetching mails
+  (setq gnus-select-method
+        '(nnimap "gmail"
+                 (nnimap-address "imap.gmail.com")
+                 (nnimap-server-port 993)
+                 (nnimap-stream ssl)
+                 (nnir-search-engine imap)))
+
+  ;; Other mail accounts
+  (add-to-list 'gnus-secondary-select-methods
+               '(nnimap "external"
+                        (nnimap-address "imap.externalmail.com")
+                        (nnimap-server-port 993)
+                        (nnimap-stream ssl)))
+#+end_src
+
+* Load
+:PROPERTIES:
+:CUSTOM_ID: load_files
+:END:
+Load files.
+#+BEGIN_SRC emacs-lisp
+  (defun load-directory (dir)
+    "This function loads all elisp files."
+    (dolist (file (directory-files dir t "\\.el$"))
+      (load file)))
+
+  (load-directory "~/.emacs.d/gyb-lisp/")
+#+END_SRC

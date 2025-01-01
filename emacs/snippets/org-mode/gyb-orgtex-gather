@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: gyb-orgtex-gather
-# key: gyb-orgtex-gather
+# name: gather
+# key: gather
 # This is for multiple equations, when we do not need them aligned
 # --
 

@@ -1,7 +1,7 @@
 
 # -*- mode: snippet -*-
 # name: ub-header
-# key: ub-header
+# key: header
 # author: Gyenes Béla (www.gyenes.xyz)
 # --
 #+TITLE: $1

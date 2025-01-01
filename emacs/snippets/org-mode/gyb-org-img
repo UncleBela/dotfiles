@@ -8,8 +8,4 @@
 #+ATTR_HTML: :alt $1 :title $1 :align center
 #+ATTR_LATEX: :width 0.5\textwidth
 [[$2]]
-
-#+BEGIN_EXPORT html
-<div class="figure-caption">$1</div>
-#+END_EXPORT
 $0

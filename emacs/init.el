@@ -3,10 +3,6 @@
 
 (setq debug-on-error nil) ;; Change to t, when in doubt
 
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
    (expand-file-name
@@ -158,6 +154,8 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (setq make-backup-files nil) ; stop creating ~ files
+(setq make-backup-files nil)
+(setq create-lockfiles nil)
 
 (setq display-buffer-alist
       '((".*" (display-buffer-same-window))))
@@ -169,11 +167,6 @@
 (global-set-key (kbd "<f5>") (lambda () (interactive)
                                (find-file "~/.emacs.d/init.org")
                                (message "Opened %s" (buffer-name))))
-
-(setq Info-default-directory-list
-      (append '("/usr/share/info")
-              Info-default-directory-list
-              '("~/.emacs.d/info")))
 
 (defun my-open-file-in-new-buffer ()
   "Open the file at point in a new buffer."
@@ -210,27 +203,6 @@
                             (yas-expand-snippet (yas--template-content template))))))))
 (global-set-key (kbd "C-c y") 'ivy-my-yasnippet)
 
-(use-package highlight-indent-guides :ensure t)
-(setq highlight-indent-guides-auto-enabled nil)
-
-;; Set the method to use character displays
-(setq highlight-indent-guides-method 'character)
-
-;; Enable the mode in programming modes and web-mode
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-(add-hook 'web-mode-hook 'highlight-indent-guides-mode)
-
-(setq highlight-indent-guides-responsive 'top)
-(setq highlight-indent-guides-delay 0)
-(set-face-foreground 'highlight-indent-guides-character-face "black")
-(set-face-foreground 'highlight-indent-guides-top-character-face "dimgray")
-
-(defun my/org-html--format-image-caption (orig-func &rest args)
-  (let ((caption (apply orig-func args)))
-    (replace-regexp-in-string "Figure:" "Ábra:" caption)))
-
-(advice-add 'org-html--format-caption :around #'my/org-html--format-image-caption)
-
 (defun gybfuns/pretty-funs ()
   (writeroom-mode 1)
   (display-line-numbers-mode -1)
@@ -241,46 +213,38 @@
   (dired-omit-mode t))
 
 (add-hook 'org-mode-hook 'gybfuns/pretty-funs)
+(add-hook 'elfeed-new-entry-hook 'gybfuns/pretty-funs)
 
-(add-hook 'dired-mode-hook 'gybfuns/pretty-funs)
+(add-hook 'dired-mode-hook 'gybfuns/pretty-funs)  
 (add-hook 'dired-mode-hook 'gybfuns/dired-funs)
 
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (company-mode -1)
-            (display-line-numbers-mode -1)
-            (lsp-mode -1)
-            (hl-line-mode -1)              
-            ))
-
-(add-hook 'term-mode-hook
-          (lambda ()
-            (company-mode -1)
-            (display-line-numbers-mode -1)
-            (lsp-mode -1)
-            (hl-line-mode -1)
-            ))
-
-(add-hook 'mhtml-mode-hook
+(add-hook 'html-mode-hook
           (lambda ()
             (display-line-numbers-mode 1)
+            (emmet-mode 1)
+            (sgml-electric-tag-pair-mode 1)
             ))
 
-(add-hook 'css-mode-hook
+(global-unset-key (kbd "C-<up>"))
+(global-set-key (kbd "C-<up>") 'emmet-expand-line)
+(add-hook 'html-mode
           (lambda ()
-            (display-line-numbers-mode 1)
+            (local-set-key (kbd "C-<up>") 'emmet-expand-line)
             ))
 
-(add-hook 'c-mode-hook
-          (lambda ()
-            (display-line-numbers-mode 1)
-            ))
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (display-line-numbers-mode 1)
-            ))
+          (add-hook 'css-mode-hook
+                    (lambda ()
+                      (display-line-numbers-mode 1)
+                      ))
 
-(global-set-key (kbd "M-s RET") 'eval-expression)
+          (add-hook 'c-mode-hook
+                    (lambda ()
+                      (display-line-numbers-mode 1)
+                      ))
+          (add-hook 'prog-mode-hook
+                    (lambda ()
+                      (display-line-numbers-mode 1)
+                      ))
 
 (setq org-latex-text-markup-alist
       '((bold . "\\textbf{%s}")
@@ -308,9 +272,6 @@
   (let ((value (eval (preceding-sexp))))
     (backward-kill-sexp)
     (insert (format "%s" value))))
-(global-set-key (kbd "C-x á") 'eval-and-replace)
-(global-set-key (kbd "M-é") 'backward-word)
-(global-set-key (kbd "M-á") 'forward-word)
 
 (defun load-directory (dir)
   "This function loads all elisp files."
