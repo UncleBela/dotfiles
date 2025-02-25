@@ -19,6 +19,9 @@
   (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+
 (require 'ox-texinfo)
 
 (use-package "jupyter" :ensure t)
@@ -147,6 +150,8 @@
      (concat "setsid st -e sh -c 'cd " current-directory " && exec $SHELL'"))))
 (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
 
+(use-package fish-mode :ensure t)
+
 (global-set-key (kbd "s-r") 'windresize) ; This is nice.
 
 (setq backup-directory-alist
@@ -157,8 +162,12 @@
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
 
+;; (setq display-buffer-alist
+;;       '((".*" (display-buffer-same-window))))
+
 (setq display-buffer-alist
-      '((".*" (display-buffer-same-window))))
+    '(("^\\*Help\\*" . (display-buffer-pop-up-window))
+      (".*" . (display-buffer-same-window))))
 
 (global-set-key (kbd "<f6>") (lambda () (interactive)
                                (find-file "/home/anon/Projects/Personal/org-files/index.org")
@@ -167,6 +176,16 @@
 (global-set-key (kbd "<f5>") (lambda () (interactive)
                                (find-file "~/.emacs.d/init.org")
                                (message "Opened %s" (buffer-name))))
+
+(global-set-key (kbd "<f7>") (lambda () (interactive)
+                               (cfw:open-org-calendar)
+                               (message "Opened Org Calendar." (buffer-name))))
+
+(setq org-agenda-files '("~/Projects/Personal/org-files/calendar/people_days.org"
+    "~/Projects/Personal/org-files/calendar/todo.org"
+    "~/Projects/Personal/org-files/calendar/astronomical_events.org"
+    "~/Projects/Personal/org-files/calendar/erettsegi.org"
+))
 
 (defun my-open-file-in-new-buffer ()
   "Open the file at point in a new buffer."
@@ -272,6 +291,14 @@
   (let ((value (eval (preceding-sexp))))
     (backward-kill-sexp)
     (insert (format "%s" value))))
+
+(add-to-list 'load-path "~/.emacs.d/custom-packages/expand-region.el/")
+(require 'expand-region)
+
+(add-to-list 'load-path "~/.emacs.d/custom-packages/change-inner.el")
+(require 'change-inner)
+
+(global-set-key (kbd "M-é w") 'change-inner)
 
 (defun load-directory (dir)
   "This function loads all elisp files."

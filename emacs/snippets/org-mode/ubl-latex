@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: ubl-latex
-# key: ubl-latex
-# --
-
-#+begin_latex
-$0
-#+end_latex

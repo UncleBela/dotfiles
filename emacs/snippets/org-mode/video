@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: video
+# key: video
+# --
+#+BEGIN_EXPORT html
+<iframe src="$1"></iframe>
+#+END_EXPORT
+$0

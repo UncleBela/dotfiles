@@ -61,9 +61,11 @@
 #+LATEX_HEADER: \makeatother
 #+LATEX_HEADER: \usepackage{lipsum}
 #+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage{enumitem} \setlist[itemize]{noitemsep}
 
 #+LATEX_HEADER: \setlength{\parindent}{0pt}
 #+LATEX_HEADER: \setlength{\parskip}{0.5em}
+#+LATEX_HEADER: \setcounter{secnumdepth}{0}
 
 | Készítette: | {{{myname}}}     |
 | Téma:       | {{{doctitle}}}   |

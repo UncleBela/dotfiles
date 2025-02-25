@@ -44,6 +44,15 @@
     (load bootstrap-file nil 'nomessage))
 #+end_src
 
+* MELPA 
+:PROPERTIES:
+:CUSTOM_ID: melpa
+:END:
+#+begin_src emacs-lisp
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/") t)
+#+end_src
+
 * Loading Packages
 :PROPERTIES:
 :CUSTOM_ID: loading_packages
@@ -268,6 +277,17 @@ CLOCK: [2024-12-23 h 14:52]--[2024-12-23 h 14:52] =>  0:00
 :PROPERTIES:
 :CUSTOM_ID: external_packages
 :END:
+
+** Calfw Calendar 
+:PROPERTIES:
+:CUSTOM_ID: calfw
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/external-packages.el" :mkdirp yes
+  (add-to-list 'load-path "~/.emacs.d/custom-packages/emacs-calfw/")
+  (require 'calfw-org)
+#+end_src
+
 ** Wolfram Mode 
 :PROPERTIES:
 :CUSTOM_ID: wolfram_mode
@@ -289,20 +309,20 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
 #+begin_src emacs-lisp :tangle "gyb-lisp/gyb-themes.el" :mkdirp yes
   (global-hl-line-mode 1)
 
-  (set-face-attribute 'default nil :font "Iosevka Comfy Fixed-20")
+  (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono")
+  (add-hook 'server-after-make-frame-hook
+            (lambda ()
+              (set-frame-font "Iosevka Nerd Font Mono")))
+  (set-face-attribute 'default nil :height 170)
 
   ;;;; Light Mode
-  ;; (gyb/lightmode)
+  (gyb/lightmode)
 
   ;; Dark Mode
-  (gyb/darkmode)
+  ;; (gyb/darkmode)
 
   ;; Transparent Mode
   ;; (gyb/tp)
-
-  (add-hook 'server-after-make-frame-hook
-            (lambda ()
-              (set-frame-font "Iosevka Comfy Fixed-20")))
 
 #+end_src
 
@@ -340,10 +360,6 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     (lsp-completion-provider :capf)  ; Common setting for completion
     (lsp-clients-clangd-executable "/usr/bin/clangd"))
 
-  (use-package lsp-ui
-    :ensure t
-    :commands lsp-ui-mode)
-
   (use-package company
     :ensure t
     :config
@@ -367,6 +383,9 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     :ensure t
     :config
     (which-key-mode))
+
+  (use-package php-mode :ensure t)
+
 #+end_src
 
 #+begin_src emacs-lisp :tangle "gyb-lisp/gyb-lsp.el" :mkdirp yes
@@ -459,8 +478,9 @@ Next up, we will customize our fonts and colors here, additionally, we will add 
     :ensure t
     :commands lsp-ui-mode
     :config
-    (setq lsp-ui-sideline-enable t)
-    (setq lsp-ui-doc-enable t))
+    (setq lsp-ui-sideline-enable nil)
+    (setq lsp-ui-doc-enable nil))
+  (setq lsp-ui-doc-enable nil)
 #+end_src
 
 * Major Modes and Packages
@@ -472,6 +492,10 @@ Set up various major modes and additional packages.
 ** Magit
 #+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
   (use-package magit :ensure t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
+  (use-package git-timemachine :ensure t)
 #+end_src
 
 ** Org
@@ -548,12 +572,21 @@ Set up various major modes and additional packages.
   (setq ivy-format-function 'ivy-format-function-line)
 #+end_src
 
+** Dired 
+:PROPERTIES:
+:CUSTOM_ID: dired
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-dired.el" :mkdirp yes
+(setq dired-dwim-target t)
+#+end_src
+
 ** Ido Grid Mode 
 :PROPERTIES:
 :CUSTOM_ID: ido
 :END:
 #+begin_src emacs-lisp :tangle "gyb-lisp/gyb-ido-mode.el" :mkdirp yes
-    (use-package ido-grid-mode :ensure t)
+  (use-package ido-grid-mode :ensure t)
 
   (setq ido-grid-mode-max-columns 4
         ido-grid-mode-max-rows 8
@@ -850,6 +883,11 @@ Include miscellaneous settings and functions.
   (global-set-key (kbd "C-c t") 'open-terminal-in-current-directory)
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package fish-mode :ensure t)
+#+end_src
+
+
 ** Windresize keybindings
 :PROPERTIES:
 :CUSTOM_ID: windresize
@@ -877,8 +915,12 @@ Include miscellaneous settings and functions.
 :CUSTOM_ID: new-buffers
 :END:
 #+begin_src emacs-lisp
+  ;; (setq display-buffer-alist
+  ;;       '((".*" (display-buffer-same-window))))
+
   (setq display-buffer-alist
-        '((".*" (display-buffer-same-window))))
+      '(("^\\*Help\\*" . (display-buffer-pop-up-window))
+        (".*" . (display-buffer-same-window))))
 #+end_src
 
 ** Quickly open index.org
@@ -899,6 +941,25 @@ Include miscellaneous settings and functions.
   (global-set-key (kbd "<f5>") (lambda () (interactive)
                                  (find-file "~/.emacs.d/init.org")
                                  (message "Opened %s" (buffer-name))))
+#+end_src
+
+** Calendar Options 
+:PROPERTIES:
+:CUSTOM_ID: calendar
+:END:
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "<f7>") (lambda () (interactive)
+                                 (cfw:open-org-calendar)
+                                 (message "Opened Org Calendar." (buffer-name))))
+#+end_src
+
+#+begin_src emacs-lisp
+    (setq org-agenda-files '("~/Projects/Personal/org-files/calendar/people_days.org"
+      "~/Projects/Personal/org-files/calendar/todo.org"
+      "~/Projects/Personal/org-files/calendar/astronomical_events.org"
+      "~/Projects/Personal/org-files/calendar/erettsegi.org"
+  ))
 #+end_src
 
 ** Open new file in a new frame
@@ -1057,6 +1118,19 @@ Include miscellaneous settings and functions.
       (insert (format "%s" value))))
   #+end_src
   
+* Change Inner 
+:PROPERTIES:
+:CUSTOM_ID: change_inner
+:END:
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/custom-packages/expand-region.el/")
+  (require 'expand-region)
+
+  (add-to-list 'load-path "~/.emacs.d/custom-packages/change-inner.el")
+  (require 'change-inner)
+
+  (global-set-key (kbd "M-é w") 'change-inner)
+#+end_src
 * Org LaTeX template
 :PROPERTIES:
 :CUSTOM_ID: latex_template
@@ -1283,8 +1357,8 @@ Include miscellaneous settings and functions.
       (concat
        "<div class='hb'>"
        (if (string-match "/hu/" file-path)
-           (format "<a href='/index.html'>Főoldal</a> | <a href='./i.html'>Overview</a>")
-         (format "<a href='/index.html'>Home</a> | <a href='./i.html'>Sitemap</a>"))
+           (format "<a href='/index.html'>Főoldal</a> | <a href='./i.html'>Áttekintés</a>")         
+         (format "<a href='/index.html'>Home</a> | <a href='./i.html'>Map</a>"))
        "</div>"
        )))
 #+end_src
@@ -1327,49 +1401,127 @@ Include miscellaneous settings and functions.
   (require 'ox-publish)
   (require 'ox-latex)
 
+  (use-package ox-rss :ensure t)
+
   (setq my/root-directory "~/Projects/Websites/gyenes.xyz/")
 
   (setq org-publish-project-alist
-    `(("notes"
-       :base-directory ,(expand-file-name "src/" my/root-directory)
-       :base-extension "org"
-       :publishing-directory ,(expand-file-name "public/" my/root-directory)
-       :recursive t
-       :publishing-function org-html-publish-to-html
-       :headline-levels 4
-       :section-numbers nil
-       :auto-preamble t
-       :with-toc t
-       :language "en"
+        `(("notes"
+           :base-directory ,(expand-file-name "src/" my/root-directory)
+           :base-extension "org"
+           :publishing-directory ,(expand-file-name "public/" my/root-directory)
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 4
+           :section-numbers nil
+           :auto-preamble t
+           :with-toc t
+           :language "en"
 
-       :html-head "<link rel='stylesheet' href='/styles/notes.css'>"
-       :html-head-extra "<link rel='icon' href='/imgs/favicon.ico' type='image/gif'><script src='/scripts/notes.js'></script><link rel='stylesheet' href='/styles/prism.css'/><script src='/scripts/prism.js'></script>"
+           :html-head "<link rel='stylesheet' href='/styles/notes.css'>"
+           :html-head-extra "<link rel='icon' href='/imgs/favicon.ico' type='image/gif'><script src='/scripts/notes.js'></script><link rel='stylesheet' href='/styles/prism.css'/><link rel='stylesheet' href='/styles/fancybox.css'/><script src='/scripts/prism.js'></script><script src='/scripts/fancybox.umd.js'></script><script>document.addEventListener('DOMContentLoaded', () => {Fancybox.bind('[data-fancybox]', {}); })</script>"
 
-       :html-preamble gyb/org-html-preamble
-       :html-postamble gyb/html-footer
+           :html-preamble gyb/org-html-preamble
+           :html-postamble gyb/html-footer
 
-       :html-head-include-default-style nil
+           :html-head-include-default-style nil
 
-       :html-doctype "html5"
-       :html-html5-fancy t
+           :html-doctype "html5"
+           :html-html5-fancy t
 
-       :author "Béla Gyenes"
-       :email "bela@gyenes.xyz"
-  )
+           :author "Béla Gyenes"
+           :email "bela@gyenes.xyz"
+           )
 
-  ("static"
-   :base-directory ,(expand-file-name "src/" my/root-directory)
-   :base-extension "css\\|js\\|png\\|jpg\\|gif\\|mp3\\|ogg\\|swf\\|svg\\|wav\\|aac"
-   :publishing-directory ,(expand-file-name "public/" my/root-directory)
-   :recursive t
-   :publishing-function org-publish-attachment)
+          ("static"
+           :base-directory ,(expand-file-name "src/" my/root-directory)
+           :base-extension "css\\|mp4\\|heic\\|HEIC\\|js\\|png\\|jpg\\|gif\\|mp3\\|ogg\\|swf\\|svg\\|wav\\|aac\\|pdf"
+           :publishing-directory ,(expand-file-name "public/" my/root-directory)
+           :recursive t
+           :publishing-function org-publish-attachment)
 
-  ;; rss will come here
+          ("rss"
+           :base-directory ,(expand-file-name "src/" my/root-directory)
+           :base-extension "org"
+           :publishing-directory ,(expand-file-name "public/" my/root-directory)
+           :publishing-function (org-rss-publish-to-rss)
+           :html-link-home "https://gyenes.xyz/"
+           :html-link-use-abs-url t
+           :rss-extension "xml"
+           :section-numbers nil
+           :exclude "^\(.*\(i\.org\|archive\.org\)\)$"
+           :table-of-contents nil)
 
-  ("blog" :components ("notes" "static" "pdf"))))
+          ;; rss will come here
+
+          ("blog" :components ("notes" "static" "pdf" "rss"))))
 
   (global-set-key (kbd "<f1> <f1>") 'org-publish-current-file)
   (global-set-key (kbd "<f1> <f2>") 'org-publish)
+#+end_src
+
+** Org Image Formatting Remake
+:PROPERTIES:
+:CUSTOM_ID: org_image_formatting
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org-image-formatting.el" :mkdirp yes
+(defun capitalize-first-letter (s)
+  "Capitalize the first letter of string S. This is used for my function wrap image. Return the same input S if it's empty or not a string."
+  (when (stringp s)
+    (cond
+     ((string-empty-p s) s)
+     (t (concat (upcase (substring s 0 1)) (substring s 1))))))
+
+  (defun my-org-html--wrap-image (contents info &optional label attributes)
+        "Don’t wrap images in <figure> or <figcaption>.
+      CONTENTS is the HTML for the image itself.
+      INFO is the export communication channel.
+      LABEL is the label for the environment (if any).
+      ATTRIBUTES is a plist of HTML attributes (if any)."
+        ;; Simply return the image HTML string as-is:
+        contents)
+
+      (advice-add 'org-html--wrap-image :override #'my-org-html--wrap-image)
+
+(defun my-org-html--format-image (source attributes info)
+  "Wrap <img> in an <a> tag for fancyBox, using filename-derived text for alt/title/caption.
+Also capitalize the very first letter of the resulting text.
+SOURCE is the image path.
+ATTRIBUTES is a plist for image attributes.
+INFO is a plist used as the export communication channel."
+  (let* ((file-name    (file-name-nondirectory source))     ; e.g., "great-kitty_photo.png"
+         (base-name    (file-name-sans-extension file-name)) ; "great-kitty_photo"
+         ;; Replace underscores/hyphens with spaces, e.g. "great kitty photo"
+         (raw-text     (replace-regexp-in-string "[-_]+" " " base-name))
+         ;; Capitalize only the first letter of the entire string
+         (caption-text (capitalize-first-letter raw-text))
+         ;; Merge any existing attributes with ours
+         (img-attrs    (org-combine-plists
+                        (list :src source
+                              :alt caption-text
+                              :title caption-text)
+                        attributes)))
+    (concat
+     (format "<a href=\"%s\" data-fancybox=\"gallery\" data-caption=\"%s\">"
+             source
+             (org-html-encode-plain-text caption-text))
+     (format "<img %s/>" (org-html--make-attribute-string img-attrs))
+     "</a>")))
+
+(advice-add 'org-html--format-image :override #'my-org-html--format-image)
+#+end_src
+
+** Ruby tag export (for natural languages) 
+:PROPERTIES:
+:CUSTOM_ID: ruby_tag
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-org.el" :mkdirp yes
+  (org-add-link-type "ruby" #'ignore #'export-ruby-link)
+  (defun export-ruby-link (path desc format)
+    (cl-case format
+      (html (format "<ruby>%s<rt>%s</rt></ruby>" path desc))))
 #+end_src
 
 * Redefinition of keys 
