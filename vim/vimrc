@@ -1,0 +1,58 @@
+" Appearance
+colorscheme zaibatsu
+set ruler
+set hlsearch
+set magic
+" set showmatch
+syntax enable
+set regexpengine=0
+
+"" Cursor
+" 1 = blinking block,        2 = steady block
+" 3 = blinking underline,    4 = steady underline
+" 5 = blinking vertical bar, 6 = steady vertical bar
+" let &t_SI = "\e[5 q"   " cursor in insert mode
+" let &t_EI = "\e[1 q"   " cursor in normal mode
+" let &t_SR = "\e[6 q"   " cursor in replace mode
+" let &t_ti .= "\e[1 q"  " cursor when vim starts
+" let &t_te .= "\e[1 q"  " cursor when vim exits
+
+" Auto indent!
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines"
+
+" Automatic brackets
+inoremap " ""<left>
+inoremap ' ''<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
+
+" No Backups
+set nobackup
+set nowb
+set noswapfile
+
+" QoL
+set lbr
+set tw=500
+set smarttab
+set shiftwidth=4
+set tabstop=4
+set number
+set rnu!
+
+" Variables
+let mapleader = '.'
+
+" Keybinds
+nmap <leader>w :w!<cr>
+nmap <leader>q :q!<cr>
+nmap <leader>wq :wq!<cr>
+map <leader>x :e ~/notes.org<cr>
+
+" Visual Mode Related
+
