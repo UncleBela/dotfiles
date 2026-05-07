@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: ubl-align
+# key: ubl-align
+# --
+
+#+begin_latex
+\begin{align}
+$0  \\\
+\end{align}
+#+end_latex

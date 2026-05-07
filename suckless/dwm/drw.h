@@ -19,7 +19,7 @@ typedef struct {
 	unsigned int w, h;
 	Display *dpy;
 	int screen;
-	Window root;
+        Window root;
 	Drawable drawable;
 	GC gc;
 	Clr *scheme;

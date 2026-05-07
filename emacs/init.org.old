@@ -1,6 +1,6 @@
 #+title: GNU Emacs Configuration
 #+author: Gyenes Béla
-#+email: contact@gyenes.xyz
+#+email: bela@gyenes.xyz
 #+options: toc:t author:t email:t num:t
 #+language: en
 #+property: header-args:emacs-lisp :tangle init.el
@@ -50,13 +50,6 @@
 :END:
 #+begin_src emacs-lisp
   (require 'ox-texinfo)
-#+end_src
-
-* External packages
-** Xah Lee Wolfram mode
-#+begin_src emacs-lisp :tangle "gyb-lisp/external-packages.el" :mkdirp yes
-  (add-to-list 'load-path "~/.emacs.d/custom-packages/gyb-wolfram-mode")
-  (require 'gyb-wolfram-mode)
 #+end_src
 
 * GYB Themes
@@ -154,7 +147,7 @@ CLOCK: [2024-12-23 h 14:52]--[2024-12-23 h 14:52] =>  0:00
     (set-face-foreground 'org-level-2 "#e8fcb3")
     (set-face-foreground 'org-level-3 "#e8fcb3")
     (set-face-foreground 'org-level-4 "#e8fcb3")
-    (set-face-foreground 'org-hide "#000000")
+    (set-face-foreground 'org-hide "#e8fcb3")
     (set-face-foreground 'org-link "#65d4eb")
     (set-face-foreground 'org-document-title "#ffffff")
     (set-face-foreground 'org-document-info "#ffffff")
@@ -269,6 +262,19 @@ CLOCK: [2024-12-23 h 14:52]--[2024-12-23 h 14:52] =>  0:00
   (global-set-key (kbd "M-ű") 'forward-word)
 
   (global-set-key (kbd "C-c l") 'org-open-at-point)
+#+end_src
+
+* External Packages 
+:PROPERTIES:
+:CUSTOM_ID: external_packages
+:END:
+** Wolfram Mode 
+:PROPERTIES:
+:CUSTOM_ID: wolfram_mode
+:END:
+#+begin_src emacs-lisp :tangle "gyb-lisp/external-packages.el" :mkdirp yes
+  (add-to-list 'load-path "~/.emacs.d/custom-packages/wolfram-mode/")
+  (require 'wolfram-mode)
 #+end_src
 
 * UI Enhancements
@@ -472,6 +478,7 @@ Set up various major modes and additional packages.
 #+begin_src emacs-lisp :tangle "gyb-lisp/gyb-majors.el" :mkdirp yes
   (use-package org :ensure t)
   (setq org-use-speed-commands 1)
+  (setq org-export-preserve-breaks t)
 #+end_src
 
 ** Emmet mode for web mode
@@ -1420,6 +1427,28 @@ Setting up gpg for encryption/decryption.
                         (nnimap-address "imap.externalmail.com")
                         (nnimap-server-port 993)
                         (nnimap-stream ssl)))
+#+end_src
+
+* For Minimal Configs
+:PROPERTIES:
+:CUSTOM_ID: minimal
+:END:
+
+** Delete word backwards doesn't copy it to clipboard 
+:PROPERTIES:
+:CUSTOM_ID: delete_backward
+:END:
+
+#+begin_src emacs-lisp :tangle "gyb-lisp/gyb-minimal.el" :mkdirp yes
+  (defun gyb/delete-backward-word ()
+    (interactive "*")
+    (push-mark)
+    (backward-word)
+    (delete-region (point) (mark)))
+
+  ;; Unsetting
+  (global-set-key (kbd "C-<backspace>") nil)
+  (global-set-key (kbd "C-<backspace>") 'gyb/delete-backward-word)
 #+end_src
 
 * Load

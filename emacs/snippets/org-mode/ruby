@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: ll
-# key: ll
-# --
-[[ruby:$1][$2]]
-$0

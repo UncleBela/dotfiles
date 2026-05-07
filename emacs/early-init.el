@@ -1,4 +1,1 @@
-(setq default-frame-alist '((background-color . "black")))
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(set-face-attribute 'default nil :family "Iosevka Nerd Font Mono" :height 170)

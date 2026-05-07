@@ -3,5 +3,9 @@
 # key: org-img
 # author: Gyenes Béla (www.gyenes.xyz)
 # --
-[[$1]]
+#+CAPTION: ${1}
+#+NAME: fig:$1
+#+ATTR_HTML: :alt $1 :title $1 :align center
+#+ATTR_LATEX: :width 0.5\textwidth
+[[$2]]
 $0

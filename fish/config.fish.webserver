@@ -1,0 +1,28 @@
+if status is-interactive
+# Commands to run in interactive sessions can go here
+end
+
+alias c='clear'
+alias es='/usr/local/bin/emacs --load /root/.emacs.d/init.el --daemon &'
+alias e="emacsclient -c -a ''"
+
+export EDITOR="emacsclient -c -a ''"
+
+bind \eo append_and_disown
+
+function r
+    # Define a temporary file to store the last visited directory
+    set -l tempfile '/tmp/lf_cd_'.(id -u)
+
+    # Launch lf and tell it to write the last visited directory to the tempfile
+    lf -config /home/anon/.config/lf/.lfrc -last-dir-path=$tempfile $argv
+    # Check if the tempfile exists and is not empty
+    if test -s $tempfile
+        # Read the directory from the tempfile
+        set -l lastdir (cat $tempfile)
+        # Change to the directory
+        cd $lastdir
+        # Optionally, clean up by removing the tempfile
+        command rm -f $tempfile
+    end
+end

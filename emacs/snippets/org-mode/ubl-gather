@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: ubl-gather
+# key: ubl-gather
+# This is for multiple equations, when we do not need them aligned
+# --
+
+#+begin_latex
+\begin{gather}
+  $0 \\
+\end{gather}
+#+end_latex

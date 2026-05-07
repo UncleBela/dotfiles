@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ubm-equation
+# key: ubm-equation
+# --
+
+\begin{equation}
+$1 \\\
+\end{equation}

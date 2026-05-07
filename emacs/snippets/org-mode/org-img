@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: org-img
+# key: org-img
+# --
+
+#+ATTR_HTML: :alt $1 image :title $2 :align center
+[[./imgs/$3]]
+#+BEGIN_EXPORT html
+<div class="figure-text">$4</div>
+#+END_EXPORT
+$0
