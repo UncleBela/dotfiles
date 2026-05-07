@@ -1,0 +1,46 @@
+(defsrc
+    caps
+    f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+    1 2 3 4 5 6 7 8 9 Digit0
+    del
+    pgup
+    pgdn
+    end
+    Minus Equal BracketLeft BracketRight Backslash , .
+    ArrowLeft ArrowRight Enter ArrowUp ArrowDown
+)
+
+(defalias
+    ;; Caps lock rétegváltEqualként használatra
+    num (layer-switch numpad)
+    bd (layer-switch default)
+
+    ;; Kényszerített alt gr
+    altgr (multi lctl ralt) 
+)
+
+
+
+(deflayer default
+    @num
+    f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+    1 2 3 4 5 6 7 8 9 Digit0
+    del
+    pgup
+    pgdn
+    end
+    Minus Equal BracketLeft BracketRight Backslash , .
+    ArrowLeft ArrowRight Enter ArrowUp ArrowDown
+)
+
+(deflayer numpad
+    @bd
+    f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24
+    kp1 kp2 kp3 kp4 kp5 kp6 kp7 kp8 kp9 kp0
+    NumLock
+    PrintScreen
+    CapsLock
+    ScrollLock
+    kp- kp+ BracketLeft BracketRight kp* , .
+    kp4 kp6 Numpad5 kp8 kp2
+)
